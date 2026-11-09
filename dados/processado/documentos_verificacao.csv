@@ -1,0 +1,39 @@
+alegacao,artigo,nosso_valor,unidade,fonte_nosso,status,documento
+"Custo médio da dívida, jun/2026","12,68",12.68,% a.a.,"RMD (DPF, estoque 12m, jun/26)",confere,eu_acuso_2026
+"DBGG, jun/2026","10,9",10.81,R$ tri,SGS 13761 (jun/26),confere,eu_acuso_2026
+"DBGG / PIB, jun/2026","82,5",82.0,%,SGS 13762 (jun/26),confere (≈),eu_acuso_2026
+"Serviço = custo × estoque, jun/2026","1,4",1.37,R$ tri,custo RMD × SGS 13761 (jun/26),confere,eu_acuso_2026
+"Serviço / PIB, jun/2026","10,5",10.4,%,"custo × DBGG ÷ PIB 12m (SGS 4380, jun/26)",confere,eu_acuso_2026
+Serviço c/ dívida líquida,"8,7",8.7,%,"custo RMD × DLSP/PIB (SGS dlsp_pib, jun/26)",confere,eu_acuso_2026
+Déficit nominal / PIB,~10,9.51,% 12m,SGS 5727 (09/2026),confere (≈),eu_acuso_2026
+Déficit primário 'pequeno',-,0.52,% 12m,SGS 5793 (09/2026),confere (qualitativo),eu_acuso_2026
+Identidade: nominal = juros + primário,-,9.51 = 8.99 + 0.52,% 12m,SGS 5727/5760/5793 (09/2026),confere (resíduo 0.00 p.p.),eu_acuso_2026
+Ponte: conta com estoque médio 12m,-,9.7,%,custo RMD × DBGG médio (12m até jun/26),nota: estoque cresce ~14%/ano — estoque final > médio,eu_acuso_2026
+Juro apropriado 12m (medido),"10,5 (conta)",8.99,% 12m,"SGS 5760 (09/2026) — NFSP, inclui estados e swaps","conceito diferente (acumulado vs custo corrente), não erro aritmético",eu_acuso_2026
+PIB nominal cresce ~7% a.a.,"7,0",7.0,%,SGS 4380 (12m),confere,eu_acuso_2026
+"DBGG cresce 12,7% só com juros","12,7",14.0 (observado),%,SGS 13761 (12m),confere como conta aritmética; observado é maior,eu_acuso_2026
+"Dívida/PIB sobe ~5,7 p.p. ao ano","5,7",+5.1,p.p.,SGS 13762 (12m),confere (≈),eu_acuso_2026
+'mais da metade da dívida em LFTs',>50,51.2 (DPMFi) | 42.3 (DBGG),%,"Estoque da DPF, Anexo 2.1 (antes do swap, 06/2026) × SGS 13761","confere na dívida mobiliária federal (é onde existem LFTs); sobre a DBGG inteira, não",eu_acuso_2026
+…a mesma alegação pela exposição 'após swap',>50,45.9,%,RMD Anexo 5.5 (líquido de swap cambial),"base errada da 1ª checagem: 5.5 é exposição do título trocado, não o instrumento",eu_acuso_2026
+Primário 'entre os menores do mundo' (FMI),-,-,,FMI Fiscal Monitor 4/2026 (não coletado),não verificável com dados do projeto,eu_acuso_2026
+Selic em 15% (decisão anterior à matéria),15,15.00,% a.a.,SGS 432 (vigente desde 19/06/2025),confere,kanczuk_asa_2025
+'patamar mais alto desde 2006',15 > tudo desde 2006,última vez >=15%: 07/2006 (15.25); máx. depois: 14.75,% a.a.,SGS 432 (série diária),confere,kanczuk_asa_2025
+'juro real observado acima de 6% desde 2022' — ex-post,>6 desde 2022,sempre >=6% só desde 11/2024 | mín. 2022–23 -1.2 | meses <6%: 8/24,% a.a.,SGS 4189 − SGS 13522 (Selic − IPCA 12m),não confere como está escrito (2022 inteiro abaixo),kanczuk_asa_2025
+'juro real observado acima de 6% desde 2022' — ex-ante,>6 desde 2022,sempre >=6% desde 05/2022 | mín. 2022–23 3.8 | meses <6%: 4/24,% a.a.,SGS 4189 − Focus IPCA 12m (média do mês),"confere (≈) — de mai/2022 em diante, não de jan/2022",kanczuk_asa_2025
+'juro neutro real é de 8%' (ele) / 5% (BC) / 6% (consenso),8 / 5 / 6,—,% a.a.,"opinião e expectativa, não dado",não verificável com dados do projeto,kanczuk_asa_2025
+'Fed deve começar a cortar em outubro',out/2025,—,,previsão sobre dado externo (não coletado),não verificável com dados do projeto,kanczuk_asa_2025
+'Brasil vai continuar crescendo 2%',2,—,%,previsão,não verificável com dados do projeto,kanczuk_asa_2025
+"IPCA 2025 = 4,26%","4,26",4.26,%,SGS 13522 (dez/2025),confere (exato),febraban_sidney_2026
+'melhor resultado nominal desde 2018',menor desde 2018,mín. 2019–2024 = 4.31,%,SGS 13522 (fechamentos de dezembro),confere,febraban_sidney_2026
+"Selic de 15,0% ao ano na nota (12/01/2026)","15,0",15.00,% a.a.,SGS 432 (vigência em 12/01/2026),confere,febraban_sidney_2026
+"Focus projetava IPCA 2025 em 4,90% no início de 2025","4,90",4.99 (pesquisa 02/01/2025),%,"Focus anual (focus_anuais, IPCA ref. 2025)",confere (≈),febraban_sidney_2026
+"1º corte 'se não em janeiro, a partir de março'",mar/2026,19/03/2026,,SGS 432 (primeira queda abaixo de 15%),confere,febraban_sidney_2026
+"[27/01/2025] Selic chega a 15,25% em junho/2025","15,25",15.00 (em 19/06/2025),% a.a.,SGS 432,"não confere — ficou 0,25 abaixo (15,00)",anbima_2025_01
+[27/01/2025] …e permanece nesse patamar até o fim de 2025,"15,25 até dez/2025",15.00 em dez/2025,% a.a.,SGS 432,"confere como direção (patamar alto mantido), não o valor",anbima_2025_01
+"[27/01/2025] IPCA 2025 = 5,6%","5,6",4.26,%,SGS 13522 (dez/2025),não confere — erro -1.34 p.p.,anbima_2025_01
+[27/01/2025] dívida bruta = 81% do PIB em 2025,"81,0",78.64,%,SGS 13762 (dez/2025),não confere — erro -2.36 p.p.,anbima_2025_01
+"[27/01/2025] déficit primário = 0,63% do PIB em 2025","0,63",0.43,%,"SGS 5793 (dez/2025, + = déficit)",confere (≈),anbima_2025_01
+[15/09/2025] Selic mantida em 15% nas 3 últimas reuniões de 2025,"15,00",15.00,% a.a.,SGS 432 (dez/2025),confere,anbima_2025_09
+"[15/09/2025] 1º corte em janeiro de 2026 (14,75%)",jan/2026,19/03/2026,,SGS 432 (primeira queda abaixo de 15%),não confere — foi março/2026,anbima_2025_09
+"[15/09/2025] IPCA 2025 = 4,8%","4,8",4.26,%,SGS 13522 (dez/2025),não confere — erro -0.54 p.p.,anbima_2025_09
+"[15/09/2025] dívida bruta = 79,80% do PIB em 2025","79,80",78.64,%,SGS 13762 (dez/2025),confere (≈),anbima_2025_09

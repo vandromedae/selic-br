@@ -1,0 +1,166 @@
+<!-- Fonte: https://andrelararesende.substack.com/p/eu-acuso-uma-proposta-para-eliminar -->
+<!-- Autor: André Lara Resende | Publicado: 2026-09-25 | Coletado: 2026-11-08 -->
+<!-- Título: Eu Acuso: uma proposta para eliminar os juros absurdos -->
+<!-- Documento de POSIÇÃO do corpus complementar (fase de documentos). -->
+
+Às vésperas das eleições presidenciais, mesmo diante do desmoronar da ordem política internacional e da crise das instituições nacionais, o tema dominante na grande mídia é o “descontrole fiscal”. É aparentemente a mais grave ameaça ao país. Tudo mais deve estar subordinado ao restabelecimento do “equilíbrio fiscal”, sem o que uma hecatombe econômico-financeira será inevitável.
+
+ Que fique claro: o país gasta mal, aloca recursos de forma irracional, patrimonialista, como no caso das emendas parlamentares e das vantagens pecuniárias do judiciário, e demagógica, como no caso das vinculações de receitas, isenções e subsídios de toda ordem. Ainda assim, tem apenas um pequeno déficit fiscal primário, entre os menores do mundo segundo o FMI (Gráfico 1). Quando se exclui o serviço da dívida, as contas estão praticamente equilibradas. A grande despesa do Estado é com os juros sobre a dívida. Uma dívida expressiva, sim, em torno de 80% do PIB, mas quase que integralmente em moeda nacional e nas mãos de residentes no país. Não vou retomar aqui os argumentos sobre a falácia de equiparar a dívida interna em moeda nacional à dívida externa em moeda estrangeira. Já tratei do tema em inúmeras oportunidades, aqui mesmo no meu 
+
+ Substack .
+
+ Gráfico 1 – Resultado primário do governo geral, 2025 (estimativa), % do PIB. 
+
+ 
+
+ 
+
+ Fonte: FMI, Fiscal Monitor, abril de 2026. 
+
+ O cerne do problema fiscal está no serviço da dívida. Todo o resto é secundário. O custo médio da dívida chegou a 12,68% ao ano em junho deste ano. Sobre uma dívida bruta (DBGG) de R$ 10,9 trilhões, equivalente a 82,5% do PIB, significa um custo de R$ 1,4 trilhão, ou 10,5% do PIB ao ano. Mesmo sobre a dívida líquida, a conta de juros chega a 8,7% do PIB
+
+ 1 
+
+ .
+
+ Só com a conta de juros, sem contar um eventual déficit primário, a dívida bruta cresce 12,7% ao ano, enquanto o PIB nominal cresce cerca de 7% ao ano (menos de 3% em termos reais). A relação dívida/PIB cresce, portanto, a uma taxa aproximadamente igual à diferença entre as duas, algo em torno de 5,7% ao ano. Não é preciso muita elaboração para concluir que a situação é insustentável. A trajetória explosiva da dívida em relação ao PIB deve ser interrompida o quanto antes. Os números são contundentes: nos últimos anos, exceto durante a Covid, o resultado primário foi apenas ligeiramente negativo; já o déficit nominal, puxado pelos juros, foi sempre alto e agora aproxima-se de 10% do PIB (Gráfico 2).
+
+ Gráfico 2 – Resultado primário e resultado nominal do setor público, % do PIB, acumulado em 12 meses. 
+
+ 
+
+ 
+
+ Fonte: Banco Central do Brasil, séries 5793 e 5727 do SGS (setor público consolidado), dados até julho de 2026. Nota: As faixas cinzas assinalam as eleições gerais. 
+
+ 
+
+ A taxa básica de juros é instrumento do Banco Central 
+
+ O aumento da relação dívida/PIB tem um único motor: a absurda taxa de juros fixada pelo Banco Central. Todos estão de acordo: a taxa de juros é um problema. Inviabiliza o crédito para a produção e o consumo, provoca o endividamento insustentável das famílias e das empresas e desestimula o investimento produtivo. Além disso, dado que a dívida pública está nas mãos da parcela mais rica da população, agrava a concentração de renda e riqueza, como parece ter finalmente percebido a grande imprensa, a julgar pelo recente editorial da Folha de São Paulo
+
+ 2 
+
+ .
+
+ Não se contesta que a taxa básica de juros é fixada pelo Banco Central. A taxa Selic, que baliza as operações de liquidez do BC com os bancos, é o principal instrumento de política do BC. O BC anuncia e controla integralmente a taxa básica de juros, que é o principal determinante do custo da dívida. É o parâmetro que baliza toda a estrutura a termo da dívida. Outros fatores, como a incerteza sobre a sua trajetória futura, as expectativas de inflação e o risco político da dívida, também influenciam a formação de preços, sobretudo dos papéis mais longos, mas a taxa básica é o principal determinante do custo da dívida
+
+ 3 
+
+ .
+
+ 
+
+ Inscreva-se
+
+ 
+
+ 
+
+ 
+
+ Até aqui, não há grande discordância. O problema, afirmam os que dizem não haver alternativa, é que, se o BC reduzir a taxa básica, inviabilizará o cumprimento da meta e perderá o controle da inflação. A relação inversa entre o juro básico e a inflação está estabelecida na teoria macroeconômica e profundamente enraizada no imaginário dos agentes financeiros. Já teve razão de ser. A Curva de Phillips, uma relação empírica inversa entre a inflação e o desemprego, dava sustentação à tese de uma relação inversa entre o juro e a inflação. O caminho, ou o mecanismo de transmissão no vocabulário da teoria econômica, é da alta do juro para a redução do crescimento, da redução do crescimento para o aumento do desemprego, e do aumento do desemprego para a moderação da inflação.
+
+ Desde os anos 1990, a Curva de Phillips tornou-se praticamente horizontal: o trade-off entre inflação e desemprego desapareceu em quase toda parte, provavelmente por causa da perda de importância do emprego formal e da redução do poder dos sindicatos. Desapareceu assim a sustentação empírica da relação inversa entre crescimento e inflação, mas o modelo novo-keynesiano, baseado na Curva de Phillips, com uma relação inversa entre o hiato de produto e a inflação, ainda é prevalente entre a grande maioria dos analistas
+
+ 4 
+
+ . Sem a Curva de Phillips e dada a inexistência de canais de transmissão bem especificados, as expectativas se tornaram protagonistas nos modelos dos bancos centrais. Na prática, a inflação passou a ser entendida como determinada primordialmente pelas expectativas e as expectativas supostamente formadas pelo que reza o próprio modelo. Um raciocínio circular tautológico: o modelo diz que as expectativas determinam a inflação; que a inflação responde, por mecanismos não especificados, inversamente à taxa de juros; e que as expectativas são formadas pelo que diz o modelo; logo a inflação responde inversamente à taxa de juros. CQD.
+
+ Uma macroeconomia anacrônica 
+
+ A fragilidade conceitual e empírica deste modelo macro convencional que pauta a política dos BCs é tão flagrante que, apesar de ainda dominante e repetido na mídia como verdade incontestável, passou a ser criticado até mesmo pelos economistas mais conservadores. É o caso de John H. Cochrane, da Hoover Institution, da Universidade de Stanford. Cochrane é um macroeconomista ortodoxo altamente qualificado, mas que, em vez de repetir fórmulas prontas, insiste em pensar por conta própria. Há mais de dez anos Cochrane, um dos principais formuladores da Teoria Fiscal do Nível de Preços (TFNP; FTPL, na sigla em inglês), defende que a política monetária, se dissociada da política fiscal, é ineficaz e pode ter efeitos perversos, contrários aos pretendidos. A alta dos juros não reduz a inflação; ao contrário, se não houver uma contração fiscal simultânea, irá elevar a inflação. Como já tive oportunidade de expor e comentar, trata-se de conclusão lógica inescapável do modelo macro convencional, DSGE, usado pelos próprios BCs, com expectativas racionais. Em seu livro 
+
+ The Fiscal Theory of the Price Level 5 
+
+ , de 2023
+
+ , Cochrane expõe, de
+
+ forma rigorosa e acessível, a inseparável ação das políticas monetária e fiscal. Nos seus dois últimos posts no Substack
+
+ 6 
+
+ , Cochrane vai além e defende a redução da taxa de juros com a concomitante redução do prazo de maturidade da dívida. Quanto mais curto o prazo médio da dívida, a “duration”, mais a redução do juro irá reduzir a inflação no curto prazo.
+
+ Esta é justamente a situação do Brasil hoje, em que mais da metade da dívida está em LFTs, títulos de remuneração atrelada à Selic, a taxa básica diária, portanto, de curtíssima “duration”. O que é convencionalmente percebido como fator detrator da eficácia da política monetária é, na realidade, um potencializador do efeito deflacionário da redução do juro. Sugiro aos interessados que leiam os trabalhos recentes de Cochrane. Resumo aqui apenas o essencial do que ele chamou, há aproximadamente dez anos, de efeito “neofisheriano”, segundo o qual, no longo prazo, a inflação é igual à diferença entre a taxa nominal e a taxa real de juros. O resultado é deduzido das equações do modelo, mas pode ser inferido diretamente da identidade, inicialmente apontada por Irving Fisher, entre o juro nominal e a soma do juro real com a inflação, i = r + π. A neutralidade da moeda garante que a taxa nominal não afeta o juro real no longo prazo, ou seja, r é independente de i. Como o BC fixa a taxa nominal, i, a inflação, π, é dada por i − r. Supondo-se, como é padrão nos modelos de crescimento, que no longo prazo o juro real tenda à taxa de crescimento real, a inflação é igual à taxa nominal de juros menos o crescimento real da economia. Portanto, a taxa nominal de juros e a inflação estão positivamente, e não inversamente, correlacionadas como se convencionou acreditar.
+
+ No longo prazo, o fato de que a taxa de juros e a inflação estão positivamente correlacionadas é inescapável. No curto prazo, é possível que a redução do juro eleve a inflação, antes de levá-la a convergir para um nível mais baixo. Esta é a razão pela qual a proposta de reduzir o juro para reduzir a inflação tem pouco apelo na prática. A redução do juro vai efetivamente trazer a inflação para baixo, mas só depois de um repique da inflação no curto prazo, e é muito provável que o banqueiro central que tentar reduzir a inflação através da redução do juro perca o emprego antes de ver a inflação se reduzir. A razão pela qual a redução do juro eleva a inflação no curto prazo, um efeito que Cochrane reconhece ter sido difícil de introduzir no seu modelo, é que, com a redução do juro, o valor presente da dívida se eleva, e de acordo com a Teoria Fiscal do Nível de Preços, a inflação deve aumentar para voltar a reduzir o valor presente redescontado da dívida. No entanto, se a dívida for toda indexada à taxa de overnight – exatamente como no caso das LFTs –, a redução do juro não aumenta o valor presente redescontado da dívida, portanto, não provoca um aumento da inflação no curto prazo. A inflação inicia imediatamente sua convergência para um nível mais baixo dado pela taxa de juros.
+
+ A importância da credibilidade institucional 
+
+ Cochrane insiste em associar toda a dinâmica da inflação à TFNP, que postula que o valor de todo o passivo financeiro do Estado, dívida e moeda, deve equivaler ao valor presente redescontado dos superávits fiscais futuros. A inflação é o fator de ajuste, a variável dependente. Se o passivo do Estado supera a expectativa de superávits fiscais, a inflação aumenta para reduzir o valor real do passivo público e garantir que seja equivalente aos superávits fiscais futuros. Reconhece que déficits fiscais e dívidas públicas não são sempre a causa da inflação. Faz uma observação crucial: déficits e dívidas só são inflacionários se associados a expectativas de que possam não ser honradas. Depois de muitas equações em busca de uma âncora para a inflação, Cochrane volta ao ponto de partida: tudo depende das expectativas, da confiança nas instituições. É evidente que uma dívida que cresce a uma taxa muito superior à da renda, numa trajetória explosiva da relação dívida/PIB, provoca desconfiança de que possa vir a não ser honrada. Logo pode provocar inflação. Déficits e dívida não provocam necessariamente inflação, mas dívidas que possam vir a não ser honradas, sim.
+
+ Recapitulemos. A relação inversa entre inflação e desemprego deixou de existir. Recessão e capacidade ociosa não reduzem a inflação, assim como crescimento e baixo desemprego não pressionam a inflação. Com reservas bancárias abundantes e remuneradas – o regime geral desde 2008, no caso brasileiro por meio das operações compromissadas –, a moeda é endógena. O instrumento de política dos bancos centrais é a taxa básica que remunera as reservas bancárias. Com moeda endógena, não existe âncora nominal nos agregados monetários. Na ausência de choques de preços de oferta ou de expectativas, a inflação é inercial – tende a ficar onde está. A âncora passa a ser a própria taxa básica de juros, combinada com a confiança na solvência do Estado.
+
+ O que garante a estabilidade da inflação no longo prazo é a confiança de que o passivo financeiro do Estado, moeda e dívida, será honrado. A TFNP pressupõe que para isso o valor redescontado dos superávits fiscais futuros seja ao menos igual ao passivo financeiro do Estado. Trata-se de uma pressuposição questionável se levada a ferro e fogo, como determinante da inflação corrente, mas que faz sentido como condição de confiança na dívida pública. No longo prazo a inflação converge para a diferença entre a taxa básica de juros e a taxa de crescimento real da economia. No curto prazo, a relação entre a taxa de juros e a inflação pode ser inversa, como convencionalmente aceito. A redução do juro pode efetivamente pressionar a inflação, mas é apenas um repique transitório.
+
+ Cochrane reconhece não ter uma base teórica sólida para justificar a relação inversa, efetivamente observada no curto prazo, entre o juro e a inflação. Por trabalhar com modelos de economia fechada, não considera o efeito do juro sobre o câmbio e do câmbio sobre a inflação. O câmbio como canal de transmissão do juro para a inflação é bem reconhecido na literatura e bem documentado na experiência das economias financeiramente abertas que passaram por altas taxas de inflação. A desvalorização cambial é o principal sinalizador da inflação no curto prazo, como bem sabem todos que tiveram que lidar com uma inflação crônica
+
+ 7 
+
+ . A redução do juro doméstico, através da arbitragem com o juro externo, pode levar a uma saída de capitais especulativos. Sem uma intervenção compensatória do Banco Central, o câmbio irá se desvalorizar e provocar uma alta da inflação. Esta é a explicação para o efeito inverso no curto prazo entre a taxa de juros e a inflação, que é difícil de encontrar no quadro teórico do modelo novo-keynesiano conjugado à TFNP.
+
+ Uma proposta para o Brasil 
+
+ Voltemos ao Brasil. Temos uma das mais altas taxas reais de juros do mundo, com a taxa básica em mais do dobro da taxa de crescimento nominal da economia. O serviço da dívida equivale a mais de 10% do PIB ao ano e é o responsável pela trajetória ascendente e insustentável da relação dívida/PIB. Sem uma redução do juro para algo em torno da taxa de crescimento nominal da economia, não há ajuste fiscal possível que interrompa o crescimento da dívida em relação ao PIB. Como vimos, a elevada participação das LFTs na dívida pública, vista no quadro convencional como um problema para a eficácia da política monetária, é uma vantagem no quadro da TFNP: diminui o risco de que a redução do juro provoque um repique da inflação no curto prazo.
+
+ Um novo Conselho Fiscal e Monetário Nacional, CFMN, definiria metas fiscais e monetárias para um período de quatro a cinco anos à frente. As metas fiscais seriam pautadas pela racionalização e simplificação da arrecadação e dos gastos de custeio e de investimentos. As metas de inflação seriam anunciadas em conjunto com metas para a taxa básica de juros. O BC se comprometeria a manter a taxa básica num intervalo entre a meta de inflação, 3,0%, e taxa de crescimento nominal potencial, ou seja, a meta da inflação somada ao crescimento real potencial, o que hoje seria em torno de 5,5% ao ano (3% de inflação mais 2,5% de crescimento). Só em casos excepcionais, autorizados pelo CFMN, a taxa básica poderia ser inferior ao piso - a meta de inflação - ou superior ao teto - o crescimento nominal do PIB potencial – do intervalo.
+
+ Para dar início ao novo regime fiscal e monetário, o BC anunciaria a redução gradual do juro básico, ao longo de cerca de 12 meses, para a taxa de crescimento nominal potencial mais um spread transitório de segurança de 2%, isto é, perto de 7,5% ao ano. Este spread de segurança seria periodicamente reavaliado e gradualmente reduzido até ser eliminado. Anunciaria ainda que se necessário atuará no câmbio para suavizar toda depreciação mais acentuada, devido à possível redução do volume de 
+
+ carry-trade de capitais especulativos. Com reservas internacionais de mais de US$ 350 bilhões, o BC tem munição de sobra para isso. Os dois canais pelos quais a redução do juro poderia pressionar a inflação no curto prazo estão, assim, neutralizados no Brasil: o fiscal, pela dívida curta; o cambial, pelas reservas.
+
+ A redução do custo médio da dívida de quase 13% para 7,5% ao ano, numa dívida que corresponde a 80% do PIB, equivale a uma economia fiscal de cerca de 4% do PIB ao ano. A economia não é instantânea: as LFTs, mais da metade da dívida, passam a render menos imediatamente; os títulos prefixados e os indexados à inflação, à medida que forem rolados. Eis por que a dívida curta é uma vantagem, e não um problema. Por mais radical que seja, nenhum ajuste fiscal é capaz de produzir um superávit primário dessa magnitude, sem provocar uma profunda recessão. A redução do déficit fiscal nominal de mais de 10% do PIB para algo em torno de 6% do PIB restabelece a credibilidade fiscal de longo prazo, condição para que a inflação venha a convergir para a diferença entre o juro básico e a taxa de crescimento real da economia. A redução do juro básico é a solução do desequilíbrio fiscal. Garante a sustentabilidade e dissipa a desconfiança sobre a possibilidade de a dívida não vir a ser honrada. Não se trata de dominância fiscal, mas de coordenação transparente e anunciada de políticas monetária e fiscal. Juros que tornam a dívida explosiva são a verdadeira ameaça à credibilidade fiscal.
+
+ O Brasil tem problemas sociais e institucionais graves. Nenhum deles tem solução fácil. Exigem inteligência na formulação de propostas, bom senso na costura de apoio político e competência na implementação. A economia tem um problema básico: a extraordinariamente alta taxa básica de juros. Um problema que tem solução clara. Só é preciso vencer os preconceitos associados a uma teoria monetária e fiscal anacrônica.
+
+ Em 13 de janeiro de 1898, o escritor Émile Zola publicou no jornal L’Aurore uma carta aberta ao presidente da França, Félix Faure. Sob o título “Eu acuso”, denunciava a injustiça cometida em relação ao oficial do exército Alfred Dreyfus, falsamente acusado de espionagem. O Caso Dreyfus se tornou o paradigma de um equívoco judicial motivado por preconceitos, pelo antissemitismo, em que o sistema de poder e as instituições de Estado, mesmo diante de provas irrefutáveis, insistem em não reconhecer o erro, para preservar a reputação. Guardadas as devidas proporções, o mesmo padrão – instituições que preferem sustentar o erro a reconhecê-lo – se repete na insistência do Banco Central do Brasil em sua absurda política de juros. Por isso, eu acuso.
+
+ Acuso o Banco Central de sustentar, em nome de uma teoria anacrônica, a taxa de juros que é a principal causa do desequilíbrio fiscal que diz combater.
+
+ Acuso a grande imprensa de repetir, sem exame, que o problema está no gasto primário, quando está nos juros.
+
+ Acuso os analistas do mercado financeiro de confundir o interesse dos rentistas com a racionalidade econômica.
+
+ E acuso todos os que, sabendo que juros absurdos inviabilizam o país, preferem o conforto do consenso ao incômodo da verdade.
+
+ Compartilhar
+
+ 
+
+ 1 Uma parcela da dívida está na carteira do Banco Central que é parte do Estado. É uma dívida do Estado consigo mesmo e deve ser descontada para se chegar à dívida líquida, DLSP, que é de R$ 9,2 trilhões, o que equivale a 69,1% do PIB. A conta de juros sobre a dívida líquida é de R$ 1,15 trilhão, ou 8,7% do PIB ao ano.
+
+ 2 Folha de São Paulo, “Irresponsabilidade fiscal agrava concentração de renda”, editorial, 7 de setembro de 2026.
+
+ 3 Ver Lara Resende, André; 
+
+ O equívoco dos juros altos , Valor Econômico, 9/8/2019, e 
+
+ Culpa do Banco Central ou das expectativas? ,
+
+ Valor Econômico, 8/3/2023. Ambos aqui no meu Substack.
+
+ 4 A inexistência de uma relação inversa entre inflação e crescimento para a economia brasileira, no período de inflação crônica dos últimos anos do século passado, já havia sido apontada por Lara Resende, A. e Lopes, F. 
+
+ Sobre as Causas da Recente Aceleração Inflacionária, em 1980.
+
+ 5 Cochrane, John H. 
+
+ The Fiscal Theory of the Price Level . Princeton: Princeton University Press, 2023. Uma primeira exposição, não técnica, do argumento está em Cochrane, J. H. “Inflation and Debt”, 
+
+ National Affairs , n. 9, outono de 2011.
+
+ 6 Cochrane, John H. “Reasons to Lower Rates”, 4/9/2026, e “More on Lower Rates”, 4/9/2026, 
+
+ The Grumpy Economist , Substack. O primeiro comenta a defesa da redução dos juros feita por Saki Bigio e Eric Mengus.
+
+ 7 Ver Lara Resende, A. 
+
+ A Armadilha Brasileira em 
+
+ Os Limites do Possível, Portfolio/Penguin 2014 e Lopes, F. 
+
+ A Estabilização Incompleta, em Bacha, E. e de Bolle, M. 
+
+ Novos Dilemas da Política Econômica: ensaios em homenagem a Dionísio Dias Carneiro, 2011.

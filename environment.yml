@@ -1,0 +1,20 @@
+name: juros_divida
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pandas>=2.2
+  - numpy
+  - requests
+  - matplotlib
+  - seaborn
+  - plotly
+  - jupyter
+  - ipykernel
+  - openpyxl
+  - lxml
+  - beautifulsoup4
+  - pyarrow
+  - pypdf
+  - streamlit
+  - pip
