@@ -19,6 +19,15 @@ Saídas:
 - `trechos(tema)` ...... DataFrame (id, data, ano, autor, tema, trecho)
 - `por_autor()` ........ quem fala de quê (frases por autor × tema)
 - `salvar_trechos()` ... parquet `discursos_trechos` (dados/processado)
+- `ruidos()` ........... trechos com cara de tabela/slide → CSV p/ revisão
+- `formatos()` ......... slide vs prosa por discurso → CSV p/ revisão
+
+Ruídos e formato NÃO entram na análise de temas: são um "aviso de ruído"
+para leitura humana (o usuário pediu a lista para verificar). A régua de
+ruído é `dens = 1 − letras/caracteres_sem_espaço > 0,40` (calibrada nos
+912 trechos: 0,40→44/25, 0,45→19/11, 0,50→10/8); a de slide é título
+com "Apresentação" OU ≥3 "Fonte:" OU ≥10 marcadores `•▪●·–-`
+(calibrada: 45 de 46 slides, só id 1262 é prosa).
 
 Rodar do repo root: PYTHONPATH=. python -m src.processa.discursos
 """
@@ -31,11 +40,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from ..extratores.base import RAIZ, salvar_parquet
+from ..extratores.base import RAIZ, ler_parquet, salvar_parquet
 from .atas_copom import TEMAS  # mesma régua das atas do Copom
 
 TEXTO_DIR = RAIZ / "dados" / "bruto" / "discursos" / "texto"
 INDICE = RAIZ / "dados" / "processado" / "discursos_indice.csv"
+PROC_DIR = RAIZ / "dados" / "processado"
+LIMIAR_RUIDO = 0.40
 
 # nome do autor no TÍTULO (o campo `autor` do índice mistura nome e cidade):
 # 1) "Apresentação do Diretor ..., NOME, na ..." (a maioria)
@@ -156,6 +167,78 @@ def salvar_trechos() -> Path:
     return salvar_parquet(df, "discursos_trechos")
 
 
+# ------------------------------------------------------------------ ruídos / formato
+
+
+def densidade(trecho: str) -> float:
+    """1 − (letras / caracteres não-espaço): números e tabelas sobem a densidade.
+
+    Prosa em português fica em ~0,30; trecho de tabela/slide passa de 0,40.
+    (Espaços não contam no denominador — calibrado em 912 trechos:
+    0,40→44 trechos/25 discursos, 0,45→19/11, 0,50→10/8.)
+    """
+    if not trecho:
+        return 1.0
+    alvo = [c for c in trecho if not c.isspace()]
+    if not alvo:
+        return 1.0
+    letras = sum(c.isalpha() for c in alvo)
+    return 1.0 - letras / len(alvo)
+
+
+def ruidos(limiar: float = LIMIAR_RUIDO) -> pd.DataFrame:
+    """Trechos do inventário com cara de tabela/slide (dens > limiar).
+
+    Colunas: id, data, autor, tema, pos, densidade, trecho, url — a lista
+    que o usuário pediu para conferir manualmente. Salva em
+    `dados/processado/discursos_ruidos.csv`.
+    """
+    df = ler_parquet("discursos_trechos")
+    cat = carrega_catalogo()[["id", "url_pdf"]].rename(
+        columns={"url_pdf": "url"})
+    df = df.merge(cat, on="id", how="left")
+    df["densidade"] = df.trecho.map(densidade)
+    df = (df[df.densidade > limiar]
+          .sort_values("densidade", ascending=False)
+          .reset_index(drop=True))
+    return df[["id", "data", "autor", "tema", "pos", "densidade",
+               "trecho", "url"]]
+
+
+_FONTE = re.compile(r"\bFonte\s*:", re.IGNORECASE)
+_MARCADORES = "•▪●·–-"
+
+
+def formatos() -> pd.DataFrame:
+    """Slide vs prosa por discurso — o PDF é apresentação ou texto corrido?
+
+    É slide se: o título começa com "Apresentação" OU o texto tem ≥3
+    "Fonte:" OU ≥10 marcadores de lista (`•▪●·–-`, contados em qualquer
+    lugar do texto — a extração do PDF cola marcadores no meio da linha).
+    Motivo fica na coluna `motivo` para conferência. Salva em
+    `dados/processado/discursos_formato.csv`.
+    """
+    linhas = []
+    for _, row in carrega_catalogo().iterrows():
+        texto = _texto(int(row.id))
+        motivos = []
+        if str(row.titulo).strip().lower().startswith("apresenta"):
+            motivos.append("titulo_apresentacao")
+        n_fonte = len(_FONTE.findall(texto))
+        if n_fonte >= 3:
+            motivos.append(f"fontes_{n_fonte}")
+        n_bullets = sum(texto.count(c) for c in _MARCADORES)
+        if n_bullets >= 10:
+            motivos.append(f"bullets_{n_bullets}")
+        linhas.append({
+            "id": int(row.id), "data": row.data, "autor": row.autor,
+            "titulo": row.titulo,
+            "formato": "slide" if motivos else "prosa",
+            "motivo": ";".join(motivos) or "-",
+        })
+    return pd.DataFrame(linhas)
+
+
 # ------------------------------------------------------------------ CLI
 
 
@@ -184,6 +267,26 @@ def main() -> None:
 
     p = salvar_trechos()
     print("\nok:", p)
+
+    # -- ruídos (tabelas/slides no meio dos trechos) e formato dos PDFs --
+    r = ruidos()
+    arq_r = PROC_DIR / "discursos_ruidos.csv"
+    r.to_csv(arq_r, index=False, encoding="utf-8")
+    print(f"\n== ruídos (densidade > {LIMIAR_RUIDO}): "
+          f"{len(r)} trechos em {r.id.nunique()} discursos ==")
+    print("ok:", arq_r)
+
+    f = formatos()
+    arq_f = PROC_DIR / "discursos_formato.csv"
+    f.to_csv(arq_f, index=False, encoding="utf-8")
+    n_slides = (f.formato == "slide").sum()
+    prosa = f[f.formato == "prosa"]
+    print(f"\n== formato dos {len(f)} discursos: "
+          f"{n_slides} slides / {len(prosa)} prosa ==")
+    if not prosa.empty:
+        print(prosa[["id", "data", "autor", "titulo"]]
+              .to_string(index=False))
+    print("ok:", arq_f)
 
 
 if __name__ == "__main__":

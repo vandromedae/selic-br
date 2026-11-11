@@ -11,6 +11,9 @@ venv/
 # Dados brutos regeneráveis pelos extratores (120 MB de PDFs)
 dados/bruto/discursos/
 
+# Downloads manuais do usuário (provisória, não versionada)
+dados_baixados_manualmente/
+
 # Sistema / editores
 .DS_Store
 Thumbs.db

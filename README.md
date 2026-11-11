@@ -11,6 +11,8 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 > atas do Copom registram a decisão do Comitê, **sem votos nominais**;
 > discursos de diretores têm autor assinado, mas falar de um tema não é
 > votar por ele (ver `notebooks/06_documentos.ipynb` e `07_discursos.ipynb`).
+> *Revisão do usuário em 8/11/2026: recorte aprovado; a leitura "falar ≠
+> defender" está mantida **com revisão mais detalhada marcada para depois**.*
 
 ---
 
@@ -86,12 +88,12 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 
 ## Fase de documentos — índice das atas do Copom (`notebooks/06_documentos.ipynb`)
 
-**Corpus:** 46 atas públicas da **236ª (20/1/2021) à 281ª (16/9/2026)**
-(PDFs do BCB, 789 mil caracteres extraídos com `pypdf`). A ata da **282ª
-(3–4/11/2026)** ainda não foi publicada na coleta; será incorporada ao rerodar
-o extrator.
+**Corpus:** **47 atas públicas da 236ª (20/1/2021) à 282ª (3–4/11/2026)**
+(PDFs do BCB, 805 mil caracteres extraídos com `pypdf` — a 282ª foi
+incorporada em 11/11/2026 ao rerodar o extrator). Decisão da 282ª:
+**manutenção da Selic em 13,75% a.a.**
 
-**O que o índice faz:** inventário de **1.083 trechos citáveis** por tema
+**O que o índice faz:** inventário de **1.103 trechos citáveis** por tema
 (regex → frase ± contexto, com nº da ata e data) — `dados/processado/
 copom_trechos.parquet`, regenerável com
 `PYTHONPATH=. python -m src.processa.atas_copom`.
@@ -102,7 +104,7 @@ copom_trechos.parquet`, regenerável com
 - **2023–25:** *risco fiscal* sobe de 15 → 27 frases/ano e *credibilidade*
   de 1 → 44; no topo de 15% (ata 271, 18/6/2025): "a desancoragem das
   expectativas é um fator de desconforto comum a todos os membros";
-- **Silêncios documentam:** "swap" aparece **0 vezes** nas 46 atas;
+- **Silêncios documentam:** "swap" aparece **0 vezes** nas 47 atas;
   "juro real ex ante", 1 vez. O prêmio de ~6 p.p. sobre a regra de Taylor
   (P1/P5) é inferido dos dados, **não citado nas atas**;
 - **Limitação estrutural:** a ata é decisão do Comitê **sem votos nominais** —
@@ -146,6 +148,28 @@ frases — **912 trechos citáveis** com autor, data e título
 - **silêncio consistente:** "swap" = 0 também nos 46 discursos;
 - **limitação:** slides de divulgação geram ruído (números de gráfico viram
   "frases") — a leitura é humana; 1 discurso do foco não contém nenhum tema.
+
+**Revisão do usuário (8/11/2026):** recorte aprovado; leitura "falar ≠
+defender" mantida com marcação de **revisão mais detalhada posterior**;
+ruído de slide aceito como limitação **com a lista entregue para
+conferência** (abaixo); coleta de ofícios/Congresso/manifestos segue como
+**ainda não coletado**.
+
+### Ruídos e formato — listas para conferência manual
+
+Regras calibradas nos 912 trechos / 46 discursos, geradas por
+`PYTHONPATH=. python -m src.processa.discursos`:
+
+- **Ruídos** → `dados/processado/discursos_ruidos.csv` (trecho + url +
+  densidade): trecho com cara de tabela/slide quando
+  `dens = 1 − letras/caracteres sem espaço > 0,40` → **44 trechos em 25
+  discursos** (para referência: 0,45 → 19/11; 0,50 → 10/8). Exemplo real:
+  sequência de números de gráfico ("10,2 10,5 9,6 …") virando "frase";
+- **Formato** → `dados/processado/discursos_formato.csv` (id, autor,
+  formato, motivo): é slide se o título começa com "Apresentação" OU o
+  texto tem ≥3 "Fonte:" OU ≥10 marcadores `•▪●·–-` → **45 slides / 1
+  prosa** — o único prosa é o **id 1262** (Bruno Serra, 4/3/2021,
+  abertura do Workshop LFL).
 
 ---
 
@@ -330,12 +354,23 @@ Média em dezembro — **53,3%** nos anos de Selic ≥ 13% (2015, 2016, 2023,
 participação = **0,00** (2007–2025). Só as instituições financeiras: 37,8% em
 dez/2007 → **32,9%** em dez/2025.
 
-**O que ainda não dá para afirmar:** (1) não há série de **lucro do sistema
-financeiro** no SGS — o dado existe no IFData, produto à parte do Banco
-Central, não coletado aqui; (2) o detentor "Instituições Financeiras" não
+**Lucro do SFN — origem do "R$ 255 bi" (tarefa 2, fechada em 11/11/2026):**
+o número oficial usado pela imprensa ("R$ 255 bi de lucro em 2025, todo o
+SFN", G1 22/6/2026, Fonte: BCB) **vem do anexo estatístico do REF Out/2026**,
+`Gráfico 1.2.3.1 — Evolução do ROE dos segmentos do SFN`: coluna *LL*
+(lucro líquido) do SFN, "últimos 12 meses findos em" **dez/2025 =
+R$ 254.768.798.944** (ROE 16,3%). Atenção à nota do gráfico: o SFN ali
+**exceta os conglomerados prudenciais do Master e do BRB** (comparabilidade).
+Série extraída em `dados/processado/sfn_lucro_ll.csv` (2020–2026, trimestral:
+119 → 187 → 197 → 193 → 232 → **255** bi em dez de cada ano).
+O IFData dá R$ 165,6 bi para 2025 no recorte individual — é outra base
+escopo/consolidação, **não é a fonte do 255** (verificado: leituras do portal
+não chegam a esse número).
+
+**O que ainda não dá para afirmar:** (1) o detentor "Instituições Financeiras" não
 distingue recurso próprio de recurso de terceiros (poupança, CDB, fundos), e a
 identificação banco a banco é sigilo (Requerimento 696/2019 negado);
-(3) a API do SGS precisa de IPv4 — o `src/extratores/base.py` já ordena o
+(2) a API do SGS precisa de IPv4 — o `src/extratores/base.py` já ordena o
 `getaddrinfo` com IPv4 à frente, sem isso as chamadas estouram timeout.
 
 ---
@@ -360,8 +395,9 @@ swaps +0,98 p.p. (2024) e −0,83 p.p. (2025).
 | **Focus / Olinda (BCB)** | medianas anuais de IPCA e Selic; IPCA-12m | Olinda (superdataset) |
 | **IBGE SIDRA 6381 (v4099)** | desemprego PNAD-C trimestral (desde 2012) | API SIDRA |
 | **BNDES Estudo 67/2026** | referência de decomposição do juro (validação) | PDF |
-| **Atas do Copom (BCB)** | 46 atas 2021–2026: índice de temas e trechos citáveis (fase de documentos) | PDFs públicos (probe de URL) |
+| **Atas do Copom (BCB)** | 47 atas 2021–2026 (236ª–282ª): índice de temas e trechos citáveis (fase de documentos) | PDFs públicos (probe de URL) |
 | **Discursos e apresentações (BCB)** | 1.556 itens 2002–2026; recorte foco 46 com texto (fase de documentos) | API interna pública do portal (engenharia reversa dos bundles JS) |
+| **REF Out/2026 — anexo estatístico (BCB)** | origem do "R$ 255 bi de lucro do SFN em 2025" (Gráfico 1.2.3.1, LL 12m); ROE/PLA do SFN 2020–2026 | XLSX manual (`dados_baixados_manualmente/`, não versionado) → `dados/processado/sfn_lucro_ll.csv` |
 | **Documentos de posição (corpus complementar)** | "Eu Acuso" de Lara Resende (25/9/2026): 7 citações verbatim + verificação aritmética | Substack (GET público, texto bruto arquivado) |
 
 **Substituições e decisões de fonte** (transparência metodológica):
