@@ -471,6 +471,8 @@ src/
                    documentos.py  — corpus de posição: registro curado + verificação
   viz/             graficos.py — estilo, paleta, salvar figuras
 notebooks/         00_validação … 08_renda_salarios (executados, com outputs)
+scripts/           gera_nb08.py (gerador do nb08; sobrescreve o notebook) e
+                   checa_figuras.py (colisões de texto nas figuras)
 dados/             bruto (cache) / processado (parquet)
 viz/figs/          PNG das figuras dos notebooks
 app/               ferramenta web (Streamlit)
