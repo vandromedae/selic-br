@@ -167,7 +167,7 @@ JS (`GET /api/servico/sitebcb/discursos?ano=YYYY`, ver docstring do extrator).
 Diretor) ou divulgação de Relatório → **46 discursos** com texto extraído.
 
 **O que o índice faz:** as **mesmas regex das atas** (`ac.TEMAS`) localizam
-frases — **912 trechos citáveis** com autor, data e título
+frases — **911 trechos citáveis** com autor, data e título
 (`dados/processado/discursos_trechos.parquet`), regenerável com
 `PYTHONPATH=. python -m src.processa.discursos`.
 
@@ -183,10 +183,10 @@ frases — **912 trechos citáveis** com autor, data e título
 - **dois corpora, dois públicos:** discursos concentram *risco externo*
   (32% vs 21%) e *mercado financeiro* (23% vs 17%); atas concentram
   *risco fiscal* (11% vs 2%) e *credibilidade* (10% vs 2%);
-- **juro real ex ante aparece ~10× mais nos discursos** (1,1% vs 0,1%): a
+- **juro real ex ante aparece ~10× mais nos discursos** (1,0% vs 0,1%): a
   discussão de prêmio real (o "Taylor +6 p.p." de P1/P5) **ocorre nas
   apresentações, não nas atas** — com trechos citáveis de Kanczuk
-  (RTI 3T2021), Picchetti (7/6/2024) e Guillen (RPM/Focus);
+  (RTI 4T2021), Picchetti (7/6/2024) e Guillen (RPM/Focus);
 - **silêncio consistente:** "swap" = 0 também nos 46 discursos;
 - **limitação:** slides de divulgação geram ruído (números de gráfico viram
   "frases") — a leitura é humana; 1 discurso do foco não contém nenhum tema.
@@ -199,8 +199,11 @@ conferência** (abaixo); coleta de ofícios/Congresso/manifestos segue como
 
 ### Ruídos e formato — listas para conferência manual
 
-Regras calibradas nos 912 trechos / 46 discursos, geradas por
-`PYTHONPATH=. python -m src.processa.discursos`:
+Regras calibradas nos 911 trechos / 46 discursos, geradas por
+`PYTHONPATH=. python -m src.processa.discursos` — **conferidas em
+12/11/2026**: a lista de ruídos veio **integrais de ruído** (títulos e
+números de gráfico, como a régua previa) e a de formato foi **aprovada
+sem exceções**:
 
 - **Ruídos** → `dados/processado/discursos_ruidos.csv` (trecho + url +
   densidade): trecho com cara de tabela/slide quando

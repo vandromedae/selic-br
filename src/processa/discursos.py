@@ -25,7 +25,7 @@ Saídas:
 Ruídos e formato NÃO entram na análise de temas: são um "aviso de ruído"
 para leitura humana (o usuário pediu a lista para verificar). A régua de
 ruído é `dens = 1 − letras/caracteres_sem_espaço > 0,40` (calibrada nos
-912 trechos: 0,40→44/25, 0,45→19/11, 0,50→10/8); a de slide é título
+911 trechos: 0,40→44/25, 0,45→19/11, 0,50→10/8); a de slide é título
 com "Apresentação" OU ≥3 "Fonte:" OU ≥10 marcadores `•▪●·–-`
 (calibrada: 45 de 46 slides, só id 1262 é prosa).
 
@@ -174,7 +174,7 @@ def densidade(trecho: str) -> float:
     """1 − (letras / caracteres não-espaço): números e tabelas sobem a densidade.
 
     Prosa em português fica em ~0,30; trecho de tabela/slide passa de 0,40.
-    (Espaços não contam no denominador — calibrado em 912 trechos:
+    (Espaços não contam no denominador — calibrado em 911 trechos:
     0,40→44 trechos/25 discursos, 0,45→19/11, 0,50→10/8.)
     """
     if not trecho:
