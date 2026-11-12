@@ -12,6 +12,7 @@ SERIES_SGS: dict[int, dict[str, str]] = {
     # Inflação
     433: {"nome": "ipca", "desc": "IPCA - variação % no mês", "freq": "M"},
     13522: {"nome": "ipca_12m", "desc": "IPCA - acumulado em 12 meses (%)", "freq": "M"},
+    188: {"nome": "inpc", "desc": "INPC - variação % no mês", "freq": "M"},
     4466: {"nome": "ipca_nucleo_ms", "desc": "IPCA núcleo médias aparadas com suavização (% mês)", "freq": "M"},
     11426: {"nome": "ipca_nucleo_ms_sem_suv", "desc": "IPCA núcleo médias aparadas sem suavização (% mês)", "freq": "M"},
     # Atividade

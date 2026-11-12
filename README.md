@@ -93,6 +93,41 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 
 ---
 
+## Renda, salários e investimento (`notebooks/08_renda_salarios.ipynb`)
+
+**O que o notebook faz:** fecha com dados a lacuna de *emprego, renda e
+investimento* do artigo (PNAD Contínua, salário mínimo, FBCF/PIB).
+
+**Achados principais:**
+- **Renda (PNAD, desde 2012):** rendimento médio real bateu recorde em
+  **2025 (R$ 3.560)**, +17,4% sobre o fundo de 2022 (R$ 3.032) e +8,5% sobre
+  o pico de 2014 (R$ 3.280) — mas só superou 2014 em **2024**. O nominal
+  subiu +140% (2012–25) e a inflação comeu a maior parte. **Duas fases,
+  não uma**: alta até 2014 → erosão até 2022 → recuperação 2023–25 —
+  *parcialmente confirma* e *parcialmente contrapõe* a expectativa de
+  "salário sem ganho real".
+- **Massa × média:** massa real +36% (2012–25) contra +15,5% da média — a
+  diferença é ocupação: pessoas com rendimento de trabalho de **~86 mi
+  (2012) para ~102 mi (2025)** (83 mi em 2020).
+- **Salário mínimo:** R$ 180 (jan/02) → R$ 1.621 (jan/26) = **9,0× nominal**;
+  deflacionado pelo INPC, **2,1×** em poder de compra; +8% reais desde 2019.
+- **Preços:** IPCA e INPC acumulam quase igual desde 2002 (422 × 426), com
+  INPC **acima** em 2015–16 e 2019–22 e **abaixo** em 2017–18 e 2023–26.
+- **Investimento:** FBCF em volume chegou a **176 em 2014** (2002=100) e
+  estava em **168 em 2025** — 11 anos sem recuperar o patamar (PIB: 151 →
+  166); variação anual média da FBCF **−6,0% em 2013–16**, +2,2% em 2017–19,
+  +2,4% em 2023–25. O juro real ex ante no overlay é **factual, sem
+  causalidade**.
+
+**Limites declarados:** PNAD começa em 2012; 2026 incompleto (2º tri); a
+série *trimestral* de rendimento tem lacuna 2020Q2–2022Q1 (coleta suspensa
+na pandemia) e deflação com base própria, por isso o gráfico usa só a
+anual; "ocupadas" da massa é implícito (massa ÷ média), não a série
+oficial. **Produtividade (EC1034) fica para a 2ª iteração** — produtividade
+contábil não é renda, e o 3º ponto do artigo só fecha depois dela.
+
+---
+
 ## Fase de documentos — índice das atas do Copom (`notebooks/06_documentos.ipynb`)
 
 **Corpus:** **47 atas públicas da 236ª (20/1/2021) à 282ª (3–4/11/2026)**
@@ -396,11 +431,14 @@ swaps +0,98 p.p. (2024) e −0,83 p.p. (2025).
 
 | Fonte | Uso | Acesso |
 | --- | --- | --- |
-| **BCB/SGS** (Sistema Gerenciador de Séries) | 34 séries: juros nominais (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA/meta, primário/nominal (5793/5727), DBGG (13761/13762), crédito/inadimplência/spread (20740, 20783, 20785, 21082, 21084, 20634), câmbio, etc. | API pública (exige IPv4) |
+| **BCB/SGS** (Sistema Gerenciador de Séries) | 35 séries: juros nominais (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA/INPC/meta (432/13522/188), primário/nominal (5793/5727), DBGG (13761/13762), crédito/inadimplência/spread (20740, 20783, 20785, 21082, 21084, 20634), câmbio, etc. | API pública (exige IPv4) |
 | **Tesouro/STN — RMD, Relatório Mensal do Tesouro** | Detentores (Anexo 2.7), custo médio (Anexo 4.1–4.3), composição (5.5), reserva fiscal (6.1) | anexo ZIP via CDN do Tesouro |
 | **Tesouro/STN — Fatores de variação e emissões da DPF (Anexo 2 e 2.9)** | estoque, emissões, resgates, juros apropriados | portal (CSV) |
 | **Focus / Olinda (BCB)** | medianas anuais de IPCA e Selic; IPCA-12m | Olinda (superdataset) |
 | **IBGE SIDRA 6381 (v4099)** | desemprego PNAD-C trimestral (desde 2012) | API SIDRA |
+| **IBGE SIDRA 4660/4663/5436** (nb08) | rendimento médio mensal da PNAD-C: nominal e real anuais (t/4660), massa de rendimento (t/4663) e série trimestral (t/5436, com lacuna 2020Q2–22Q1) | API SIDRA |
+| **IBGE SIDRA 1620** (nb08) | FBCF e PIB em volume, trimestral (c11255/93406 e c11255/90707) | API SIDRA |
+| **Salário mínimo nacional** (nb08) | steps nominais 2001–2026 (`dados/bruto/salario_minimo.csv`, manual) — Dieese como fonte primária, conferido contra IPEADATA MTE12_SALMIN12 | CSV manual + tabela Dieese |
 | **BNDES Estudo 67/2026** | referência de decomposição do juro (validação) | PDF |
 | **Atas do Copom (BCB)** | 47 atas 2021–2026 (236ª–282ª): índice de temas e trechos citáveis (fase de documentos) | PDFs públicos (probe de URL) |
 | **Discursos e apresentações (BCB)** | 1.556 itens 2002–2026; recorte foco 46 com texto (fase de documentos) | API interna pública do portal (engenharia reversa dos bundles JS) |
@@ -429,7 +467,7 @@ src/
                    discursos.py   — índice de temas/trechos dos discursos (mesma régua)
                    documentos.py  — corpus de posição: registro curado + verificação
   viz/             graficos.py — estilo, paleta, salvar figuras
-notebooks/         00_validação … 07_discursos (executados, com outputs)
+notebooks/         00_validação … 08_renda_salarios (executados, com outputs)
 dados/             bruto (cache) / processado (parquet)
 viz/figs/          PNG das figuras dos notebooks
 app/               ferramenta web (Streamlit)
