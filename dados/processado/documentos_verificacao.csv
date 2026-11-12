@@ -24,7 +24,7 @@ Selic em 15% (decisão anterior à matéria),15,15.00,% a.a.,SGS 432 (vigente de
 'Fed deve começar a cortar em outubro',out/2025,—,,previsão sobre dado externo (não coletado),não verificável com dados do projeto,kanczuk_asa_2025
 'Brasil vai continuar crescendo 2%',2,—,%,previsão,não verificável com dados do projeto,kanczuk_asa_2025
 "IPCA 2025 = 4,26%","4,26",4.26,%,SGS 13522 (dez/2025),confere (exato),febraban_sidney_2026
-'melhor resultado nominal desde 2018',menor desde 2018,mín. 2019–2024 = 4.31,%,SGS 13522 (fechamentos de dezembro),confere,febraban_sidney_2026
+'melhor resultado nominal desde 2018',menor desde 2018,mín. 2018–2024 = 3.75,%,SGS 13522 (fechamentos de dezembro),não confere,febraban_sidney_2026
 "Selic de 15,0% ao ano na nota (12/01/2026)","15,0",15.00,% a.a.,SGS 432 (vigência em 12/01/2026),confere,febraban_sidney_2026
 "Focus projetava IPCA 2025 em 4,90% no início de 2025","4,90",4.99 (pesquisa 02/01/2025),%,"Focus anual (focus_anuais, IPCA ref. 2025)",confere (≈),febraban_sidney_2026
 "1º corte 'se não em janeiro, a partir de março'",mar/2026,19/03/2026,,SGS 432 (primeira queda abaixo de 15%),confere,febraban_sidney_2026

@@ -407,7 +407,8 @@ elif PAGINA.startswith("P1"):
     st.markdown(
         "A Selic acompanha a inflação **esperada** (Focus), não realizada. O "
         "que é excepcional é a magnitude: juro real ex ante de 2024–2026 em "
-        "~8–9 p.p. com inflação **dentro da meta**."
+        "média ~8,8 p.p. (6,9 em 2024 → 10,1 em 2026), com inflação "
+        "**dentro da meta**."
     )
     st.plotly_chart(fig_selic_inflacao(), use_container_width=True)
     st.plotly_chart(fig_juro_real(), use_container_width=True)
@@ -442,8 +443,9 @@ elif PAGINA.startswith("P3"):
     st.title("P3 · Os juros amortizam a dívida?")
     st.markdown(
         "Identidade dos fatores de variação da DPF (Tesouro, anexo 2.9): "
-        "emissões ≈ resgates + juros — os juros **não amortizam** a dívida; "
-        "**os juros são a dívida nova**."
+        "variação do estoque = emissão líquida + juros — em 2025, R$ 439 bi "
+        "+ R$ 880 bi = R$ 1.319 bi (67% do aumento foram juros). Os juros "
+        "**não amortizam** a dívida; **são a dívida nova**."
     )
     f_ano = st.slider("ano da cascata", 2012, 2025, 2025, key="cascata")
     st.plotly_chart(fig_cascata(f_ano), use_container_width=True)
@@ -505,10 +507,11 @@ elif PAGINA.startswith("P5"):
     )
     st.plotly_chart(fig_juros_swaps(), use_container_width=True)
     st.info(
-        "Um país que praticou **2% de juro real** em 2021 praticou **9%** em "
-        "2025 sem mudança da estrutura produtiva: o patamar é *escolha de "
-        "política*. Quem defende que “não havia alternativa” precisa "
-        "apontar por que ela praticamente inverteu de 2022 para cá."
+        "Em **2021** o juro real ex ante foi **−0,3%** (média 2019–22: 2,1%) "
+        "e em **2025** foi **9,6%**, sem mudança da estrutura produtiva: o "
+        "patamar é *escolha de política*. Quem defende que “não havia "
+        "alternativa” precisa apontar por que ela praticamente inverteu "
+        "de 2022 para cá."
     )
 
 elif PAGINA == "Transparência: lacunas":

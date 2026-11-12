@@ -21,12 +21,14 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 ### P1 — Os juros altos se justificam? (`notebooks/01_juros_se_justificam.ipynb`)
 - A Selic acompanha a inflação **esperada** (Focus), não a realizada — a direção
   do ciclo não é arbitrária. O que é excepcional é a **magnitude**: juro real
-  ex ante de 2024–2026 em ~8–9 p.p. — nível que historicamente só apareceu com
-  inflação em dois dígitos (2003–04) ou no ajuste pós-2015. Hoje coexiste com
+  ex ante de 2024–2026 em **média de ~8,8 p.p.** (6,9 em 2024 → 10,1 em 2026)
+  — média que desde 2002 só havia sido alcançada em 2002–06, quando a inflação
+  caía de dois dígitos. Hoje coexiste com
   IPCA de ~4,6% — **dentro da meta**.
 - A regra de Taylor simples pediria ~7,5–9% a.a. para Focus ~5%. O **desvio
-  médio 2024–26 (~6,5 p.p.) é o maior de qualquer janela desde 2002**,
-  inclusive maior que o do aperto pós-pandemia (2022–23: 5,2 p.p.).
+  médio 2024–26 (~6,5 p.p.) é o maior entre as janelas comparadas** (2003–14:
+  4,9; 2022–23: 5,2 p.p.), mas **não é recorde histórico**: a MM36 chegou a
+  9,9 p.p. em fev/2006.
 - Atividade (IBC-Br +2–3%) e desemprego em mínimo (5,2–5,3%) não explicam o
   patamar. **Conclusão verificável:** o juro atual é inflação esperada **+
   prêmio institucional adicional** sem contrapeso inflacionário — defender que
@@ -47,11 +49,15 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   STN, foi **negado por sigilo bancário**.
 
 ### P3 — Os juros amortizam a dívida? (`notebooks/03_juros_amortizam.ipynb`)
-- Identidade dos fatores de variação da DPF (Anexo 2.9): `emissões ≈ resgates +
-  juros` — ou seja, **os juros não amortizam a dívida; os juros são a dívida
-  nova**. O juro apropriado de R$ ~880 bi em 2025 virou rolagem, não redução.
-- O dispêndio total gira 2–2,2× o juro apropriado (emissões e resgates) — a
-  máquina de rolagem é muito maior que a dívida nova líquida.
+- Identidade dos fatores de variação da DPF (Anexo 2.9): `variação do estoque =
+  emissão líquida + juros apropriados` — em 2025, R$ 439 bi + R$ 880 bi =
+  R$ 1.319 bi. Os resgates **já incluem os juros pagos** (notas 6 e 7 do
+  anexo), então **os juros não amortizam a dívida; são a dívida nova**: 67% do
+  aumento de 2025 e 88% do acumulado 2012–25 (R$ 5.977 bi dos R$ 6.769 bi)
+  foram juros apropriados.
+- As emissões anuais giram de 1,9 a 3,8× o juro apropriado (2,2× em 2025) e
+  equivalem, em média, a 1,05× os resgates — a máquina de rolagem é muito
+  maior que a dívida nova líquida.
 - O déficit nominal é dominado por juros; o resultado primário é quase neutro
   na maior parte da série.
 
@@ -77,10 +83,11 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   (set/22). O aperto atual começou em **março de 2021** e já estava no
   patamar de hoje em **dez/2022 (8,4%)** — a troca de nível não coincide
   com a troca de mandato.
-- Dispêndio nominal cresceu ~17× entre 2002 e 2025; os saltos de % do PIB
-  ocorrem em 2015–16 e 2024–25, ambos com desvio acima da regra de Taylor.
-- Swaps custaram em ~1/3 dos anos — "imposto cambial" recorrente na conta de
-  juros, contratado em diferentes gestões.
+- Dispêndio nominal cresceu ~8,9× entre 2002 e 2025 (R$ 113 bi → R$ 1.008 bi);
+  os saltos de % do PIB ocorrem em 2015–16 e 2024–25, ambos com desvio
+  acima da regra de Taylor.
+- Swaps geraram custo em 8 dos 18 anos (44%, 2008–25) — "imposto cambial"
+  recorrente na conta de juros, contratado em diferentes gestões.
 - **Não afirmamos intenção aqui**: isso exige documentos (atas, manifestos,
   ofícios) — ver a fase de documentos abaixo.
 
@@ -222,7 +229,7 @@ Séries novas no catálogo para a conferência: **13761** (DBGG R$),
 **13762** (DBGG % PIB), **5727** (resultado nominal/PIB 12m) — 28 séries na
 época; hoje são **34**, com as 6 de crédito do teste da Febraban (abaixo).
 Convenção SGS 5727/5793: **positivo = déficit** (checado em dez/2020:
-+9,24/+13,34; dez/2021: −0,72).
++13,34 nominal / +9,24 primário; dez/2021: +4,26 / −0,72).
 
 **Segundo documento:** *"`BC não levará inflação para a meta e cortará juros
 mesmo sem espaço`, diz Fabio Kanczuk, do ASA"* — NeoFeed (25/7/2025, entrevista
@@ -259,7 +266,7 @@ Textos brutos em `dados/bruto/documentos/`: `febraban_sidney_2026-01-12.txt`,
 | Alegação | Nota | Nós | Veredito |
 | --- | --- | --- | --- |
 | IPCA 2025 = 4,26% | 4,26 | 4,26 (SGS 13522) | **confere (exato)** |
-| "melhor resultado nominal desde 2018" | — | mín. 2019–2024 = 4,31% | confere |
+| "melhor resultado nominal desde 2018" | — | mín. 2018–2024 = 3,75% | **não confere** |
 | Selic de 15,0% ao ano | 15,0 | 15,00 (SGS 432, em 12/1/2026) | confere |
 | Focus projetava 4,90% para 2025 no início de 2025 | 4,90 | 4,99 (pesquisa 2/1/2025) | confere (≈) |
 | "flexibilização… se não em janeiro, a partir de março" | mar/2026 | 1º corte em **19/3/2026** | **confere** |

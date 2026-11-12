@@ -654,7 +654,7 @@ def verificacao_febraban() -> pd.DataFrame:
     ipca_dez = ipca[ipca.data.dt.month == 12].set_index("data")["valor"]
     ipca_2025 = float(ipca_dez.loc["2025-12-01"])
     anos = ipca_dez.index.year                      # Index[int], sem .between
-    desde_2019 = ipca_dez[(anos >= 2019) & (anos <= 2024)]
+    desde_2018 = ipca_dez[(anos >= 2018) & (anos <= 2024)]
 
     meta = _serie("meta_selic_copom")
     meta_nota = float(meta[meta.data <= NOTA].valor.iloc[-1])
@@ -673,14 +673,14 @@ def verificacao_febraban() -> pd.DataFrame:
         return {"alegacao": aleg, "artigo": artigo, "nosso_valor": nosso,
                 "unidade": unidade, "fonte_nosso": fonte, "status": status}
 
-    melhor = desde_2019.min() >= ipca_2025
+    melhor = desde_2018.min() >= ipca_2025
     return pd.DataFrame([
         _linha("IPCA 2025 = 4,26%", "4,26", f"{ipca_2025:.2f}",
                "SGS 13522 (dez/2025)",
                "confere (exato)" if abs(ipca_2025 - 4.26) <= 0.01
                else "não confere", "%"),
         _linha("'melhor resultado nominal desde 2018'", "menor desde 2018",
-               f"mín. 2019–2024 = {desde_2019.min():.2f}",
+               f"mín. 2018–2024 = {desde_2018.min():.2f}",
                "SGS 13522 (fechamentos de dezembro)",
                "confere" if melhor else "não confere", "%"),
         _linha("Selic de 15,0% ao ano na nota (12/01/2026)", "15,0",
