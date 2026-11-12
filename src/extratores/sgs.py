@@ -29,9 +29,7 @@ def _fim_de(ano: int) -> str:
     hoje = date.today()
     if ano < hoje.year:
         return f"31/12/{ano}"
-    if ano == hoje.year:
-        return hoje.strftime("%d/%m/%Y")
-    return hoje.strftime("%d/%m/%Y")
+    return hoje.strftime("%d/%m/%Y")  # ano atual ou futuro: até hoje
 
 
 def baixar_serie(codigo: int) -> pd.DataFrame:

@@ -37,7 +37,8 @@ def processar() -> pd.DataFrame:
     for row in linhas:
         periodo = row.get("D3C", "")
         valor = row.get("V", "")
-        if not periodo or valor in ("-", None, ""):
+        # SIDRA: "-", "..." (dado indisponível) e "X" (confidencial) não são número
+        if not periodo or valor in ("-", "...", "X", None, ""):
             continue
         # D3C = AAAAMM do último mês do trimestre móvel
         data = pd.Timestamp(int(periodo[:4]), int(periodo[4:]), 1) + pd.offsets.MonthEnd(0)

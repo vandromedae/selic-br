@@ -40,7 +40,7 @@ TEMAS: dict[str, str] = {
         r"|aperto monetário em termos reais"
         r"|taxa real de juros?|juros? real neutra"
     ),
-    "juro real ex ante": r"\bex[- ]ante\b",
+    "juro real ex ante": r"\bjuros? rea(?:l|is) ex[- ]ante\b",
     "risco fiscal": (
         r"ris[ck]os? fiscais?"
         r"|domin[âa]ncia fiscal|sustentabilidade fiscal"

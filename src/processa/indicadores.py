@@ -20,6 +20,9 @@ def juros_anuais() -> pd.DataFrame:
 
     Colunas: ano, juros_mi, swap_resultado_mi, juros_ex_swap_mi, pib_mi,
              swap_pp_pib, juros_pib_pct, juros_ex_swap_pib_pct
+
+    `swap_resultado_mi`, `juros_ex_swap_*` e `swap_pp_pib` são NaN em
+    2002–07: o SGS 29522 (resultado caixa de swap) só começa em 2008.
     """
     sgs = ler_parquet("sgs")
 
@@ -44,7 +47,7 @@ def juros_anuais() -> pd.DataFrame:
     df["swap_pp_pib"] = -100 * df["swap_resultado_mi"] / df["pib_mi"]
     df["juros_pib_pct"] = 100 * df["juros_mi"] / df["pib_mi"]
     df["juros_ex_swap_pib_pct"] = 100 * df["juros_ex_swap_mi"] / df["pib_mi"]
-    df = df[df.ano >= ANO_INICIO - 1].reset_index(drop=True)
+    df = df[df.ano >= ANO_INICIO].reset_index(drop=True)
     return df
 
 
@@ -87,6 +90,10 @@ def juros_por_detentor(ano: int | None = None) -> pd.DataFrame:
 
     Premissa: participação do estoque em dezembro aproxima a participação média
     do ano no dispêndio com juros (proxy — não é dado oficial por detentor).
+
+    O `merge` é interno: anos sem linha de dezembro em `detentores` (2026,
+    enquanto o RMD 2.7 não fechar o ano) ficam de fora — comportamento
+    pretendido, mas aqui declarado.
     """
     j = juros_anuais()
     if ano is not None:
@@ -181,3 +188,23 @@ def validacao_bndes() -> pd.DataFrame:
             "swap_pp_calc": round(r.swap_pp_pib, 2),
         })
     return pd.DataFrame(linhas)
+
+
+# --------------------------------------------------------------- juros × primário
+
+
+def juros_primario_12m() -> pd.DataFrame:
+    """Juros nominais e resultado primário, acumulados 12 meses (% do PIB).
+
+    SGS `juros_pib_12m` e `primario_pib_12m` — mesmo calendário de datas.
+    """
+    sgs = ler_parquet("sgs")
+
+    def _serie(nome: str) -> pd.Series:
+        return sgs[sgs.serie == nome].set_index("data")["valor"].dropna()
+
+    return pd.concat(
+        [_serie("juros_pib_12m").rename("juros_pib_12m"),
+         _serie("primario_pib_12m").rename("primario_pib_12m")],
+        axis=1,
+    )

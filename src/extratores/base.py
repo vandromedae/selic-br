@@ -5,6 +5,7 @@ import hashlib
 import json
 import socket
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import requests
@@ -22,16 +23,23 @@ _UA = {
 # Hosts como www.bcb.gov.br publicam AAAA (IPv6/Azure Front Door) mesmo em
 # redes onde o IPv6 não rota: o `requests` tenta o IPv6 primeiro e estoura o
 # timeout. Ordena o getaddrinfo pondo IPv4 à frente — só reordena, não força,
-# então continua funcionando em rede IPv6-only.
-_getaddrinfo_original = socket.getaddrinfo
+# então continua funcionando em rede IPv6-only. Aplicado só durante o
+# download (context manager), não no import do módulo.
 
 
-def _ipv4_primeiro(host, port, *args, **kwargs):
-    res = _getaddrinfo_original(host, port, *args, **kwargs)
-    return sorted(res, key=lambda r: 0 if r[0] == socket.AF_INET else 1)
+@contextmanager
+def _ipv4_primeiro():
+    original = socket.getaddrinfo
 
+    def ordenado(host, port, *args, **kwargs):
+        res = original(host, port, *args, **kwargs)
+        return sorted(res, key=lambda r: 0 if r[0] == socket.AF_INET else 1)
 
-socket.getaddrinfo = _ipv4_primeiro
+    socket.getaddrinfo = ordenado
+    try:
+        yield
+    finally:
+        socket.getaddrinfo = original
 
 
 def _cache_path(nome: str, subpasta: str) -> Path:
@@ -51,19 +59,19 @@ def _destino(subpasta: str) -> Path:
 
 
 def get(url: str, params: dict | None = None, timeout: int = 120) -> bytes:
-    resp = requests.get(url, params=params, headers=_UA, timeout=timeout)
-    resp.raise_for_status()
+    with _ipv4_primeiro():
+        resp = requests.get(url, params=params, headers=_UA, timeout=timeout)
+        resp.raise_for_status()
     return resp.content
 
 
 def get_json(url: str, params: dict | None = None, timeout: int = 120, tentativas: int = 4,
              ignorar_404: bool = False):
-    import time as _time
-
     ultimo_erro: Exception | None = None
     for i in range(tentativas):
         try:
-            resp = requests.get(url, params=params, headers=_UA, timeout=timeout)
+            with _ipv4_primeiro():
+                resp = requests.get(url, params=params, headers=_UA, timeout=timeout)
             if ignorar_404 and resp.status_code == 404:
                 return []  # janela sem dados (série ainda não existia)
             if resp.status_code in (429, 500, 502, 503):
@@ -72,7 +80,7 @@ def get_json(url: str, params: dict | None = None, timeout: int = 120, tentativa
             return resp.json()
         except (requests.RequestException, ValueError) as exc:  # inclui JSONDecodeError
             ultimo_erro = exc
-            _time.sleep(1.5 * (i + 1))
+            time.sleep(1.5 * (i + 1))
     raise RuntimeError(f"falha após {tentativas} tentativas: {url}") from ultimo_erro
 
 

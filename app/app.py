@@ -21,6 +21,10 @@ sys.path.insert(0, str(RAIZ))
 from src.processa import indicadores as ind  # noqa: E402
 from src.viz.graficos import CORES_DETENTOR  # noqa: E402
 
+# ano incompleto: excluído dos gráficos e tabelas anuais fechados
+# (regra 4 em "Fontes e metodologia")
+ANO_CORTE = 2026
+
 st.set_page_config(
     page_title="Juros e Dívida — Transparência",
     page_icon="🏦",
@@ -85,7 +89,7 @@ def _layout(fig, altura: int = 420, fonte: int = 12) -> None:
 
 def fig_juros_swaps() -> go.Figure:
     j = D["juros"]
-    j = j[(j.ano >= 2008) & (j.ano < 2026)]
+    j = j[(j.ano >= 2008) & (j.ano < ANO_CORTE)]
     fig = go.Figure()
     fig.add_bar(x=j.ano, y=j.juros_ex_swap_pib_pct, name="juros ex-swaps",
                 marker_color="#1f77b4",
@@ -94,12 +98,17 @@ def fig_juros_swaps() -> go.Figure:
     fig.add_bar(x=j.ano, y=j.juros_pib_pct, name="juros (incl. swaps)",
                 marker_color="#7f7f7f")
     fig.add_vline(x=2024.5, line_dash="dash", line_color="#000000", opacity=0.5)
-    fig.add_annotation(x=2024, y=j.juros_pib_pct.max() * 1.02,
-                       text="2024: prejuízo BCB (+0,98 p.p.)", showarrow=False,
-                       font=dict(size=11, color="#d62728"))
-    fig.add_annotation(x=2025.5, y=6.0,
-                       text="2025: ganho BCB (−0,83 p.p.)", showarrow=False,
-                       font=dict(size=11, color="#2ca02c"))
+    # anotações derivadas de swap_pp_pib (valores calculados, não fixos)
+    for xpos, ybase, ano in [(2024, j.juros_pib_pct.max() * 1.02, 2024),
+                             (2025.5, 6.0, 2025)]:
+        val = float(j.loc[j.ano == ano, "swap_pp_pib"].iloc[0])
+        rot = "prejuízo" if val > 0 else "ganho"
+        pp = f"{val:+.2f}".replace(".", ",")
+        fig.add_annotation(
+            x=xpos, y=ybase, showarrow=False,
+            text=f"{ano}: {rot} BCB ({pp} p.p.)",
+            font=dict(size=11, color="#d62728" if val > 0 else "#2ca02c"),
+        )
     fig.update_layout(barmode="group", bargap=0.35)
     fig.update_xaxes(title="ano")
     fig.update_yaxes(title="% do PIB")
@@ -118,7 +127,8 @@ def fig_selic_inflacao() -> go.Figure:
         fig.add_scatter(x=m.index, y=m[col], name=nome, line=dict(color=cor, dash=dash or "solid")
                         if dash else dict(color=cor), mode="lines")
     fig.add_hline(y=4.5, line=dict(width=1), line_dash="dot", line_color="#7f7f7f")
-    fig.add_annotation(x=m.index[36], y=5.3, text="meta de inflação (4,5%)",
+    fig.add_annotation(x=pd.Timestamp("2005-01-31"), y=5.3,
+                       text="meta de inflação (4,5%)",
                        showarrow=False, font=dict(size=11, color="#7f7f7f"))
     fig.update_xaxes(title="")
     fig.update_yaxes(title="% a.a.")
@@ -135,7 +145,7 @@ def fig_juro_real() -> go.Figure:
                     line=dict(color="#7f7f7f"), mode="lines")
     media = m.loc[:"2014", "juro_real_ex_ante"].mean()
     fig.add_hline(y=media, line=dict(dash="dot", color="#2ca02c"))
-    fig.add_annotation(x=m.index[36], y=media + 0.6,
+    fig.add_annotation(x=pd.Timestamp("2005-01-31"), y=media + 0.6,
                        text=f"média 2002–2014: {media:.1f}%",
                        showarrow=False, font=dict(size=11, color="#2ca02c"))
     fig.update_yaxes(title="% a.a.")
@@ -146,12 +156,14 @@ def fig_juro_real() -> go.Figure:
 def fig_desvio_taylor() -> go.Figure:
     t = D["macro"][["selic_meta", "focus_ipca_12m"]].dropna().copy()
     t["taylor"] = 2.5 + t.focus_ipca_12m + 0.5 * (t.focus_ipca_12m - 4.5)
-    t["desvio"] = t.selic_meta - t.taylor
     fig = go.Figure()
-    fig.add_scatter(x=t.index, y=t.selic_meta, name="Selic meta",
-                    line=dict(color="#1f77b4"), mode="lines")
-    fig.add_scatter(x=t.index, y=t.taylor, name="Regra de Taylor simples (r*=2,5; meta 4,5)",
+    fig.add_scatter(x=t.index, y=t.taylor,
+                    name="Regra de Taylor simples (r*=2,5; meta 4,5)",
                     line=dict(color="#7f7f7f", dash="dash"), mode="lines")
+    # faixa entre a regra e a Selic = desvio da política em relação à regra
+    fig.add_scatter(x=t.index, y=t.selic_meta, name="Selic meta",
+                    line=dict(color="#1f77b4"), mode="lines",
+                    fill="tonexty", fillcolor="rgba(31,119,180,0.15)")
     fig.update_yaxes(title="% a.a.")
     _layout(fig)
     return fig
@@ -198,7 +210,7 @@ def fig_estoque_detentor() -> go.Figure:
 
 def fig_fluxo_juros_detentor() -> go.Figure:
     jd = D["juros_detentor"]
-    jd = jd[jd.ano < 2026]
+    jd = jd[jd.ano < ANO_CORTE]
     conv = jd.pivot_table(index="ano", columns="detentor", values="juros_estimado_bi")
     fig = go.Figure()
     for detentor in [c for c in conv.columns if not conv[c].isna().all()]:
@@ -239,7 +251,7 @@ def fig_cascata(ano: int = 2025) -> go.Figure:
 
 def fig_fluxos_anuais() -> go.Figure:
     f = D["fatores"]
-    f = f[(f.ano >= 2010) & (f.ano < 2026)]
+    f = f[(f.ano >= 2010) & (f.ano < ANO_CORTE)]
     fig = go.Figure()
     for col, rotulo, cor in [
         ("juros_apropriados_mi", "juros apropriados", "#d62728"),
@@ -256,17 +268,13 @@ def fig_fluxos_anuais() -> go.Figure:
 
 
 def fig_juros_primario() -> go.Figure:
-    from src.extratores.base import ler_parquet  # noqa: E402
-    sgs = ler_parquet("sgs")
-
-    def serie(nome: str) -> pd.Series:
-        return sgs[sgs.serie == nome].set_index("data")["valor"].dropna()
-
-    jp, pp = serie("juros_pib_12m"), serie("primario_pib_12m")
+    sp = ind.juros_primario_12m()
     fig = go.Figure()
-    fig.add_scatter(x=jp.index, y=jp, name="juros nominais % PIB (12m)",
+    fig.add_scatter(x=sp.index, y=sp.juros_pib_12m,
+                    name="juros nominais % PIB (12m)",
                     line=dict(color="#d62728"), mode="lines")
-    fig.add_scatter(x=pp.index, y=pp, name="resultado primário % PIB (12m)",
+    fig.add_scatter(x=sp.index, y=sp.primario_pib_12m,
+                    name="resultado primário % PIB (12m)",
                     line=dict(color="#2ca02c"), mode="lines")
     fig.add_hline(y=0, line_color="#000000", line_width=1)
     fig.update_yaxes(title="% do PIB")
@@ -274,13 +282,13 @@ def fig_juros_primario() -> go.Figure:
     return fig
 
 
-def fig_i_g() -> go.Figure:
+def fig_i_g() -> tuple[pd.DataFrame, go.Figure]:
     v = D["juros"]
-    v = v[(v.ano >= 2012) & (v.ano < 2026)].set_index("ano")
+    v = v[(v.ano >= 2012) & (v.ano < ANO_CORTE)].set_index("ano")
     g_nom = v.pib_mi.pct_change() * 100
     m = D["macro"]
     m_anual = m[m.ipca_12m.notna()].groupby(m[m.ipca_12m.notna()].index.year).mean()
-    g_real = g_nom - m_anual.ipca_12m
+    g_real = ((1 + g_nom / 100) / (1 + m_anual.ipca_12m / 100) - 1) * 100
     tab = pd.DataFrame({
         "g (PIB nominal)": g_nom,
         "g (PIB real aprox.)": g_real,
@@ -307,13 +315,19 @@ def fig_i_g() -> go.Figure:
     return tab, fig
 
 
-def fig_mandatos() -> pd.DataFrame:
+MESES_PT = ["jan", "fev", "mar", "abr", "mai", "jun",
+            "jul", "ago", "set", "out", "nov", "dez"]
+
+
+def df_mandatos() -> pd.DataFrame:
+    """Média e máximo do juro real ex ante por mandato (Lula 3: até a última data)."""
     m = D["macro"]
+    ult = m["juro_real_ex_ante"].dropna().index.max()
     mandatos = [
         ("Lula 1-2 (03-10)", "2003-01-01", "2010-12-31"),
         ("Dilma/Temer (11-18)", "2011-01-01", "2018-12-31"),
         ("Bolsonaro (19-22)", "2019-01-01", "2022-12-31"),
-        ("Lula 3 (23-26)", "2023-01-01", "2026-12-31"),
+        (f"Lula 3 (jan/23–{MESES_PT[ult.month - 1]}/{ult:%y})", "2023-01-01", ult),
     ]
     linhas = []
     for nome, ini, fim in mandatos:
@@ -326,7 +340,7 @@ def fig_mandatos() -> pd.DataFrame:
 # ------------------------------------------------------------------ UI
 
 st.sidebar.title("🏦 Juros e dívida pública")
-st.sidebar.caption("Brasil, 2002–2026 · apenas fontes públicas")
+st.sidebar.caption(f"Brasil, 2002–{ANO_CORTE} · apenas fontes públicas")
 
 PAGINA = st.sidebar.radio(
     "Pergunta",
@@ -345,7 +359,7 @@ PAGINA = st.sidebar.radio(
 st.sidebar.divider()
 
 j = D["juros"]
-ultimo_ano_completo = j[j.ano < 2026].ano.max()
+ultimo_ano_completo = j[j.ano < ANO_CORTE].ano.max()
 row = j[j.ano == ultimo_ano_completo].iloc[0]
 cm_ult = D["custo"].data.max()
 cm_val = D["custo"].set_index("data").taxa_pct_aa.loc[cm_ult]
@@ -451,7 +465,7 @@ elif PAGINA.startswith("P3"):
     st.plotly_chart(fig_cascata(f_ano), use_container_width=True)
     st.plotly_chart(fig_fluxos_anuais(), use_container_width=True)
     t = D["fatores"].copy()
-    t = t[(t.ano >= 2012) & (t.ano < 2026)]
+    t = t[(t.ano >= 2012) & (t.ano < ANO_CORTE)]
     t["emissoes_mult_juros"] = t.emissoes_mi / t.juros_apropriados_mi
     st.dataframe(
         t[["ano", "emissoes_mi", "resgates_mi", "juros_apropriados_mi",
@@ -495,14 +509,14 @@ elif PAGINA.startswith("P5"):
         "**Não é afirmação de intenção**: isso exige documentos (atas, "
         "manifestos, ofícios) — fase posterior."
     )
-    tab = fig_mandatos()
+    tab = df_mandatos()
     st.bar_chart(tab["juro_real_ex_ante_medio"], color="#1f77b4", height=340)
     st.dataframe(tab.round(1), use_container_width=True)
 
     j2 = j[j.ano >= 2002]
     st.caption(
         f"Dispêndio nominal com juros: {fmt_bi(j2.juros_mi.iloc[0] / 1000, 0)} "
-        f"({j2.ano.iloc[0]}) → {fmt_bi(j2[j2.ano < 2026].juros_mi.iloc[-1] / 1000, 0)} "
+        f"({j2.ano.iloc[0]}) → {fmt_bi(j2[j2.ano < ANO_CORTE].juros_mi.iloc[-1] / 1000, 0)} "
         f"({ultimo_ano_completo}) — sem contar o efeito dos swaps."
     )
     st.plotly_chart(fig_juros_swaps(), use_container_width=True)
@@ -573,7 +587,7 @@ elif PAGINA == "Transparência: lacunas":
 
 else:
     st.title("Fontes e metodologia")
-    st.markdown("""
+    st.markdown(f"""
 | Fonte | Uso nesta ferramenta |
 | --- | --- |
 | **BCB/SGS** (25 séries) | juros nominais (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA, primário |
@@ -589,7 +603,7 @@ else:
    anuais) — não dado oficial.
 2. **Nomes de credores não são públicos** (Req. 696/2019 negado por sigilo).
 3. **Desemprego** só a partir de 2012 — lacuna informada, não escondida.
-4. **2026 é ano incompleto** nas séries de fluxo — o app o exclui dos
+4. **{ANO_CORTE} é ano incompleto** nas séries de fluxo — o app o exclui dos
    gráficos anuais fechados e avisa.
 5. Swaps: `juros_ex_swap = juros + resultado_caixa` (prejuízo do BCB aumenta
    juros; ganho reduz) — validado contra BNDES 67/2026 (desvio ≤ 0,03 p.p.).
