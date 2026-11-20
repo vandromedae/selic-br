@@ -7,6 +7,7 @@ import re
 import socket
 import time
 from contextlib import contextmanager
+from datetime import date, datetime
 from pathlib import Path
 
 import requests
@@ -23,6 +24,32 @@ MESES = {
 }
 RE_MES = re.compile(r"^([A-Za-z]{3})/(\d{2})$")
 RE_ANO = re.compile(r"^\d{4}$")
+
+
+def ano_de_dois_digitos(yy: str) -> int:
+    """Converte ano de 2 dígitos do cabeçalho: '99' -> 1999, '26' -> 2026.
+
+    Usa o format %y (regra do strptime: 00-68 -> 2000-2068, 69-99 ->
+    1969-1999) em vez de `2000 + yy` ingênuo, que leria o 'Jan/99' da
+    aba 2.3 do anexo RMD como janeiro de 2099.
+
+    O parse é só dos dígitos, então independe de locale — ao contrário de
+    `to_datetime('Fev/99', format='%b/%y')`, que exige siglas inglesas de
+    mês e falha nas 7 siglas PT diferentes (fev, abr, mai, ago, set, out,
+    dez). O mês fica a cargo de MESES.
+
+    Falha ruidosa (ValueError) se o ano resolver fora de 1990..ano
+    corrente+1 — janela dos dados do projeto (RMD desde 1996; Tesouro
+    desde 2000) — em vez de gravar data absurda em silêncio.
+    """
+    ano = int(datetime.strptime(str(yy), "%y").year)
+    limite = date.today().year + 1
+    if not 1990 <= ano <= limite:
+        raise ValueError(
+            f"ano de 2 dígitos {yy!r} resolveu para {ano}, fora da janela "
+            f"1990..{limite} — cabeçalho inesperado no anexo?")
+    return ano
+
 
 _UA = {
     "User-Agent": "juros-e-divida/1.0 (pesquisa de transparencia publica)",

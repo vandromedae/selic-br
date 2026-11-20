@@ -25,7 +25,8 @@ from urllib.parse import unquote
 import pandas as pd
 import requests
 
-from .base import BRUTO, MESES, RE_ANO, RE_MES, get, salvar_parquet
+from .base import (BRUTO, MESES, RE_MES, ano_de_dois_digitos, get,
+                    salvar_parquet)
 
 RMD_PAGE = "https://www.tesourotransparente.gov.br/publicacoes/relatorio-mensal-da-divida-rmd"
 THOT = "https://thot-arquivos.tesouro.gov.br/publicacao-anexo/{id}"
@@ -140,7 +141,7 @@ def _melte_largo(bruto: pd.DataFrame) -> pd.DataFrame:
             m = RE_MES.match(cab.iloc[j].strip())
             if not m:
                 continue
-            ano = 2000 + int(m.group(2))
+            ano = ano_de_dois_digitos(m.group(2))
             regs.append({
                 "indicador": label,
                 "data": pd.Timestamp(ano, MESES[m.group(1).lower()], 1) + pd.offsets.MonthEnd(0),

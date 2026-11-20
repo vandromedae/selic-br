@@ -17,7 +17,8 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-from .base import BRUTO, MESES, PROCESSADO, RE_ANO, RE_MES, salvar_parquet
+from .base import (BRUTO, MESES, PROCESSADO, RE_ANO, RE_MES,
+                    ano_de_dois_digitos, salvar_parquet)
 
 CKAN = "https://www.tesourotransparente.gov.br/ckan/api/3/action/package_show"
 
@@ -101,7 +102,7 @@ def _melte_anexo(caminho: Path, sheet=0) -> pd.DataFrame:
             m = RE_MES.match(str(cab.iloc[j]).strip())
             if not m:
                 continue
-            ano = 2000 + int(m.group(2))
+            ano = ano_de_dois_digitos(m.group(2))
             registros.append({
                 "indicador": label,
                 "data": pd.Timestamp(ano, MESES[m.group(1).lower()], 1) + pd.offsets.MonthEnd(0),
