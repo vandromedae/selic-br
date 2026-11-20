@@ -219,7 +219,9 @@ def baixar_foco() -> Path:
         if not isinstance(url, str) or not url:
             return (row.id, None, 0)
         ext = url.rsplit(".", 1)[-1].lower() if "." in url else "pdf"
-        if ext not in ("pdf", "pps", "ppt"):  # só textuais
+        if ext != "pdf":
+            # só PDF tem extração de texto no pipeline (ppt/pps do BCB seriam
+            # baixados e nunca virariam .txt — nada de arquivo órfão)
             return (row.id, None, 0)
         pdf = BRUTO_DISCURSOS / f"d_{row.id}.{ext}"
         if not pdf.exists():
@@ -233,7 +235,7 @@ def baixar_foco() -> Path:
             except requests.RequestException:
                 return (row.id, None, 0)
         txt = TEXTO_DIR / f"d_{row.id}.txt"
-        if not txt.exists() and ext == "pdf":
+        if not txt.exists():
             try:
                 txt.write_text(_texto_pdf(pdf), encoding="utf-8")
             except Exception as e:  # PDF protegido/corrompido
