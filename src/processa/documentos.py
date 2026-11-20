@@ -543,7 +543,8 @@ def verificacao_kanczuk() -> pd.DataFrame:
     13522 (IPCA 12m) e Focus IPCA 12m (focus_inflacao12m, sem suavização).
 
     Recorte da matéria: as alegações são conferidas NA DATA dela (jul/2025);
-    "desde 2022" é checado mês a mês até o último dado disponível.
+    "desde 2022" é checado mês a mês ATÉ A DATA DA MATÉRIA (25/07/2025) —
+    dado posterior não reescreve a checagem histórica.
     """
     sg = pd.read_parquet(PROCESSADO / "sgs.parquet")
 
@@ -580,12 +581,15 @@ def verificacao_kanczuk() -> pd.DataFrame:
               - foc.resample("ME").last()).dropna()
 
     def _desde6(s: pd.Series) -> tuple[pd.Timestamp, float, int]:
-        """Primeiro mês a partir do qual fica sempre >= 6% + mínimo em 2022–23."""
+        """Primeiro mês < MAT a partir do qual fica sempre >= 6% ATÉ A
+        MATÉRIA + mínimo em 2022–23."""
+        # Recorte da matéria (25/07/2025): dado posterior não pode
+        # reescrever a checagem histórica (senão um dado novo <6% no
+        # futuro apagaria o "desde" já apurado).
+        s = s[s.index < MAT]
         janela = s[(s.index >= "2022-01-01") & (s.index < "2024-01-01")]
         desde = pd.NaT
         for i in range(len(s)):
-            if s.index[i] >= MAT:
-                break
             if (s.iloc[i:] >= 6).all():
                 desde = s.index[i]
                 break
