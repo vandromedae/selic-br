@@ -355,6 +355,29 @@ def trechos() -> pd.DataFrame:
     return df
 
 
+# --------------------------------------------- parâmetros de referência
+# Datas de recorte e limiares das checagens aritméticas (as alegações em
+# si — o que cada documento diz — ficam em verificacao_* como texto
+# citado). Fonte de cada valor na função correspondente; nada de literal
+# inline: mudar aqui muda a checagem.
+
+# "Eu Acuso" (Lara Resende, artigo de jun/2026)
+MES_ARTIGO = pd.Timestamp("2026-06-30")        # mês do artigo
+
+# Entrevista Kanczuk/ASA (25/07/2025)
+MAT_KANCZUK = pd.Timestamp("2025-07-25")       # data da matéria
+JURO_REAL_DE = "2022-01-01"                    # alegação: "desde 2022"
+JURO_REAL_ATE = "2024-01-01"                   # janela 2022–23 (mín./meses <)
+LIMIAR_JURO_REAL = 6                           # alegação: "acima de 6%"
+
+# patamar de Selic citado por Kanczuk, Febraban e ANBIMA ("15%")
+SELIC_PATAMAR = 15
+
+# Nota Febraban/Sidney (12/01/2026)
+NOTA_FEBRABAN = pd.Timestamp("2026-01-12")     # data da nota
+IPCA_MELHOR_DESDE = 2018                       # alegação: "melhor desde 2018"
+
+
 # ------------------------------------------------------------------ verificação
 
 
@@ -412,7 +435,7 @@ def verificacao_eu_acuso() -> pd.DataFrame:
         return float(sub.valor.iloc[-1])
 
     # ---- mês do artigo (jun/2026) para estoque/custo
-    MES = pd.Timestamp("2026-06-30")
+    MES = MES_ARTIGO                            # mês do artigo (centralizado)
     dbgg_jun = _em(dbgg_s, MES) / 1e6                       # R$ tri
     dbggpib_jun = _em(dpib_s, MES)                          # %
     c = cm[(cm.escopo == "DPF") & (cm.tabela == "estoque 12m")].copy()
@@ -555,13 +578,13 @@ def verificacao_kanczuk() -> pd.DataFrame:
             raise ValueError(f"série '{nome}' ausente — rode src.extratores.sgs")
         return d.sort_values("data").reset_index(drop=True)
 
-    MAT = pd.Timestamp("2025-07-25")                     # data da matéria
+    MAT = MAT_KANCZUK                     # data da matéria (centralizado)
 
     # ---- Selic: 15% e "mais alta desde 2006"
     meta = _serie("meta_selic_copom")
     meta_jul = float(meta[meta.data <= MAT].valor.iloc[-1])
     antes = meta[meta.data < "2025-06-19"]               # vigência do 15%
-    ult_15 = antes[antes.valor >= 15]
+    ult_15 = antes[antes.valor >= SELIC_PATAMAR]
     d_ult15 = ult_15.data.max() if len(ult_15) else pd.NaT
     v_ult15 = (float(ult_15.sort_values("data").valor.iloc[-1])
                if len(ult_15) else float("nan"))
@@ -587,10 +610,10 @@ def verificacao_kanczuk() -> pd.DataFrame:
         # reescrever a checagem histórica (senão um dado novo <6% no
         # futuro apagaria o "desde" já apurado).
         s = s[s.index < MAT]
-        janela = s[(s.index >= "2022-01-01") & (s.index < "2024-01-01")]
+        janela = s[(s.index >= JURO_REAL_DE) & (s.index < JURO_REAL_ATE)]
         desde = pd.NaT
         for i in range(len(s)):
-            if (s.iloc[i:] >= 6).all():
+            if (s.iloc[i:] >= LIMIAR_JURO_REAL).all():
                 desde = s.index[i]
                 break
         return desde, float(janela.min()), int((janela < 6).sum())
@@ -605,7 +628,7 @@ def verificacao_kanczuk() -> pd.DataFrame:
     return pd.DataFrame([
         _linha("Selic em 15% (decisão anterior à matéria)", "15",
                f"{meta_jul:.2f}", "SGS 432 (vigente desde 19/06/2025)",
-               "confere" if abs(meta_jul - 15) <= 0.01 else "não confere",
+               "confere" if abs(meta_jul - SELIC_PATAMAR) <= 0.01 else "não confere",
                "% a.a."),
         _linha("'patamar mais alto desde 2006'", "15 > tudo desde 2006",
                f"última vez >=15%: {d_ult15:%m/%Y} ({v_ult15:.2f}); "
@@ -652,17 +675,17 @@ def verificacao_febraban() -> pd.DataFrame:
             raise ValueError(f"série '{nome}' ausente — rode src.extratores.sgs")
         return d.sort_values("data").reset_index(drop=True)
 
-    NOTA = pd.Timestamp("2026-01-12")
+    NOTA = NOTA_FEBRABAN                        # data da nota (centralizado)
 
     ipca = _serie("ipca_12m")
     ipca_dez = ipca[ipca.data.dt.month == 12].set_index("data")["valor"]
     ipca_2025 = float(ipca_dez.loc["2025-12-01"])
     anos = ipca_dez.index.year                      # Index[int], sem .between
-    desde_2018 = ipca_dez[(anos >= 2018) & (anos <= 2024)]
+    desde_2018 = ipca_dez[(anos >= IPCA_MELHOR_DESDE) & (anos <= 2024)]
 
     meta = _serie("meta_selic_copom")
     meta_nota = float(meta[meta.data <= NOTA].valor.iloc[-1])
-    queda = meta[(meta.data > "2025-12-31") & (meta.valor < 15)]
+    queda = meta[(meta.data > "2025-12-31") & (meta.valor < SELIC_PATAMAR)]
     d_primeira_queda = queda.data.min() if len(queda) else pd.NaT
 
     foc = pd.read_parquet(PROCESSADO / "focus_anuais.parquet")
@@ -689,7 +712,7 @@ def verificacao_febraban() -> pd.DataFrame:
                "confere" if melhor else "não confere", "%"),
         _linha("Selic de 15,0% ao ano na nota (12/01/2026)", "15,0",
                f"{meta_nota:.2f}", "SGS 432 (vigência em 12/01/2026)",
-               "confere" if abs(meta_nota - 15) <= 0.01 else "não confere",
+               "confere" if abs(meta_nota - SELIC_PATAMAR) <= 0.01 else "não confere",
                "% a.a."),
         _linha("Focus projetava IPCA 2025 em 4,90% no início de 2025",
                "4,90", f"{focus_490:.2f} (pesquisa {d_focus:%d/%m/%Y})",
@@ -734,7 +757,7 @@ def verificacao_anbima() -> pd.DataFrame:
     # Selic: onde parou em jun/2025 e se manteve até o fim do ano
     jun25 = float(meta[meta.data <= "2025-06-30"].valor.iloc[-1])
     dez25 = float(meta[meta.data <= "2025-12-31"].valor.iloc[-1])
-    queda = meta[(meta.data > "2025-12-31") & (meta.valor < 15)]
+    queda = meta[(meta.data > "2025-12-31") & (meta.valor < SELIC_PATAMAR)]
     d_1o_corte = queda.data.min() if len(queda) else pd.NaT
 
     def _linha(aleg, artigo, nosso, fonte, status, unidade=""):
@@ -761,7 +784,7 @@ def verificacao_anbima() -> pd.DataFrame:
                else "não confere", "%"),
         _linha("[15/09/2025] Selic mantida em 15% nas 3 últimas reuniões "
                "de 2025", "15,00", f"{dez25:.2f}", "SGS 432 (dez/2025)",
-               "confere" if abs(dez25 - 15) <= 0.01 else "não confere",
+               "confere" if abs(dez25 - SELIC_PATAMAR) <= 0.01 else "não confere",
                "% a.a."),
         _linha("[15/09/2025] 1º corte em janeiro de 2026 (14,75%)",
                "jan/2026",

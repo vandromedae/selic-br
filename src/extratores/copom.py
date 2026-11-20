@@ -44,6 +44,13 @@ INDICE = BRUTO_COPOM / "indice.json"
 
 UA = {"User-Agent": "Mozilla/5.0 (juros-e-divida; pesquisa de transparencia)"}
 
+# calendário do Copom: REUNIOES_POR_ANO por ano, numeração sequencial desde
+# PRIMEIRA_REUNIAO (236ª = 20/01/2021; 2020 terminou na 235ª). Fonte única
+# da numeração e das regras de validar_pares().
+PRIMEIRA_REUNIAO = 236
+REUNIOES_POR_ANO = 8
+ANO_INICIO = 2021
+
 
 # ------------------------------------------------------------------ candidates
 
@@ -60,15 +67,14 @@ def _datas_candidatas(ano: int) -> list[date]:
 
 
 def _numeros_candidatos(ano: int) -> list[int]:
-    """Nºs esperados: 8 reuniões/ano, sequenciais a partir de 2021 (2020 terminou
-    na 235ª reunião — nº 229=18/3, 230=6/5, …, 235=9/12/2020: confirmado por
-    download direto e pela tabela pública do fulljoin)."""
-    inicio = {2021: 236}
-    for y in range(2022, 2027):
-        inicio[y] = inicio[y - 1] + 8
-    if ano not in inicio:
+    """Nºs esperados: REUNIOES_POR_ANO reuniões/ano, sequenciais a partir de
+    ANO_INICIO (2020 terminou na 235ª reunião — nº 229=18/3, 230=6/5, …,
+    235=9/12/2020: confirmado por download direto e pela tabela pública do
+    fulljoin). Anos fora do calendário -> lista vazia."""
+    if ano < ANO_INICIO:
         return []
-    return list(range(inicio[ano], inicio[ano] + 8))
+    primeiro = PRIMEIRA_REUNIAO + (ano - ANO_INICIO) * REUNIOES_POR_ANO
+    return list(range(primeiro, primeiro + REUNIOES_POR_ANO))
 
 
 def _url_para(num: int, d: date, maiusculo: bool = False) -> str:
@@ -204,7 +210,8 @@ def validar_pares(pares: dict[int, str],
     for ano, n in sorted(por_ano.items()):
         if ano in EXCECOES_ANO:
             continue
-        lo, hi = (1, 8) if ano == date.today().year else (8, 8)
+        lo, hi = ((1, REUNIOES_POR_ANO) if ano == date.today().year
+                  else (REUNIOES_POR_ANO, REUNIOES_POR_ANO))
         if not (lo <= n <= hi):
             contexto = "ano corrente" if ano == date.today().year else "ano fechado"
             problemas.append(
@@ -216,9 +223,15 @@ def validar_pares(pares: dict[int, str],
             "pares (num, data) inconsistentes:\n  - " + "\n  - ".join(problemas))
 
 
-def descobrir(ano_inicio: int = 2021, ano_fim: int = 2026) -> dict[int, str]:
-    """Valida pares (num, data) e retorna {num: 'YYYY-MM-DD'}."""
+def descobrir(ano_inicio: int = ANO_INICIO,
+              ano_fim: int | None = None) -> dict[int, str]:
+    """Valida pares (num, data) e retorna {num: 'YYYY-MM-DD'}.
+
+    `ano_fim` padrão = ano corrente (acompanha o calendário sem manutenção).
+    """
     BRUTO_COPOM.mkdir(parents=True, exist_ok=True)
+    if ano_fim is None:
+        ano_fim = date.today().year  # dinâmico: a próxima reunião entra sozinha
     pares: dict[int, str] = {}
     if INDICE.exists():
         pares = {int(k): v for k, v in json.loads(INDICE.read_text()).items()}
@@ -235,11 +248,11 @@ def descobrir(ano_inicio: int = 2021, ano_fim: int = 2026) -> dict[int, str]:
         # esperado — até 2 abaixo de nums[0] e até 2 acima de nums[-1] —
         # sempre com as datas deste ano (cobre numeração dessincronizada).
         # Piso236: índice começa na 236ª reunião; nada antes dela.
-        if 0 < len([n for n in nums if n in pares]) < 8:
+        if 0 < len([n for n in nums if n in pares]) < REUNIOES_POR_ANO:
             candidatos = ({nums[0] + viz for viz in (-2, -1)}
                           | {nums[-1] + viz for viz in (1, 2)})
             for nx in sorted(candidatos):
-                if nx < 236 or nx in nums or nx in pares:
+                if nx < PRIMEIRA_REUNIAO or nx in nums or nx in pares:
                     continue
                 for d in datas:
                     jobs.append((nx, d, pares.get(nx) == d.isoformat()))
@@ -344,7 +357,7 @@ def catalogo_csv(catalogo: list[dict]) -> None:
 
 def main() -> int:
     try:
-        pares = descobrir(2021, 2026)
+        pares = descobrir()
     except ValueError as e:  # validação de consistência recusou o índice
         print(f"falha: {e}")
         return 1
