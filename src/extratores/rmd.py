@@ -216,6 +216,12 @@ def processar_custo_medio() -> pd.DataFrame:
             continue
         d["tabela"] = rotulo
         frames.append(d)
+    if not frames:
+        # nenhuma aba com o cabeçalho esperado: devolve o esquema vazio em
+        # vez de estourar o pd.concat de lista vazia. O aviso importa: pode
+        # ser zero legítimo, mas também mudança de layout da STN.
+        print("aviso: nenhuma aba de custo médio reconhecida — salvando vazio")
+        frames = [pd.DataFrame(columns=["indicador", "data", "valor", "tabela"])]
     df = pd.concat(frames, ignore_index=True)
     df = df.rename(columns={"indicador": "escopo", "valor": "taxa_pct_aa"})
     df["unidade"] = "% a.a."

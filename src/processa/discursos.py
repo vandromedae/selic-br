@@ -102,6 +102,11 @@ def _frases(id_: int) -> tuple[str, ...]:
 # ------------------------------------------------------------------ trechos / temas
 
 
+# esquema do DataFrame de trechos: fonte única para trechos() e para o
+# fallback de salvar_trechos() quando não há nenhuma ocorrência
+COLS_TRECHOS = ["id", "data", "ano", "autor", "titulo", "pos", "tema", "trecho"]
+
+
 def trechos(tema: str, contexto: int = 1) -> pd.DataFrame:
     """DataFrame (id, data, ano, autor, titulo, pos, tema, trecho) p/ um tema.
 
@@ -122,8 +127,7 @@ def trechos(tema: str, contexto: int = 1) -> pd.DataFrame:
                     "autor": row.autor, "titulo": row.titulo,
                     "pos": i, "tema": tema, "trecho": janela.strip(),
                 })
-    return pd.DataFrame(linhas, columns=[
-        "id", "data", "ano", "autor", "titulo", "pos", "tema", "trecho"])
+    return pd.DataFrame(linhas, columns=COLS_TRECHOS)
 
 
 def temas() -> pd.DataFrame:
@@ -161,8 +165,14 @@ def por_autor() -> pd.DataFrame:
 
 
 def salvar_trechos() -> Path:
-    blocos = [trechos(t) for t in TEMAS]
-    df = pd.concat([b for b in blocos if not b.empty], ignore_index=True)
+    blocos = [b for b in (trechos(t) for t in TEMAS) if not b.empty]
+    if not blocos:
+        # zero ocorrências é resultado legítimo (corpus sem as expressões
+        # pesquisadas): devolve o esquema vazio em vez de estourar o
+        # pd.concat de lista vazia ("No objects to concatenate")
+        print("aviso: 0 trechos — discursos_trechos salvo vazio (esquema preservado)")
+        blocos = [pd.DataFrame(columns=COLS_TRECHOS)]
+    df = pd.concat(blocos, ignore_index=True)
     df = df.sort_values(["id", "tema", "pos"]).reset_index(drop=True)
     return salvar_parquet(df, "discursos_trechos")
 

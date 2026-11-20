@@ -117,6 +117,11 @@ def carrega_atas() -> pd.DataFrame:
 # ------------------------------------------------------------------ trechos
 
 
+# esquema do DataFrame de trechos: fonte única para trechos() e para o
+# fallback de salvar_trechos() quando não há nenhuma ocorrência
+COLS_TRECHOS = ["num", "data", "ano", "pos_ata", "tema", "trecho"]
+
+
 def trechos(tema: str, contexto: int = 1) -> pd.DataFrame:
     """DataFrame (num, data, ano, pos_ata, tema, trecho) para um tema de TEMAS.
 
@@ -136,7 +141,7 @@ def trechos(tema: str, contexto: int = 1) -> pd.DataFrame:
                     "num": int(row.num), "data": row.data, "ano": int(row.ano),
                     "pos_ata": i, "tema": tema, "trecho": janela.strip(),
                 })
-    return pd.DataFrame(linhas, columns=["num", "data", "ano", "pos_ata", "tema", "trecho"])
+    return pd.DataFrame(linhas, columns=COLS_TRECHOS)
 
 
 def temas() -> pd.DataFrame:
@@ -162,8 +167,14 @@ def temas() -> pd.DataFrame:
 
 
 def salvar_trechos() -> Path:
-    blocos = [trechos(t) for t in TEMAS]
-    df = pd.concat([b for b in blocos if not b.empty], ignore_index=True)
+    blocos = [b for b in (trechos(t) for t in TEMAS) if not b.empty]
+    if not blocos:
+        # zero ocorrências é resultado legítimo (corpus sem as expressões
+        # pesquisadas): devolve o esquema vazio em vez de estourar o
+        # pd.concat de lista vazia ("No objects to concatenate")
+        print("aviso: 0 trechos — copom_trechos salvo vazio (esquema preservado)")
+        blocos = [pd.DataFrame(columns=COLS_TRECHOS)]
+    df = pd.concat(blocos, ignore_index=True)
     df = df.sort_values(["num", "tema", "pos_ata"]).reset_index(drop=True)
     return salvar_parquet(df, "copom_trechos")
 
