@@ -80,12 +80,15 @@ def _url_para(num: int, d: date, maiusculo: bool = False) -> str:
 
 def _checa_url(url: str, timeout: int = 20) -> bool:
     try:
-        r = requests.head(url, headers=UA, timeout=timeout, allow_redirects=False)
+        # allow_redirects=True: o status FINAL é que conta — um redirect para
+        # o PDF real prova que a ata existe (30x seria descartado antes)
+        r = requests.head(url, headers=UA, timeout=timeout, allow_redirects=True)
         if r.status_code == 200:
             return True
         # alguns CDNs recusam HEAD — dupla-checa com GET varião
         if r.status_code in (403, 405):
-            g = requests.get(url, headers=UA, timeout=timeout, stream=True)
+            g = requests.get(url, headers=UA, timeout=timeout, stream=True,
+                             allow_redirects=True)
             ok = g.status_code == 200
             g.close()
             return ok
@@ -140,6 +143,79 @@ def _candidatas_faltantes(pares: dict[int, str], nums_ano: list[int]) -> list[tu
     return out
 
 
+# -------------------------------------------------------- validação de consistência
+
+# Exceções documentadas às regras de validar_pares(): só acrescentar com a
+# causa escrita. Ex.: EXCECOES_ANO[2020] = "9 reuniões (calendário extra …)"
+EXCECOES_ANO: dict[int, str] = {}
+EXCECOES_DIA: dict[str, str] = {}  # data ISO fora de quarta, com a causa
+
+
+def validar_pares(pares: dict[int, str],
+                  conflitos: list[tuple[int, str, str]] | None = None) -> None:
+    """Validação independente dos pares (num, data) descobertos.
+
+    Levanta ValueError listando TODAS as inconsistências de uma vez:
+    - números associados a datas conflitantes (registrados na varredura —
+      o dict sozinho esconderia a sobrescrita);
+    - sequencial contíguo, sem buracos entre o menor e o maior nº;
+    - data válida (ISO) e em quarta-feira, dia de divulgação do Copom
+      (exceções em EXCECOES_DIA);
+    - sem datas duplicadas (uma reunião por data);
+    - reuniões por ano: 8 em anos fechados, 1..8 no ano corrente
+      (exceções em EXCECOES_ANO).
+
+    Sem descarte da estratégia de descoberta: é uma malha de segurança que
+    impede índice inconsistente de ser gravado em silêncio.
+    """
+    problemas: list[str] = []
+    for num, d1, d2 in (conflitos or []):
+        problemas.append(f"nº {num} em datas conflitantes: {d1} x {d2}")
+    if not pares:
+        raise ValueError("validar_pares: nenhum par (num, data) para validar")
+
+    nums = sorted(pares)
+    buracos = [n for n in range(nums[0], nums[-1] + 1) if n not in pares]
+    if buracos:
+        problemas.append(f"sequencial com buracos: {buracos} (atas ausentes?)")
+
+    datas_ok: dict[int, date] = {}
+    for num in nums:
+        try:
+            datas_ok[num] = date.fromisoformat(pares[num])
+        except ValueError:
+            problemas.append(f"nº {num}: data inválida {pares[num]!r}")
+    if len(set(pares.values())) != len(pares):
+        vistas: set[str] = set()
+        dup = sorted({v for v in pares.values()
+                      if v in vistas or vistas.add(v)})
+        problemas.append(f"datas duplicadas: {dup}")
+
+    for num, d in datas_ok.items():
+        if d.weekday() != 2 and pares[num] not in EXCECOES_DIA:
+            problemas.append(
+                f"nº {num}: {pares[num]} não é quarta-feira "
+                "(dia de divulgação do Copom) — se for legítimo, "
+                "documente em EXCECOES_DIA")
+
+    por_ano: dict[int, int] = {}
+    for d in datas_ok.values():
+        por_ano[d.year] = por_ano.get(d.year, 0) + 1
+    for ano, n in sorted(por_ano.items()):
+        if ano in EXCECOES_ANO:
+            continue
+        lo, hi = (1, 8) if ano == date.today().year else (8, 8)
+        if not (lo <= n <= hi):
+            contexto = "ano corrente" if ano == date.today().year else "ano fechado"
+            problemas.append(
+                f"{ano}: {n} reuniões (esperado {lo}..{hi}, {contexto}) "
+                "— se for legítimo, documente em EXCECOES_ANO")
+
+    if problemas:
+        raise ValueError(
+            "pares (num, data) inconsistentes:\n  - " + "\n  - ".join(problemas))
+
+
 def descobrir(ano_inicio: int = 2021, ano_fim: int = 2026) -> dict[int, str]:
     """Valida pares (num, data) e retorna {num: 'YYYY-MM-DD'}."""
     BRUTO_COPOM.mkdir(parents=True, exist_ok=True)
@@ -183,13 +259,23 @@ def descobrir(ano_inicio: int = 2021, ano_fim: int = 2026) -> dict[int, str]:
     for ano, nums in por_ano_nums.items():
         pendentes += [(n, d, False) for (n, d)
                       in _candidatas_faltantes(pares, nums)]
+    conflitos: list[tuple[int, str, str]] = []
     with ThreadPoolExecutor(max_workers=12) as ex:
         futs = {ex.submit(_varredura, *j): j for j in pendentes}
         for fut in as_completed(futs):
             res = fut.result()
             if res:
-                pares[res[0]] = res[1].isoformat()
+                num, d = res
+                iso = d.isoformat()
+                if pares.get(num) not in (None, iso):
+                    # mesmo nº em outra data: não sobrescreve o já confirmado
+                    # e registra o conflito (validar_pares faz o resto)
+                    conflitos.append((num, pares[num], iso))
+                    continue
+                pares[num] = iso
 
+    # índice inconsistente não é gravado: a próxima rodada reprocessa
+    validar_pares(pares, conflitos)
     INDICE.write_text(json.dumps({str(k): v for k, v in sorted(pares.items())}, indent=1,
                                  ensure_ascii=False))
     return pares
@@ -256,8 +342,16 @@ def catalogo_csv(catalogo: list[dict]) -> None:
 # ------------------------------------------------------------------ CLI
 
 
-def main() -> None:
-    pares = descobrir(2021, 2026)
+def main() -> int:
+    try:
+        pares = descobrir(2021, 2026)
+    except ValueError as e:  # validação de consistência recusou o índice
+        print(f"falha: {e}")
+        return 1
+    if not pares:
+        # defesa: min()/max() de sequência vazia estourariam sem contexto
+        print("falha: nenhum par (num, data) descoberto — rede/portal fora?")
+        return 1
     print(f"pares válidos: {len(pares)} (nº {min(pares)} … {max(pares)})")
     por_ano: dict[int, list[int]] = {}
     for num, iso in pares.items():
@@ -266,6 +360,7 @@ def main() -> None:
         print(f"  {ano}: {len(nums)} atas ({min(nums)}–{max(nums)})")
     catalogo = baixar_e_extrair(pares)
     catalogo_csv(catalogo)
+    return 0
 
 
 if __name__ == "__main__":
