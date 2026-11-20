@@ -5,11 +5,59 @@ Tudo aqui é derivado dos parquets de `dados/processado/` — nenhum download.
 
 from __future__ import annotations
 
+from datetime import date
+
 import pandas as pd
 
 from ..extratores.base import ler_parquet
 
 ANO_INICIO = 2002
+COBERTURA_DETENTORES = 2007  # RMD 2.7 (detentores da DPMFi) começa em jan/2007
+
+
+# ------------------------------------------------------------------ validação
+# Falha ruidosa em vez de saída incompleta em silêncio: o dado de entrada
+# precisa ter as colunas, as séries e a cobertura temporal que as contas
+# assumem (mesmo padrão de fatores_anuais).
+
+
+def _exigir_colunas(df: pd.DataFrame, colunas: list[str], fonte: str) -> None:
+    """Falha ruidosa se colunas esperadas faltarem no dado de entrada."""
+    faltando = [c for c in colunas if c not in df.columns]
+    if faltando:
+        raise ValueError(
+            f"{fonte}: colunas ausentes {faltando} — "
+            f"encontradas: {sorted(df.columns)}")
+
+
+def _sgs_serie(sgs: pd.DataFrame, nome: str) -> pd.DataFrame:
+    """Fatia do SGS por nome de série; falha ruidosa se ela não existir.
+
+    (Série ausente viraria coluna inteira de NaN no resample — falha
+    silenciosa, o pior tipo para uma série analítica.)
+    """
+    _exigir_colunas(sgs, ["serie", "data", "valor"], "sgs.parquet")
+    d = sgs[sgs.serie == nome]
+    if d.empty:
+        raise ValueError(
+            f"sgs.parquet: série {nome!r} ausente — "
+            f"disponíveis: {sorted(sgs.serie.unique())}")
+    return d
+
+
+def _exigir_cobertura_anual(df: pd.DataFrame, desde: int, fonte: str,
+                            col_ano: str = "ano") -> None:
+    """Falha ruidosa se a série anual recuar antes de `desde` ou tiver buracos."""
+    if df.empty:
+        raise ValueError(f"{fonte}: saiu vazia")
+    anos = sorted(df[col_ano].unique())
+    if anos[0] > desde:
+        raise ValueError(
+            f"{fonte}: cobertura recuou — primeiro ano {anos[0]} "
+            f"(esperado desde {desde})")
+    buracos = [a for a in range(anos[0], anos[-1] + 1) if a not in set(anos)]
+    if buracos:
+        raise ValueError(f"{fonte}: anos faltando na sequência: {buracos}")
 
 
 # ------------------------------------------------------------------ fiscal/anual
@@ -27,7 +75,7 @@ def juros_anuais() -> pd.DataFrame:
     sgs = ler_parquet("sgs")
 
     def _serie(nome: str) -> pd.Series:
-        s = sgs[sgs.serie == nome].set_index("data")["valor"]
+        s = _sgs_serie(sgs, nome).set_index("data")["valor"]
         return s.resample("YE").sum()
 
     juros = _serie("juros_mensal")
@@ -48,6 +96,7 @@ def juros_anuais() -> pd.DataFrame:
     df["juros_pib_pct"] = 100 * df["juros_mi"] / df["pib_mi"]
     df["juros_ex_swap_pib_pct"] = 100 * df["juros_ex_swap_mi"] / df["pib_mi"]
     df = df[df.ano >= ANO_INICIO].reset_index(drop=True)
+    _exigir_cobertura_anual(df, ANO_INICIO, "juros_anuais")
     return df
 
 
@@ -90,14 +139,19 @@ def fatores_anuais() -> pd.DataFrame:
 def detentores_anuais() -> pd.DataFrame:
     """Estoque da DPMFi por detentor no dezembro de cada ano (R$ bi e participação)."""
     det = ler_parquet("rmd_detentores")
+    _exigir_colunas(det, ["detentor", "data", "valor_bi", "participacao"],
+                    "rmd_detentores.parquet")
     det = det[det.detentor != "Total"].copy()
     dez = det[det.data.dt.month == 12].copy()
     dez["ano"] = dez.data.dt.year
+    _exigir_cobertura_anual(dez, COBERTURA_DETENTORES, "detentores_anuais")
     return dez[["ano", "data", "detentor", "valor_bi", "participacao"]].reset_index(drop=True)
 
 
 def detentores_mes() -> pd.DataFrame:
     det = ler_parquet("rmd_detentores")
+    _exigir_colunas(det, ["detentor", "data", "valor_bi", "participacao"],
+                    "rmd_detentores.parquet")
     return det[det.detentor != "Total"].copy()
 
 
@@ -107,14 +161,22 @@ def juros_por_detentor(ano: int | None = None) -> pd.DataFrame:
     Premissa: participação do estoque em dezembro aproxima a participação média
     do ano no dispêndio com juros (proxy — não é dado oficial por detentor).
 
-    O `merge` é interno: anos sem linha de dezembro em `detentores` (2026,
-    enquanto o RMD 2.7 não fechar o ano) ficam de fora — comportamento
-    pretendido, mas aqui declarado.
+    O `merge` é interno: anos sem linha de dezembro em `detentores` ficam de
+    fora — os anos antes da cobertura do RMD 2.7 (até 2006) e o ano corrente,
+    enquanto o anexo não fecha o ano. Qualquer outro ano descartado é erro.
     """
     j = juros_anuais()
     if ano is not None:
         j = j[j.ano == ano]
     det = detentores_anuais()
+    # o merge interno descarta anos silenciosamente — medir antes de cruzar
+    sem_match = sorted(set(j.ano) - set(det.ano))
+    inesperados = [a for a in sem_match
+                   if a >= COBERTURA_DETENTORES and a < date.today().year]
+    if inesperados:
+        raise ValueError(
+            f"juros_por_detentor: anos sem dezembro em detentores: "
+            f"{inesperados} — o merge interno os descartaria em silêncio")
     det = det.merge(j[["ano", "juros_mi"]], on="ano")
     det["juros_estimado_mi"] = det.participacao * det["juros_mi"]
     det["juros_estimado_bi"] = det.juros_estimado_mi / 1000
@@ -129,7 +191,7 @@ def macro_mensal() -> pd.DataFrame:
     sgs = ler_parquet("sgs")
 
     def _ult_do_mes(nome: str) -> pd.Series:
-        s = sgs[sgs.serie == nome].set_index("data")["valor"]
+        s = _sgs_serie(sgs, nome).set_index("data")["valor"]
         return s.resample("ME").last()
 
     selic_meta = _ult_do_mes("meta_selic_copom")
@@ -138,9 +200,13 @@ def macro_mensal() -> pd.DataFrame:
     ibc12 = (ibc / ibc.shift(12) - 1) * 100
     selic_mensal = _ult_do_mes("selic_mensal_anualizada")
 
-    des = ler_parquet("desemprego").set_index("data")["taxa_pct"]
+    des = ler_parquet("desemprego")
+    _exigir_colunas(des, ["data", "taxa_pct"], "desemprego.parquet")
+    des = des.set_index("data")["taxa_pct"]
 
     foc = ler_parquet("focus_inflacao12m")
+    _exigir_colunas(foc, ["data_pesquisa", "suavizada", "media"],
+                    "focus_inflacao12m.parquet")
     foc = foc[foc.suavizada == "N"].set_index("data_pesquisa")["media"]
     foc = foc.resample("ME").last()
 
@@ -164,7 +230,10 @@ def selic_real_mensal() -> pd.DataFrame:
 
 
 def focus_anuais() -> pd.DataFrame:
-    return ler_parquet("focus_anuais")
+    d = ler_parquet("focus_anuais")
+    _exigir_colunas(d, ["indicador", "data_pesquisa", "data_referencia", "media"],
+                    "focus_anuais.parquet")
+    return d
 
 
 # ------------------------------------------------------------------ custo médio
@@ -172,13 +241,25 @@ def focus_anuais() -> pd.DataFrame:
 
 def custo_medio() -> pd.DataFrame:
     c = ler_parquet("rmd_custo_medio")
+    _exigir_colunas(c, ["data", "escopo", "tabela", "taxa_pct_aa"],
+                    "rmd_custo_medio.parquet")
     return c
 
 
 def custo_medio_dpf() -> pd.DataFrame:
     """Custo médio do estoque (% a.a.), escopo DPF — série mensal desde 2005."""
     c = ler_parquet("rmd_custo_medio")
+    _exigir_colunas(c, ["data", "escopo", "tabela", "taxa_pct_aa"],
+                    "rmd_custo_medio.parquet")
     d = c[(c.tabela == "estoque mensal") & (c.escopo == "DPF")]
+    if d.empty:
+        raise ValueError(
+            "custo_medio_dpf: o filtro 'estoque mensal'/'DPF' não casou nenhuma "
+            "linha — os rótulos do RMD 4.x mudaram?")
+    if d.data.min().to_period("M") > pd.Period("2005-01"):
+        raise ValueError(
+            f"custo_medio_dpf: cobertura recuou — começa em "
+            f"{d.data.min():%Y-%m} (esperado desde 2005-01)")
     return d[["data", "taxa_pct_aa"]].reset_index(drop=True)
 
 
@@ -194,6 +275,10 @@ def validacao_bndes() -> pd.DataFrame:
     }
     linhas = []
     for ano, esp in esperado.items():
+        if ano not in set(j.ano):
+            raise ValueError(
+                f"validacao_bndes: o ano {ano} (Estudo BNDES) não existe em "
+                f"juros_anuais — anos disponíveis: {sorted(j.ano)}")
         r = j[j.ano == ano].iloc[0]
         linhas.append({
             "ano": ano,
@@ -217,10 +302,12 @@ def juros_primario_12m() -> pd.DataFrame:
     sgs = ler_parquet("sgs")
 
     def _serie(nome: str) -> pd.Series:
-        return sgs[sgs.serie == nome].set_index("data")["valor"].dropna()
+        return _sgs_serie(sgs, nome).set_index("data")["valor"].dropna()
 
-    return pd.concat(
-        [_serie("juros_pib_12m").rename("juros_pib_12m"),
-         _serie("primario_pib_12m").rename("primario_pib_12m")],
-        axis=1,
-    )
+    a = _serie("juros_pib_12m").rename("juros_pib_12m")
+    b = _serie("primario_pib_12m").rename("primario_pib_12m")
+    if not a.index.equals(b.index):
+        raise ValueError(
+            f"juros_primario_12m: calendários divergentes entre "
+            f"juros_pib_12m ({len(a)} datas) e primario_pib_12m ({len(b)} datas)")
+    return pd.concat([a, b], axis=1)
