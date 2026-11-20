@@ -34,8 +34,22 @@ st.set_page_config(
 # ------------------------------------------------------------------ dados com cache
 
 
+def _assinatura_dados() -> tuple[tuple[str, int, int], ...]:
+    """(nome, mtime_ns, tamanho) de cada arquivo em dados/processado.
+
+    Chave de invalidação do cache: sem parâmetro, o @st.cache_data hasheia
+    sempre a mesma chave e o app exibiria dados velhos mesmo depois de
+    rodar os extratores. O parâmetro de dados() entra no hash — não pode
+    começar com "_", senão o Streamlit o ignora de propósito.
+    """
+    proc = RAIZ / "dados" / "processado"
+    return tuple((p.name, p.stat().st_mtime_ns, p.stat().st_size)
+                 for p in sorted(proc.iterdir()) if p.is_file())
+
+
 @st.cache_data(show_spinner="carregando dados processados…")
-def dados() -> dict[str, pd.DataFrame]:
+def dados(assinatura) -> dict[str, pd.DataFrame]:
+    del assinatura  # só serve para invalidar o cache quando os arquivos mudam
     j = ind.juros_anuais()
     f = ind.fatores_anuais()
     dz = ind.detentores_anuais()
@@ -54,7 +68,7 @@ def dados() -> dict[str, pd.DataFrame]:
     }
 
 
-D = dados()
+D = dados(_assinatura_dados())
 
 ORDEM_DETENTOR = [
     "Instituições Financeiras", "Fundos de Investimento", "Previdência",
