@@ -57,9 +57,24 @@ _FOCO_AUTOR = re.compile(
     r"Presidente|Diretor|Relat[óo]rio de Pol|Divulga[çc][ãa]o", re.I)
 
 
+class FalhaAPI(Exception):
+    """A fonte não respondeu (status de erro, rede ou JSON inválido).
+
+    Diferente de "ok, sem dados" (200 + lista vazia): a API do portal
+    responde 200 com `conteudo: []` para anos sem discursos (testado:
+    1995, 2050) — então qualquer status !=200 É falha, nunca falta de
+    dado. Tratar falha como ausência de dado fazia montar_indice() rodar
+    sem o ano e salvar_indice() sobrescrever o CSV sem ele.
+    """
+
+
 def _get(url: str, params: dict | None = None, tentativas: int = 3,
-         timeout: int = 60) -> dict | None:
-    """GET com retry. Retorna dict ou None se a fonte não responder."""
+         timeout: int = 60) -> dict:
+    """GET com retry. Retorna o JSON (dict) ou levanta FalhaAPI.
+
+    Nunca retorna None: falha é exceção, "sem dados" é 200 + lista vazia.
+    """
+    ultimo = "?"
     for i in range(tentativas):
         try:
             r = requests.get(url, params=params, headers=_UA, timeout=timeout)
@@ -70,20 +85,22 @@ def _get(url: str, params: dict | None = None, tentativas: int = 3,
                         return json.loads(r.content.decode(enc))
                     except (UnicodeDecodeError, json.JSONDecodeError):
                         continue
-                return None
-            if r.status_code in (404, 400, 500):
-                return None
-        except requests.RequestException:
-            pass
+                raise FalhaAPI(f"HTTP 200 mas corpo não é JSON válido: {url}")
+            if r.status_code in (404, 400):  # definitivo: retry não resolve
+                raise FalhaAPI(f"HTTP {r.status_code}: {url}")
+            ultimo = f"HTTP {r.status_code}"  # 500/502/429…: transitório
+        except requests.RequestException as e:
+            ultimo = type(e).__name__
         time.sleep(1.5 * (i + 1))
-    return None
+    raise FalhaAPI(
+        f"sem resposta após {tentativas} tentativas ({ultimo}) — {url}"
+        + (f" params={params}" if params else ""))
 
 
 def _itens_por_ano(ano: int) -> list[dict]:
     d = _get(f"{API}/servico/{SITE}/discursos",
              params={"ano": ano, "ordem": "Title asc"})
-    if not d:
-        return []
+    # falha propaga FalhaAPI; 200 sem itens -> [] legítimo
     return d.get("conteudo") or []
 
 
@@ -91,11 +108,10 @@ def descobrir_anos() -> list[int]:
     """Anos com discursos: via /Anos (datas de referência) + varredura fina."""
     d = _get(f"{API}/servico/{SITE}/discursos/Anos")
     anos: set[int] = set()
-    if d:
-        for it in d.get("conteudo") or []:
-            ref = (it.get("dataReferencia") or "")[:4]
-            if ref.isdigit():
-                anos.add(int(ref))
+    for it in d.get("conteudo") or []:
+        ref = (it.get("dataReferencia") or "")[:4]
+        if ref.isdigit():
+            anos.add(int(ref))
     if anos:
         # completa com anos intermediários vazios e o ano corrente
         lo, hi = min(anos), max(MAX_ANO, max(anos))
@@ -103,13 +119,25 @@ def descobrir_anos() -> list[int]:
     return sorted(anos)
 
 
-def montar_indice(anos: list[int]) -> list[dict]:
+def montar_indice(anos: list[int]) -> tuple[list[dict], list[int]]:
+    """Coleta o índice. Retorna (linhas, anos_com_falha).
+
+    Falha de requisição num ano não derruba os demais, mas também não é
+    silenciosamente tratada como "ano sem discursos" (fail-closed: vira
+    exit 1 em main, sem salvar).
+    """
     linhas: list[dict] = []
+    falhas: list[int] = []
     with ThreadPoolExecutor(max_workers=4) as ex:
         futs = {ex.submit(_itens_por_ano, a): a for a in anos}
         for fut in as_completed(futs):
             ano = futs[fut]
-            itens = fut.result()
+            try:
+                itens = fut.result()
+            except FalhaAPI as e:
+                falhas.append(ano)
+                print(f"  {ano}: FALHA (requisição) — {e}")
+                continue
             if not itens:
                 print(f"  {ano}: 0 itens")
                 continue
@@ -130,12 +158,18 @@ def montar_indice(anos: list[int]) -> list[dict]:
                     "tamanho": it.get("Tamanho"),
                 })
             print(f"  {ano}: {len(itens)} itens")
-    return sorted(linhas, key=lambda x: (x["data"], str(x["titulo"])))
+    linhas.sort(key=lambda x: (x["data"], str(x["titulo"])))
+    return linhas, sorted(falhas)
 
 
 def salvar_indice(linhas: list[dict]) -> Path:
     import pandas as pd
 
+    if not linhas:
+        # fail-closed: lista vazia nunca sobrescreve o índice já salvo
+        raise ValueError(
+            "nenhuma linha para salvar — recusando sobrescrever "
+            f"{PROCESSADO / 'discursos_indice.csv'}")
     df = pd.DataFrame(linhas).drop_duplicates(subset=["id", "url_pdf", "titulo"])
     destino = PROCESSADO / "discursos_indice.csv"
     df.to_csv(destino, index=False)
@@ -219,16 +253,32 @@ def baixar_foco() -> Path:
     return TEXTO_DIR
 
 
-def main(argv: list[str] | None = None) -> None:
+def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     BRUTO_DISCURSOS.mkdir(parents=True, exist_ok=True)
     if "--foco" in argv:
         baixar_foco()
-        return
-    anos = descobrir_anos()
+        return 0
+    try:
+        anos = descobrir_anos()
+    except FalhaAPI as e:
+        print(f"falha na API de anos: {e}")
+        return 1
+    if not anos:
+        print("falha: /Anos não retornou nenhum ano")
+        return 1
     print(f"anos: {anos[0]}–{anos[-1]} ({len(anos)} varreduras)")
-    linhas = montar_indice(anos)
+    linhas, falhas = montar_indice(anos)
+    if falhas:
+        print(f"falha de requisição em {len(falhas)} ano(s): {falhas}")
+        print("índice NÃO salvo (fail-closed): falha de requisição não é "
+              "falta de dados — rode de novo.")
+        return 1
+    if not linhas:
+        print("nenhum item coletado; índice NÃO salvo")
+        return 1
     salvar_indice(linhas)
+    return 0
 
 
 if __name__ == "__main__":
