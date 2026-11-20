@@ -26,7 +26,8 @@ import pandas as pd
 import requests
 
 from .base import (BRUTO, MESES, RE_MES, ano_de_dois_digitos, get,
-                    salvar_parquet)
+                    meta_gravar, meta_ler, salvar_parquet,
+                    usar_cache as _usar_cache_arquivo)
 
 RMD_PAGE = "https://www.tesourotransparente.gov.br/publicacoes/relatorio-mensal-da-divida-rmd"
 THOT = "https://thot-arquivos.tesouro.gov.br/publicacao-anexo/{id}"
@@ -86,11 +87,7 @@ def descobrir_anexo() -> tuple[int, str]:
     raise RuntimeError("nenhum anexo RMD encontrado")
 
 
-def baixar(force: bool = False) -> Path:
-    """Baixa o último anexo ZIP e extrai o XLSX para cache."""
-    if XLSX_CACHE.exists() and not force:
-        return XLSX_CACHE
-    anexo_id, url = descobrir_anexo()
+def _baixa_anexo(anexo_id: int, url: str) -> Path:
     print(f"anexo RMD id={anexo_id} <- {url[:100]}", flush=True)
     content = get(url, timeout=180)
     XLSX_CACHE.parent.mkdir(parents=True, exist_ok=True)
@@ -100,7 +97,51 @@ def baixar(force: bool = False) -> Path:
             raise RuntimeError("ZIP sem XLSX")
         XLSX_CACHE.write_bytes(zf.read(nomes[0]))
     _salvar_id(anexo_id, url)
+    meta_gravar(XLSX_CACHE, fonte="rmd/thot-anexo", url=url,
+                identificador_publicacao=f"anexo:{anexo_id}")
     return XLSX_CACHE
+
+
+def baixar(force: bool = False) -> Path:
+    """baixar(): obtém a versão ATUAL do último anexo do RMD.
+
+    O anexo muda de URL a cada publicação mensal, então a revalidação aqui
+    é o identificador da publicação (id do anexo no thot): igual ao
+    registrado nos metadados -> mantém a cópia local; id novo -> baixa o
+    anexo novo. force=True transfere de novo mesmo assim.
+    """
+    meta = meta_ler(XLSX_CACHE)
+    cache_ok = (XLSX_CACHE.exists() and XLSX_CACHE.stat().st_size > 0
+                and meta is not None)
+    try:
+        if cache_ok and not force:
+            anexo_id, url = descobrir_anexo()  # consulta leve: há publicação nova?
+            if meta.get("identificador_publicacao") == f"anexo:{anexo_id}":
+                return XLSX_CACHE  # mesma publicação
+        else:
+            anexo_id, url = descobrir_anexo()
+    except RuntimeError as e:
+        tem_copia = XLSX_CACHE.exists() and XLSX_CACHE.stat().st_size > 0
+        if tem_copia:
+            # fonte indisponível: NÃO se disfarça de sucesso — falha, mas
+            # aponta a saída (a cópia local tem procedência registrada)
+            origem = (f"{meta.get('identificador_publicacao')}, coletada em "
+                      f"{meta.get('data_coleta')}" if meta
+                      else "cópia de coleta antiga, sem metadados")
+            raise RuntimeError(
+                f"fonte do RMD indisponível: {e} — há cópia local ({origem}): "
+                "use --cache para usá-la ou --force para tentar "
+                "transferir de novo") from e
+        raise
+    return _baixa_anexo(anexo_id, url)
+
+
+def usar_cache() -> Path:
+    """usa_cache(): usa o XLSX já coletado, sem consultar a fonte.
+
+    Integridade validada pelo hash_sha256 dos metadados.
+    """
+    return _usar_cache_arquivo("anexo_rmd.xlsx", "rmd")
 
 
 # ----------------------------------------------------------------- parse helpers
@@ -256,8 +297,14 @@ def processar_reserva() -> pd.DataFrame:
     return salvar_parquet(pd.DataFrame(regs), "rmd_reserva")
 
 
-def main(force: bool = False) -> None:
-    baixar(force=force)
+def main(force: bool = False, so_cache: bool = False) -> None:
+    """CLI: default = baixar() (compara a publicação atual);
+    --cache = usar_cache() (só cópia local, sem rede);
+    --force = baixar(force=True) (transfere de novo)."""
+    if so_cache:
+        usar_cache()
+    else:
+        baixar(force=force)
     for fn in (processar_detentores, processar_custo_medio,
                processar_composicao, processar_reserva):
         out = fn()
@@ -268,4 +315,4 @@ def main(force: bool = False) -> None:
 if __name__ == "__main__":
     import sys
 
-    main(force="--force" in sys.argv)
+    main(force="--force" in sys.argv, so_cache="--cache" in sys.argv)

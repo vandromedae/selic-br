@@ -487,8 +487,10 @@ conda activate juros_divida
 
 # atualizar dados (cada extrator tem CLI própria)
 python -m src.extratores.sgs
-python -m src.extratores.tesouro
-python -m src.extratores.rmd
+python -m src.extratores.tesouro             # revalida com a fonte: transfere só se mudou
+python -m src.extratores.tesouro --cache     # usa as cópias locais (sem rede)
+python -m src.extratores.tesouro --force     # transfere de novo
+python -m src.extratores.rmd                 # idem (compara o id do anexo publicado)
 python -m src.extratores.focus
 python -m src.extratores.ibge
 python -m src.extratores.copom     # atas 2021–hoje (descobre a nova ata sozinho)
@@ -505,6 +507,16 @@ jupyter nbconvert --to notebook --execute --inplace notebooks/*.ipynb
 # ferramenta web
 streamlit run app/app.py
 ```
+
+**Coleta com procedência** (Tesouro e RMD). As três operações são
+`baixar()` — verifica e obtém a versão atual (revalidação condicional por
+`ETag`/`Last-Modified`; no RMD, compara o id do anexo publicado, já que a
+URL muda todo mês) —, `usar_cache()` — usa explicitamente a cópia local,
+validando o `hash_sha256` dos metadados — e `baixar(force=True)` — força
+nova transferência. Cada coleta registra `<arquivo>.meta.json` com
+`fonte`, `url`, `data_coleta`, `identificador_publicacao`, `hash_sha256`
+(+ `etag`/`last_modified` brutos para a revalidação). As CLIs aceitam
+`--cache` e `--force`.
 
 ## Limitações declaradas
 

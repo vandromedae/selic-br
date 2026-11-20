@@ -12,13 +12,15 @@ aqui são derretidos para formato longo e salvos em parquet.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pandas as pd
 import requests
 
 from .base import (BRUTO, MESES, PROCESSADO, RE_ANO, RE_MES,
-                    ano_de_dois_digitos, salvar_parquet)
+                    ano_de_dois_digitos, baixar_com_cache, salvar_parquet,
+                    usar_cache as _usar_cache_arquivo)
 
 CKAN = "https://www.tesourotransparente.gov.br/ckan/api/3/action/package_show"
 
@@ -43,19 +45,36 @@ def _descobrir_url(pid: str, fmts=("XLSX", "CSV")) -> dict[str, str]:
 
 
 def baixar(force: bool = False) -> dict[str, Path]:
-    """Baixa os arquivos brutos (com cache em dados/bruto/tesouro)."""
-    destino = BRUTO / "tesouro"
-    destino.mkdir(parents=True, exist_ok=True)
+    """baixar(): obtém as versões ATUAIS dos anexos (revalidação condicional).
+
+    Cada arquivo passa por baixar_com_cache(): 304 mantém a cópia local,
+    200 grava a nova versão; force=True transfere de novo. Metadados da
+    coleta em <arquivo>.meta.json.
+    """
     baixados: dict[str, Path] = {}
     for nome, pid in PAQUETES.items():
         for ext, url in _descobrir_url(pid).items():
-            caminho = destino / f"{nome}.{ext}"
-            if force or not caminho.exists():
-                print(f"baixando {caminho.name} <- {url[:90]}...", flush=True)
-                resp = requests.get(url, timeout=180)
-                resp.raise_for_status()
-                caminho.write_bytes(resp.content)
+            caminho = baixar_com_cache(url, f"{nome}.{ext}", "tesouro",
+                                       fonte=f"tesouro/{pid}", force=force)
             baixados[caminho.name] = caminho
+    return baixados
+
+
+def usar_cache() -> dict[str, Path]:
+    """usa_cache(): usa as cópias locais de dados/bruto/tesouro, sem rede.
+
+    Integridade validada pelo hash_sha256 dos metadados de cada arquivo.
+    """
+    destino = BRUTO / "tesouro"
+    baixados: dict[str, Path] = {}
+    for nome in PAQUETES:
+        arqs = sorted(p for p in destino.glob(f"{nome}.*")
+                      if p.is_file() and not p.name.endswith(".meta.json"))
+        if not arqs:
+            raise FileNotFoundError(
+                f"cache ausente para '{nome}' em {destino} — rode baixar()")
+        for p in arqs:
+            baixados[p.name] = _usar_cache_arquivo(p.name, "tesouro")
     return baixados
 
 
@@ -166,7 +185,15 @@ def processar_estoque_csv() -> pd.DataFrame:
 
 
 def main() -> None:
-    baixar()
+    """CLI: default = baixar() (revalida com a fonte);
+    --cache = usar_cache() (só cópias locais, sem rede);
+    --force = baixar(force=True) (transfere de novo)."""
+    argv = sys.argv[1:]
+    if "--cache" in argv:
+        arqs = usar_cache()
+    else:
+        arqs = baixar(force="--force" in argv)
+    print(f"coleta: {len(arqs)} arquivo(s)")
     for fn in (processar_estoque, processar_fatores, processar_emissoes,
                processar_estoque_csv):
         out = fn()

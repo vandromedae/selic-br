@@ -7,7 +7,7 @@ import re
 import socket
 import time
 from contextlib import contextmanager
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import requests
@@ -121,13 +121,114 @@ def get_json(url: str, params: dict | None = None, timeout: int = 120, tentativa
     raise RuntimeError(f"falha após {tentativas} tentativas: {url}") from ultimo_erro
 
 
-def baixar_com_cache(url: str, nome: str, subpasta: str, params: dict | None = None) -> Path:
-    """Baixa URL e guarda cópia bruta; reusa se o arquivo já existe."""
+def _sha256(p: Path) -> str:
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def _meta_path(dest: Path) -> Path:
+    return dest.with_name(dest.name + ".meta.json")
+
+
+def meta_ler(dest: Path) -> dict | None:
+    """Metadados da coleta de um arquivo do cache (ou None se ausentes)."""
+    p = _meta_path(dest)
+    if not p.exists():
+        return None
+    try:
+        return json.loads(p.read_text())
+    except ValueError:
+        return None
+
+
+def meta_gravar(dest: Path, *, fonte: str, url: str,
+                identificador_publicacao: str, etag: str | None = None,
+                last_modified: str | None = None) -> dict:
+    """Registra os metadados da coleta em <arquivo>.meta.json.
+
+    Campos: fonte, url, data_coleta, identificador_publicacao (o que
+    identifica esta versão publicada: ETag, Last-Modified ou id do anexo),
+    hash_sha256 do arquivo coletado; + etag/last_modified brutos, usados
+    na revalidação condicional (If-None-Match / If-Modified-Since).
+    """
+    meta = {
+        "fonte": fonte,
+        "url": url,
+        "data_coleta": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "identificador_publicacao": identificador_publicacao,
+        "hash_sha256": _sha256(dest),
+        "etag": etag,
+        "last_modified": last_modified,
+    }
+    _meta_path(dest).write_text(json.dumps(meta, ensure_ascii=False, indent=1))
+    return meta
+
+
+def baixar_com_cache(url: str, nome: str, subpasta: str, params: dict | None = None,
+                     fonte: str = "", force: bool = False) -> Path:
+    """baixar(): obtém a versão ATUAL da fonte, com revalidação condicional.
+
+    - force=False: havendo cache com metadados, revalida com If-None-Match /
+      If-Modified-Since — 304 mantém a cópia local (byte-idêntica à fonte),
+      200 grava a nova versão. Sem cache (ou sem metadados) -> transfere.
+    - force=True: transfere de novo, ignorando a revalidação.
+    - Qualquer outro status HTTP é erro claro: não cai de volta para o
+      cache (falha não se disfarça de dado).
+
+    Os metadados da coleta ficam em <arquivo>.meta.json (ver meta_gravar).
+    """
     dest = _cache_path(nome, subpasta)
-    if dest.exists() and dest.stat().st_size > 0:
-        return dest
-    dest.write_bytes(get(url, params=params))
+    meta = meta_ler(dest)
+    if not force and dest.exists() and dest.stat().st_size > 0 and meta:
+        headers = dict(_UA)
+        if meta.get("etag"):
+            headers["If-None-Match"] = meta["etag"]
+        if meta.get("last_modified"):
+            headers["If-Modified-Since"] = meta["last_modified"]
+        with _ipv4_primeiro():
+            resp = requests.get(url, params=params, headers=headers, timeout=120)
+        if resp.status_code == 304:
+            return dest  # nada mudou na fonte
+        if resp.status_code != 200:
+            raise RuntimeError(f"falha ao revalidar {url}: HTTP {resp.status_code}")
+    else:
+        with _ipv4_primeiro():
+            resp = requests.get(url, params=params, headers=_UA, timeout=120)
+        resp.raise_for_status()
+        if resp.status_code == 304:
+            # 304 só faz sentido com If-None-Match/If-Modified-Since;
+            # aqui a requisição é incondicional — não gravar o corpo vazio
+            raise RuntimeError(
+                f"servidor devolveu 304 para requisição incondicional: {url}")
+    dest.write_bytes(resp.content)
     time.sleep(0.3)
+    meta_gravar(dest, fonte=fonte or url, url=url,
+                identificador_publicacao=resp.headers.get("ETag")
+                or resp.headers.get("Last-Modified") or url,
+                etag=resp.headers.get("ETag"),
+                last_modified=resp.headers.get("Last-Modified"))
+    return dest
+
+
+def usar_cache(nome: str, subpasta: str) -> Path:
+    """usa_cache(): usa explicitamente a cópia local, sem consultar a fonte.
+
+    Valida a integridade contra o hash_sha256 dos metadados: erro claro se
+    o cache não existir, não tiver metadados ou estiver corrompido/trocado.
+    """
+    dest = _cache_path(nome, subpasta)
+    if not dest.exists() or dest.stat().st_size == 0:
+        raise FileNotFoundError(
+            f"cache ausente: {dest} — rode baixar() para coletar da fonte")
+    meta = meta_ler(dest)
+    if not meta or not meta.get("hash_sha256"):
+        # cópia anterior aos metadados de procedência: usa, mas rotula
+        print(f"aviso: cache sem metadados ({_meta_path(dest)}) — cópia de "
+              "coleta antiga, sem procedência registrada")
+        return dest
+    if _sha256(dest) != meta["hash_sha256"]:
+        raise RuntimeError(
+            f"cache corrompido/trocado: {dest} não bate com o hash_sha256 "
+            "dos metadados — rode baixar(force=True)")
     return dest
 
 
