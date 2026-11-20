@@ -65,10 +65,17 @@ for nome, fig in figs.items():
                 area = inter(bbs[a][1], bbs[b][1])
                 if area > 25:  # px^2
                     total_problemas += 1
-                    print(f"[{nome}] SOPOSIÇÃO: {bbs[a][0]}  X  {bbs[b][0]}  "
+                    print(f"[{nome}] SOBREPOSIÇÃO: {bbs[a][0]}  X  {bbs[b][0]}  "
                           f"({area:.0f} px^2)")
-        # texto fora da figura?
-        fb = fig.bbox
+        # texto fora do que será salvo? salvar() faz tight_layout() +
+        # savefig(bbox_inches="tight", pad=0,1"), então compara com o bbox
+        # APERTADO da figura (inches -> px) mais o pad — e não com fig.bbox
+        # (canvas original), que marcaria falso positivo para legendas
+        # ancoradas fora dos eixos, que o tight inclui corretamente.
+        pad_px = plt.rcParams.get("savefig.pad_inches", 0.1) * fig.dpi
+        fb = fig.get_tightbbox(r).transformed(fig.dpi_scale_trans)
+        fb = fb.expanded(1 + 2 * pad_px / max(fb.width, 1),
+                         1 + 2 * pad_px / max(fb.height, 1))
         for rot, bb in bbs:
             if bb.x0 < fb.x0 - 1 or bb.x1 > fb.x1 + 1 or bb.y0 < fb.y0 - 1 or bb.y1 > fb.y1 + 1:
                 total_problemas += 1

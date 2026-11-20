@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import socket
 import time
 from contextlib import contextmanager
@@ -13,6 +14,15 @@ import requests
 RAIZ = Path(__file__).resolve().parents[2]
 BRUTO = RAIZ / "dados" / "bruto"
 PROCESSADO = RAIZ / "dados" / "processado"
+
+# Cabeçalhos mensais dos anexos da STN/Tesouro: "jan/24"…"dez/24" e "2007".
+# Fonte única compartilhada por tesouro.py e rmd.py (evita divergência).
+MESES = {
+    "jan": 1, "fev": 2, "mar": 3, "abr": 4, "mai": 5, "jun": 6,
+    "jul": 7, "ago": 8, "set": 9, "out": 10, "nov": 11, "dez": 12,
+}
+RE_MES = re.compile(r"^([A-Za-z]{3})/(\d{2})$")
+RE_ANO = re.compile(r"^\d{4}$")
 
 _UA = {
     "User-Agent": "juros-e-divida/1.0 (pesquisa de transparencia publica)",

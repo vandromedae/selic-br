@@ -23,3 +23,7 @@ Thumbs.db
 
 # Conda / logs
 *.log
+
+# Saídas do Repomix (empacotamento pra IA)
+output*.xml
+repomix-output*

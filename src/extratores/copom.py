@@ -9,7 +9,7 @@ vorto SPA. A descoberta aqui valida pares candidatos por requisição HTTP
 tem 8 reuniões anuais com datas quase idênticas ano a ano
 (~28/1, ~18/3, ~29/4, ~17/6, ~5/8, ~16/9, ~4/11, ~9/12 — 2º dia).
 
-Base confirmada por download: nº 232 = 2020-05-06 (ª 230ª reunião).
+Base confirmada por download: nº 230 = 2020-05-06 (200 OK, PDF 337 KB).
 
 Saídas (cache):
 - dados/bruto/copom/indice.json .......... pares (num, data) validados
@@ -38,9 +38,6 @@ URL_ATAS = "https://www.bcb.gov.br/content/copom/atascopom"
 # agendamento padrão (2º dia da reunião), por posição
 DIAS_PADRAO = [(28, 1), (18, 3), (29, 4), (17, 6), (5, 8), (16, 9), (4, 11), (9, 12)]
 JITTER_DIAS = 3
-
-# nº 229? = 2020-05-06 confirmado; reuniões ~8/ano a partir daí
-NUM_BASE, DATA_BASE = 230, date(2020, 5, 6)
 
 BRUTO_COPOM = BRUTO / "copom"
 INDICE = BRUTO_COPOM / "indice.json"
@@ -154,20 +151,22 @@ def descobrir(ano_inicio: int = 2021, ano_fim: int = 2026) -> dict[int, str]:
     for ano in range(ano_inicio, ano_fim + 1):
         datas = _datas_candidatas(ano)
         nums = _numeros_candidatos(ano)
-        # faltantes: varre TODAS as datas do ano (mais robusto que janela estreita)
-        falt = [n for n in nums if n not in pares]
         for num in nums:
             for d in datas:
                 ja_feito = pares.get(num) == d.isoformat()
                 jobs.append((num, d, ja_feito))
-        # folga numérica: se o ano não fechou 8, tenta nº vizinhos (-2..+2)
+        # folga numérica: se o ano não fechou 8, sonda nº fora do intervalo
+        # esperado — até 2 abaixo de nums[0] e até 2 acima de nums[-1] —
+        # sempre com as datas deste ano (cobre numeração dessincronizada).
+        # Piso236: índice começa na 236ª reunião; nada antes dela.
         if 0 < len([n for n in nums if n in pares]) < 8:
-            for viz in [-2, -1, 1, 2]:
-                extra = [max(nums[0] + viz, 236)]
-                for nx in extra:
-                    if nx not in nums:
-                        for d in datas:
-                            jobs.append((nx, d, pares.get(nx) == d.isoformat()))
+            candidatos = ({nums[0] + viz for viz in (-2, -1)}
+                          | {nums[-1] + viz for viz in (1, 2)})
+            for nx in sorted(candidatos):
+                if nx < 236 or nx in nums or nx in pares:
+                    continue
+                for d in datas:
+                    jobs.append((nx, d, pares.get(nx) == d.isoformat()))
 
     def _varredura(num: int, d: date, ja: bool) -> tuple[int, date] | None:
         if ja:

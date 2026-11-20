@@ -66,7 +66,23 @@ def fatores_anuais() -> pd.DataFrame:
     }
     piv = anual[anual.fator.isin(chave)].pivot_table(
         index="ano", columns="fator", values="valor_mi", aggfunc="first")
+    # Validação: o pivot por rótulo exato falha em silêncio se a STN renomear
+    # um rótulo (coluna some) ou mudar só em parte do período (NaN por ano).
+    faltantes = [k for k in chave if k not in piv.columns]
+    if faltantes:
+        achados = sorted(anual.fator.unique())
+        raise ValueError(
+            "fatores_anuais: rótulos do anexo 2.9 não encontrados no pivot:\n"
+            + "\n".join(f"  esperado: {k!r}" for k in faltantes)
+            + "\nrótulos presentes no arquivo:\n  " + "\n  ".join(map(repr, achados)))
     piv = piv.rename(columns=chave)
+    nan_por_ano = piv[piv.isna().any(axis=1)]
+    if not nan_por_ano.empty:
+        cols = sorted(nan_por_ano.columns[nan_por_ano.isna().any()])
+        raise ValueError(
+            "fatores_anuais: valores ausentes após o pivot — provável renomeação "
+            f"parcial do anexo 2.9.\ncolunas afetadas: {cols}\n"
+            f"anos afetados: {sorted(nan_por_ano.index)}")
     piv["emissao_liq_mi"] = piv["emissoes_mi"] + piv["resgates_mi"]  # resgates < 0
     return piv.reset_index()
 

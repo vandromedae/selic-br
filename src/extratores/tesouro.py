@@ -12,13 +12,12 @@ aqui são derretidos para formato longo e salvos em parquet.
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-from .base import BRUTO, PROCESSADO, salvar_parquet
+from .base import BRUTO, MESES, PROCESSADO, RE_ANO, RE_MES, salvar_parquet
 
 CKAN = "https://www.tesourotransparente.gov.br/ckan/api/3/action/package_show"
 
@@ -27,13 +26,6 @@ PAQUETES = {
     "fatores": "fatores-de-variacao-da-divida-publica-federal",
     "emissoes": "emissoes-e-resgates-divida-publica-federal",
 }
-
-MESES = {
-    "jan": 1, "fev": 2, "mar": 3, "abr": 4, "mai": 5, "jun": 6,
-    "jul": 7, "ago": 8, "set": 9, "out": 10, "nov": 11, "dez": 12,
-}
-_RE_MES = re.compile(r"^([A-Za-z]{3})/(\d{2})$")
-_RE_ANO = re.compile(r"^\d{4}$")
 
 
 def _descobrir_url(pid: str, fmts=("XLSX", "CSV")) -> dict[str, str]:
@@ -71,7 +63,7 @@ def _acha_cabecalho(df: pd.DataFrame) -> int:
     for i in range(min(15, len(df))):
         meses = [
             j for j in range(df.shape[1])
-            if isinstance(df.iloc[i, j], str) and _RE_MES.match(str(df.iloc[i, j]).strip())
+            if isinstance(df.iloc[i, j], str) and RE_MES.match(str(df.iloc[i, j]).strip())
         ]
         if len(meses) >= 6:
             return i
@@ -89,9 +81,9 @@ def _melte_anexo(caminho: Path, sheet=0) -> pd.DataFrame:
         if pd.isna(v):
             continue
         s = str(v).strip()
-        if _RE_MES.match(s):
+        if RE_MES.match(s):
             cols_mes.append(j)
-        elif _RE_ANO.match(s):  # colunas anuais vêm como int (2007) ou str
+        elif RE_ANO.match(s):  # colunas anuais vêm como int (2007) ou str
             cols_ano.append(j)
 
     registros = []
@@ -106,7 +98,7 @@ def _melte_anexo(caminho: Path, sheet=0) -> pd.DataFrame:
             val = bruto.iloc[i, j]
             if pd.isna(val):
                 continue
-            m = _RE_MES.match(str(cab.iloc[j]).strip())
+            m = RE_MES.match(str(cab.iloc[j]).strip())
             if not m:
                 continue
             ano = 2000 + int(m.group(2))

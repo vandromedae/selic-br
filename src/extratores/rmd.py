@@ -25,19 +25,13 @@ from urllib.parse import unquote
 import pandas as pd
 import requests
 
-from .base import BRUTO, get, salvar_parquet
+from .base import BRUTO, MESES, RE_ANO, RE_MES, get, salvar_parquet
 
 RMD_PAGE = "https://www.tesourotransparente.gov.br/publicacoes/relatorio-mensal-da-divida-rmd"
 THOT = "https://thot-arquivos.tesouro.gov.br/publicacao-anexo/{id}"
 ESTADO = BRUTO / "rmd" / "ultimo_anexo.json"
 XLSX_CACHE = BRUTO / "rmd" / "anexo_rmd.xlsx"
 
-_MESES = {
-    "jan": 1, "fev": 2, "mar": 3, "abr": 4, "mai": 5, "jun": 6,
-    "jul": 7, "ago": 8, "set": 9, "out": 10, "nov": 11, "dez": 12,
-}
-_RE_MES = re.compile(r"^([A-Za-z]{3})/(\d{2})$")
-_RE_ANO = re.compile(r"^\d{4}$")
 _UA = {"User-Agent": "Mozilla/5.0 (juros-e-divida/1.0)"}
 
 
@@ -115,7 +109,7 @@ def _acha_cabecalho_meses(bruto: pd.DataFrame) -> int:
     for i in range(min(15, len(bruto))):
         n = sum(
             1 for j in range(bruto.shape[1])
-            if isinstance(bruto.iloc[i, j], str) and _RE_MES.match(bruto.iloc[i, j].strip())
+            if isinstance(bruto.iloc[i, j], str) and RE_MES.match(bruto.iloc[i, j].strip())
         )
         if n >= 6:
             return i
@@ -128,7 +122,7 @@ def _melte_largo(bruto: pd.DataFrame) -> pd.DataFrame:
     cab = bruto.iloc[linha]
     cols = [
         j for j in range(1, bruto.shape[1])
-        if isinstance(cab.iloc[j], str) and _RE_MES.match(cab.iloc[j].strip())
+        if isinstance(cab.iloc[j], str) and RE_MES.match(cab.iloc[j].strip())
     ]
     regs = []
     for i in range(linha + 1, len(bruto)):
@@ -143,13 +137,13 @@ def _melte_largo(bruto: pd.DataFrame) -> pd.DataFrame:
                 v = float(val)
             except (TypeError, ValueError):  # 'N/D' etc.
                 continue
-            m = _RE_MES.match(cab.iloc[j].strip())
+            m = RE_MES.match(cab.iloc[j].strip())
             if not m:
                 continue
             ano = 2000 + int(m.group(2))
             regs.append({
                 "indicador": label,
-                "data": pd.Timestamp(ano, _MESES[m.group(1).lower()], 1) + pd.offsets.MonthEnd(0),
+                "data": pd.Timestamp(ano, MESES[m.group(1).lower()], 1) + pd.offsets.MonthEnd(0),
                 "valor": v,
             })
     return pd.DataFrame(regs)
