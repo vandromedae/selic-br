@@ -17,5 +17,5 @@ dependencies:
   - beautifulsoup4
   - pyarrow
   - pypdf
-  - streamlit
+  - streamlit>=1.51  # "width" de gráficos/tabelas (use_container_width saiu pós-1.50)
   - pip

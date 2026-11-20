@@ -423,12 +423,12 @@ if PAGINA == "Visão geral":
               f"dez/20: {cm_ult:%m/%Y}")
     c4.metric("Estoque DPMFi", fmt_bi(D["detentores"][D["detentores"].data == dez_ult].valor_bi.sum(), 0))
 
-    st.plotly_chart(fig_juros_swaps(), use_container_width=True)
+    st.plotly_chart(fig_juros_swaps(), width="stretch")
     st.markdown(
         "**Validação BNDES** — o cálculo próprio reproduz o Estudo BNDES 67/2026 "
         "com desvio ≤ 0,03 p.p. (ver notebook 00 ou a tabela na parte inferior):"
     )
-    st.dataframe(D["validacao_bndes"], use_container_width=True, hide_index=True)
+    st.dataframe(D["validacao_bndes"], width="stretch", hide_index=True)
 
 elif PAGINA.startswith("P1"):
     st.title("P1 · Os juros altos se justificam?")
@@ -438,9 +438,9 @@ elif PAGINA.startswith("P1"):
         "média ~8,8 p.p. (6,9 em 2024 → 10,1 em 2026), com inflação "
         "**dentro da meta**."
     )
-    st.plotly_chart(fig_selic_inflacao(), use_container_width=True)
-    st.plotly_chart(fig_juro_real(), use_container_width=True)
-    st.plotly_chart(fig_desvio_taylor(), use_container_width=True)
+    st.plotly_chart(fig_selic_inflacao(), width="stretch")
+    st.plotly_chart(fig_juro_real(), width="stretch")
+    st.plotly_chart(fig_desvio_taylor(), width="stretch")
     st.info(
         "**Conclusão verificável:** o juro extra atual não é “preço da "
         "inflação”: é um prêmio institucional adicional. Defender que "
@@ -454,12 +454,12 @@ elif PAGINA.startswith("P2"):
         "Composição de estoque por grupo de detentor (RMD 2.7) e **estimativa** "
         "do fluxo de juros por grupo (juros do ano × participação em dezembro)."
     )
-    st.plotly_chart(fig_detentores(stacked=True), use_container_width=True)
+    st.plotly_chart(fig_detentores(stacked=True), width="stretch")
     cols = st.columns(2)
     with cols[0]:
-        st.plotly_chart(fig_estoque_detentor(), use_container_width=True)
+        st.plotly_chart(fig_estoque_detentor(), width="stretch")
     with cols[1]:
-        st.plotly_chart(fig_fluxo_juros_detentor(), use_container_width=True)
+        st.plotly_chart(fig_fluxo_juros_detentor(), width="stretch")
     st.warning(
         "**Estimativa, não dado oficial:** participação em dezembro × juros "
         "anuais. A União não publica fluxo por credor. Identificar "
@@ -476,8 +476,8 @@ elif PAGINA.startswith("P3"):
         "**não amortizam** a dívida; **são a dívida nova**."
     )
     f_ano = st.slider("ano da cascata", 2012, 2025, 2025, key="cascata")
-    st.plotly_chart(fig_cascata(f_ano), use_container_width=True)
-    st.plotly_chart(fig_fluxos_anuais(), use_container_width=True)
+    st.plotly_chart(fig_cascata(f_ano), width="stretch")
+    st.plotly_chart(fig_fluxos_anuais(), width="stretch")
     t = D["fatores"].copy()
     t = t[(t.ano >= 2012) & (t.ano < ANO_CORTE)]
     t["emissoes_mult_juros"] = t.emissoes_mi / t.juros_apropriados_mi
@@ -489,9 +489,9 @@ elif PAGINA.startswith("P3"):
                "juros (R$ bi)": lambda x: (x.juros_apropriados_mi / 1000).round(0)}
         )[["ano", "emissoes (R$ bi)", "resgates (R$ bi)", "juros (R$ bi)",
            "emissoes_mult_juros"]].round(2),
-        use_container_width=True, hide_index=True,
+        width="stretch", hide_index=True,
     )
-    st.plotly_chart(fig_juros_primario(), use_container_width=True)
+    st.plotly_chart(fig_juros_primario(), width="stretch")
     st.info("Equação honesta para o público: **os juros não reduzem a dívida — "
             "eles são a dívida nova** (mais a dívida que chega próxima).")
 
@@ -505,9 +505,9 @@ elif PAGINA.startswith("P4"):
     tab, fig = fig_i_g()
     c1, c2 = st.columns([2, 3])
     with c1:
-        st.dataframe(tab.round(1), use_container_width=True)
+        st.dataframe(tab.round(1), width="stretch")
     with c2:
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     st.info(
         "Nos dados públicos de fluxo **não há caminho pelo qual o dispêndio "
         "de juros se converta em investimento produtivo**: é rolagem (P3) + "
@@ -525,7 +525,7 @@ elif PAGINA.startswith("P5"):
     )
     tab = df_mandatos()
     st.bar_chart(tab["juro_real_ex_ante_medio"], color="#1f77b4", height=340)
-    st.dataframe(tab.round(1), use_container_width=True)
+    st.dataframe(tab.round(1), width="stretch")
 
     j2 = j[j.ano >= 2002]
     st.caption(
@@ -533,7 +533,7 @@ elif PAGINA.startswith("P5"):
         f"({j2.ano.iloc[0]}) → {fmt_bi(j2[j2.ano < ANO_CORTE].juros_mi.iloc[-1] / 1000, 0)} "
         f"({ultimo_ano_completo}) — sem contar o efeito dos swaps."
     )
-    st.plotly_chart(fig_juros_swaps(), use_container_width=True)
+    st.plotly_chart(fig_juros_swaps(), width="stretch")
     st.info(
         "Em **2021** o juro real ex ante foi **−0,3%** (média 2019–22: 2,1%) "
         "e em **2025** foi **9,6%**, sem mudança da estrutura produtiva: o "
