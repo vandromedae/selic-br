@@ -5,10 +5,11 @@ Entrada:
   `src/extratores/discursos.py`: ano ≥ 2021 + tema monetário + autoridade)
 - `dados/processado/discursos_indice.csv` (índice completo 2002–hoje)
 
-Reaproveita `TEMAS` de `atas_copom` — a MESMA régua de indexação, para que
-dê para comparar discursos × atas sem tradução entre vocabulários. É um
-INVENTÁRIO de trechos citáveis, não NLP: cada trecho é a frase com a
-expressão ±1 frase, sempre com autor, data e título para citação direta.
+`TEMAS` vive em `src/config.py` — a MESMA régua de indexação das atas do
+Copom, para que dê para comparar discursos × atas sem tradução entre
+vocabulários. É um INVENTÁRIO de trechos citáveis, não NLP: cada trecho é a
+frase com a expressão ±1 frase, sempre com autor, data e título para
+citação direta.
 
 O que este módulo NÃO é: classificação de intenção. Um discurso conter a
 expressão "juro real" não significa defesa de patamar — o trecho serve
@@ -40,30 +41,22 @@ from pathlib import Path
 
 import pandas as pd
 
+from ..config import (LIMIAR_RUIDO, MARCADORES_SLIDE, NOME_AUTOR_1,
+                       NOME_AUTOR_2, REGEX_FONTE, TEMAS)
 from ..extratores.base import RAIZ, ler_parquet, salvar_parquet
-from .atas_copom import TEMAS  # mesma régua das atas do Copom
 
 TEXTO_DIR = RAIZ / "dados" / "bruto" / "discursos" / "texto"
 INDICE = RAIZ / "dados" / "processado" / "discursos_indice.csv"
 PROC_DIR = RAIZ / "dados" / "processado"
-LIMIAR_RUIDO = 0.40
-
-# nome do autor no TÍTULO (o campo `autor` do índice mistura nome e cidade):
-# 1) "Apresentação do Diretor ..., NOME, na ..." (a maioria)
-# 2) "Apresentação do Presidente NOME no evento ..." (sem vírgula)
-_NOME_1 = re.compile(
-    r"(?:Apresenta[çc][ãa]o|Discurso|Entrevista)[^.]{0,120}?,\s*"
-    r"([A-ZÀ-Þ][\wÀ-ÿ]+(?: [A-ZÀ-Þ][\wÀ-ÿ]+){1,3}),")
-_NOME_2 = re.compile(
-    r"(?:do|da)\s+(?:Presidente|Diretor[a]?)\s+"
-    r"([A-ZÀ-Þ][\wÀ-ÿ]+(?: [A-ZÀ-Þ][\wÀ-ÿ]+){1,3})\s+(?:no|na|em|para|sob)")
+# TEMAS, NOME_AUTOR_*, LIMIAR_RUIDO e REGEX_FONTE vêm de src/config.py
+# (regras do corpus separadas da lógica).
 
 _FRASE = re.compile(r"[^.!?]+[.!?]")
 
 
 def nome_de(titulo: str) -> str:
     """Nome do autor extraído do título; '?' se o padrão não casar."""
-    m = _NOME_1.search(titulo) or _NOME_2.search(titulo)
+    m = NOME_AUTOR_1.search(titulo) or NOME_AUTOR_2.search(titulo)
     return m.group(1) if m else "?"
 
 
@@ -215,10 +208,6 @@ def ruidos(limiar: float = LIMIAR_RUIDO) -> pd.DataFrame:
                "trecho", "url"]]
 
 
-_FONTE = re.compile(r"\bFonte\s*:", re.IGNORECASE)
-_MARCADORES = "•▪●·–-"
-
-
 def formatos() -> pd.DataFrame:
     """Slide vs prosa por discurso — o PDF é apresentação ou texto corrido?
 
@@ -234,10 +223,10 @@ def formatos() -> pd.DataFrame:
         motivos = []
         if str(row.titulo).strip().lower().startswith("apresenta"):
             motivos.append("titulo_apresentacao")
-        n_fonte = len(_FONTE.findall(texto))
+        n_fonte = len(REGEX_FONTE.findall(texto))
         if n_fonte >= 3:
             motivos.append(f"fontes_{n_fonte}")
-        n_bullets = sum(texto.count(c) for c in _MARCADORES)
+        n_bullets = sum(texto.count(c) for c in MARCADORES_SLIDE)
         if n_bullets >= 10:
             motivos.append(f"bullets_{n_bullets}")
         linhas.append({

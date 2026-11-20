@@ -41,20 +41,14 @@ from pathlib import Path
 import requests
 
 from .base import BRUTO, PROCESSADO, _UA
+from ..config import FOCO_AUTOR, FOCO_TEMA, MAX_ANO
 
 API = "https://www.bcb.gov.br/api"
 SITE = "sitebcb"
 BRUTO_DISCURSOS = BRUTO / "discursos"
 TEXTO_DIR = BRUTO_DISCURSOS / "texto"
 
-MAX_ANO = 2026  # ano final da varredura (ajustar conforme avança o calendário)
-
-# regexes do recorte "foco" (ver docstring)
-_FOCO_TEMA = re.compile(
-    r"Copom|Selic|juros|infla|pol[íi]tica monet|Relat[óo]rio de Pol"
-    r"|Taylor|expectativ|cen[áa]rios econ", re.I)
-_FOCO_AUTOR = re.compile(
-    r"Presidente|Diretor|Relat[óo]rio de Pol|Divulga[çc][ãa]o", re.I)
+# FOCO_TEMA, FOCO_AUTOR (recorte "foco") e MAX_ANO vêm de src/config.py
 
 
 class FalhaAPI(Exception):
@@ -186,8 +180,8 @@ def recorte_foco() -> "pd.DataFrame":
 
     df = pd.read_csv(PROCESSADO / "discursos_indice.csv")
     df = df[df.ano >= 2021].copy()
-    tema = df.titulo.fillna("").str.contains(_FOCO_TEMA)
-    autor = df.titulo.fillna("").str.contains(_FOCO_AUTOR)
+    tema = df.titulo.fillna("").str.contains(FOCO_TEMA)
+    autor = df.titulo.fillna("").str.contains(FOCO_AUTOR)
     return df[tema & autor].reset_index(drop=True)
 
 

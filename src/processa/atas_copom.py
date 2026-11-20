@@ -25,62 +25,13 @@ from pathlib import Path
 
 import pandas as pd
 
+from ..config import TEMAS  # mesma régua de indexação dos discursos
 from ..extratores.base import RAIZ, ler_parquet, salvar_parquet
 
 TEXTO_DIR = RAIZ / "dados" / "bruto" / "copom" / "texto"
 
-# ------------------------------------------------------------------ temas
-# Regexes por expressão literal (não exaustivas): servem para localizar
-# FRASES candidatas em cada ata. Palavras isoladas demais (= "fiscal")
-# poluiriam o índice; cada alternativa tem ao menos duas palavras de âncora.
+# TEMAS vive em src/config.py (a MESMA régua dos discursos).
 
-TEMAS: dict[str, str] = {
-    "juro real": (
-        r"juros? reais?\b|juro real"
-        r"|aperto monetário em termos reais"
-        r"|taxa real de juros?|juros? real neutra"
-    ),
-    "juro real ex ante": r"\b(?:juros?|selic) rea(?:l|is) ex[- ]ante\b",
-    "risco fiscal": (
-        r"ris[ck]os? fiscais?"
-        r"|domin[âa]ncia fiscal|sustentabilidade fiscal"
-        r"|incertezas? fiscal(?:is)?|deteriora[çc][ãa]o fiscal|impasse fiscal"
-        r"|pol[íi]tica fiscal|estrat[ée]gia fiscal|quadro fiscal|lado fiscal"
-        r"|d[ée]ficit p[úu]blico|d[íi]vida p[úu]blica (l[íi]quida?|bruta)?"
-        r"|fracasso fiscal|contas p[úu]blicas|despesa(s)? (p[úu]blica[s]?|obrigat)"
-    ),
-    "credibilidade": r"credib\w*|desancorad\w*|ancorad\w*",
-    "histórico de desencontro": (
-        r"desencontro\w*"
-        r"|(sequência|recorrência) de surpresas"
-        r"|surpresas? altistas|virada[s]? (inesperadas? )?na inflação"
-        r"|hist[óo]ricamente (alto|baixo|elevad|intens|importante)"
-    ),
-    "surpresa inflacionária": (
-        r"surpresas? infl"
-        r"|acima do esperado|vieram acima|veio acima"
-        r"|diferentes do esperado|desconfirm\w*"
-    ),
-    "câmbio": r"c[âa]mbi\w*",
-    # nota: "swap" NÃO aparece em nenhuma das 47 atas 2021–2026 (verificado);
-    # tema removido do índice — o derivativo cambial não é citado nos textos.
-    "meta de inflação": (
-        r"regime de metas|metas? de infla[çc][ãa]o\b"
-        r"|meta para a inflação|redor da meta|cumprimento da meta"
-        r"|converg[êe]ncia da inflação para as metas|metas fixadas"
-    ),
-    "mercado financeiro": (
-        r"curvas? de juros?"
-        r"|derivativos|mercado (de futuros|de derivativos|financeiro)"
-        r"|pre[çc]os de (ativos|op[çc][õo]es|swaps)"
-        r"|contratos (futuros|a termo)|prêmio \w* de risco"
-        r"|Focus\b"
-    ),
-    "risco externo": (
-        r"(cen[áa]rio|economia|condi[çc][õo]es) (internacional|global|externo)"
-        r"|guerra\b|ucr[âa]nia|pandemi\w*|tarifa(ços)?|guerras? comercial(?:is)?"
-    ),
-}
 
 _FRASE = re.compile(r"[^.!?]+[.!?]")
 
