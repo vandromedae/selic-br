@@ -196,6 +196,9 @@ def _texto_pdf(caminho: Path) -> str:
     except Exception:  # pypdf antigo sem a API de configuração
         pass
     reader = PdfReader(str(caminho))
+    # slides (PPT→PDF) PERDEM conteúdo no extraction_mode="layout" (medido:
+    # −25% dos chars nos 46 discursos, ex. d_1685: 30k → 16k) — aqui fica o
+    # modo padrão; a correção de quebra de palavras é para as atas (copom.py)
     paginas = [re.sub(r"\s+", " ", (pg.extract_text() or "")).strip()
                for pg in reader.pages]
     return "\n".join(p for p in paginas if p)

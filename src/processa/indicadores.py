@@ -93,19 +93,24 @@ def juros_anuais() -> pd.DataFrame:
     sgs = ler_parquet("sgs")
 
     def _serie(nome: str) -> pd.Series:
-        s = _sgs_serie(sgs, nome).set_index("data")["valor"]
-        return s.resample("YE").sum()
+        return _sgs_serie(sgs, nome).set_index("data")["valor"]
 
-    juros = _serie("juros_mensal")
-    swap = _serie("swap_resultado_caixa")  # caixa negativa = prejuízo = juros maiores
-    pib = _serie("pib_nominal_mensal")
-
-    df = pd.DataFrame({
-        "juros_mi": juros,
-        "swap_resultado_mi": swap,
-        "pib_mi": pib,
+    # somas anuais sobre os meses COMUNS às séries presentes no ano: o PIB
+    # mensal tem defasagem maior que os juros e o swap, e sem alinhar as
+    # razões do ano corrente saem enviesadas (2026: swap tem 8 meses contra
+    # 9 de juros/PIB — a soma do swap seria de um período diferente)
+    tab = pd.DataFrame({
+        "juros_mi": _serie("juros_mensal"),
+        "swap_resultado_mi": _serie("swap_resultado_caixa"),
+        "pib_mi": _serie("pib_nominal_mensal"),
     })
-    df["ano"] = df.index.year
+    linhas = []
+    for ano, g in tab.groupby(tab.index.year):
+        series_do_ano = [c for c in tab.columns if g[c].notna().any()]
+        comuns = g.dropna(subset=series_do_ano)
+        linhas.append(comuns.sum(min_count=1))
+    df = pd.DataFrame(linhas)
+    df["ano"] = sorted(tab.groupby(tab.index.year).groups)
     # resultado caixa de swap negativo = prejuízo do BCB = aumenta o dispêndio
     # com juros; positivo (ganho) reduz. Logo: juros_ex = juros + resultado.
     df["juros_ex_swap_mi"] = df["juros_mi"] + df["swap_resultado_mi"]

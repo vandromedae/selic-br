@@ -46,7 +46,9 @@ TEMAS: dict[str, str] = {
         r"|d[ée]ficit p[úu]blico|d[íi]vida p[úu]blica (l[íi]quida?|bruta)?"
         r"|fracasso fiscal|contas p[úu]blicas|despesa(s)? (p[úu]blica[s]?|obrigat)"
     ),
-    "credibilidade": r"credib\w*|desancorad\w*|ancorad\w*",
+    "credibilidade": r"credib\w*|desancorad\w*|\bancorad\w*",
+    # (\bancorad: sem o \b, "ancorad\w*" casa "desancorada" por substring e
+    # a frase entra por DUAS alternativas — com \b, cada forma casca só uma)
     "histórico de desencontro": (
         r"desencontro\w*"
         r"|(sequência|recorrência) de surpresas"
@@ -75,7 +77,9 @@ TEMAS: dict[str, str] = {
     ),
     "risco externo": (
         r"(cen[áa]rio|economia|condi[çc][õo]es) (internacional|global|externo)"
-        r"|guerra\b|ucr[âa]nia|pandemi\w*|tarifa(ços)?|guerras? comercial(?:is)?"
+        r"|guerra\b|ucr[âa]nia|pandemi\w*|guerras? comercial(?:is)?"
+        # tarifa COMERCIAL; "tarifa de energia" (luz) é interno, não externo
+        r"|tarifas?(?!\s+d[ea]\s+(energia|luz))"
     ),
 }
 

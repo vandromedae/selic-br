@@ -303,7 +303,10 @@ def _texto_pdf(caminho: Path) -> str:
     reader = PdfReader(caminho)
     paginas = []
     for pg in reader.pages:
-        t = pg.extract_text() or ""
+        # extraction_mode="layout": o modo padrão do pypdf quebra palavras
+        # ("context o", "U crânia") e gera falsos negativos nas regexes
+        # (artefatos confirmados: 43 no modo padrão vs 6 no layout, 47 atas)
+        t = pg.extract_text(extraction_mode="layout") or ""
         paginas.append(re.sub(r"\s+", " ", t).strip())
     return "\n".join(p for p in paginas if p)
 
