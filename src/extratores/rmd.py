@@ -15,6 +15,7 @@ arquivo seja "Anexo ... RMD ....zip".
 
 from __future__ import annotations
 
+from datetime import date
 import io
 import json
 import re
@@ -269,6 +270,77 @@ def processar_custo_medio() -> pd.DataFrame:
     return salvar_parquet(df, "rmd_custo_medio")
 
 
+def processar_detentores_titulo() -> pd.DataFrame:
+    """RMD 2.8 — estoque da DPMFi por detentor E por título (R$ bi e %).
+
+    Cada bloco do anexo é um título (LFT, LTN, NTN-B, NTN-F, OUTROS); as
+    colunas trazem pares (valor R$ bi, participação) por grupo de detentor.
+    Responde "quem segura o quê" — o 2.7 só traz o total por grupo.
+    """
+    bruto = _ler("2.8")
+    col0 = bruto.iloc[:, 0]
+    # blocos: rótulos de título na coluna 0 (as datas 'mar/18*' têm '/')
+    blocos = [(i, str(v).strip()) for i, v in col0.items()
+              if isinstance(v, str) and v.strip() and "/" not in v]
+    regs: list[dict] = []
+    for bi, (ini, titulo) in enumerate(blocos):
+        fim = blocos[bi + 1][0] if bi + 1 < len(blocos) else len(bruto)
+        bloco = bruto.iloc[ini:fim]
+        # cabeçalho: linha com 'Inst' na coluna de valor 1
+        cab_i = next((j for j in range(len(bloco))
+                      if isinstance(bloco.iloc[j, 1], str)
+                      and "Inst" in bloco.iloc[j, 1]), None)
+        if cab_i is None:
+            continue
+        cab = bloco.iloc[cab_i]
+        # grupos nas colunas de valor (ímpares); a par é a participação
+        grupos = [(j, str(cab.iloc[j]).strip()) for j in range(1, 17, 2)
+                  if isinstance(cab.iloc[j], str) and cab.iloc[j].strip()]
+        for k in range(cab_i + 1, len(bloco)):
+            d = _data_mista(bloco.iloc[k, 0])
+            if d is None:
+                continue
+            for j, nome in grupos:
+                val = bloco.iloc[k, j]
+                if pd.isna(val):
+                    continue
+                regs.append({
+                    "titulo": titulo,
+                    "detentor": nome,
+                    "data": d,
+                    "valor_bi": float(val),
+                    "participacao": float(bloco.iloc[k, j + 1])
+                    if not pd.isna(bloco.iloc[k, j + 1]) else float("nan"),
+                })
+    df = pd.DataFrame(regs)
+    if df.empty:
+        raise ValueError(
+            "processar_detentores_titulo: nenhum registro — o layout do "
+            "anexo 2.8 mudou?")
+    if df.groupby(["titulo", "detentor"]).size().min() < 100:
+        raise ValueError(
+            "processar_detentores_titulo: série curta demais por grupo — "
+            "a extração pode estar cortando blocos")
+    return salvar_parquet(df, "rmd_detentores_titulo")
+
+
+def _data_mista(v) -> "pd.Timestamp | None":
+    """Data do anexo: datetime (1º ou fim de mês) ou rótulo 'mar/18*'
+    (com asterisco de nota). Tudo normalizado para o FIM do mês."""
+    if isinstance(v, (pd.Timestamp, date)) and not isinstance(v, str):
+        try:
+            return pd.Timestamp(v) + pd.offsets.MonthEnd(0)
+        except (ValueError, TypeError):
+            return None
+    if isinstance(v, str):
+        m = RE_MES.match(v.strip().rstrip("*"))
+        if m:
+            ano = ano_de_dois_digitos(m.group(2))
+            return pd.Timestamp(ano, MESES[m.group(1).lower()], 1) \
+                + pd.offsets.MonthEnd(0)
+    return None
+
+
 def processar_composicao() -> pd.DataFrame:
     df = _melte_pares(_ler("5.5"))
     df = df.rename(columns={"grupo": "indexador"})
@@ -305,8 +377,8 @@ def main(force: bool = False, so_cache: bool = False) -> None:
         usar_cache()
     else:
         baixar(force=force)
-    for fn in (processar_detentores, processar_custo_medio,
-               processar_composicao, processar_reserva):
+    for fn in (processar_detentores, processar_detentores_titulo,
+               processar_custo_medio, processar_composicao, processar_reserva):
         out = fn()
         n = len(pd.read_parquet(out)) if isinstance(out, Path) else len(out)
         print(f"{fn.__name__}: {n} linhas")
