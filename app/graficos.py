@@ -135,7 +135,8 @@ def fig_detentores(d, stacked: bool) -> go.Figure:
     for detentor in ordem:
         sub = dez[dez.detentor == detentor].sort_values("data")
         fig.add_scatter(
-            x=sub.data.dt.year + pd.DatetimeIndex(sub.data).month / 12,
+            x=sub.data.dt.year + (sub.data.dt.month - 0.5) / 12,  # centro do mês
+            # (dez/2007 em 2007.96 — com month/12 o ponto iria para 2008.0)
             y=sub.participacao * 100,
             name=detentor, customdata=sub.valor_bi,
             line=dict(color=CORES_DETENTOR.get(detentor, "#999999")),
@@ -187,16 +188,15 @@ def fig_fluxo_juros_detentor(d) -> go.Figure:
 def fig_cascata(d, ano: int = 2025) -> go.Figure:
     f = d["fatores"].set_index("ano")
     r = f.loc[ano]
-    etapas = [
-        ("estoque anterior", r.estoque_anterior_mi, "#1f77b4"),
-        ("emissão líquida", r.emissao_liq_mi, "#2ca02c"),
-        ("juros apropriados", r.juros_apropriados_mi, "#d62728"),
-        ("estoque final", r.estoque_final_mi, "#1f77b4"),
-    ]
+    # fatores do Tesouro vêm em R$ MILHÕES — converter para bilhões
+    # (o eixo e a leitura são em R$ bilhões)
+    bi = 1000
     fig = go.Figure(go.Waterfall(
-        x=[s[0] for s in etapas],
+        x=["estoque anterior", "emissão líquida", "juros apropriados",
+           "estoque final"],
         measure=["absolute", "relative", "relative", "total"],
-        y=[r.estoque_anterior_mi, r.emissao_liq_mi, r.juros_apropriados_mi, 0],
+        y=[r.estoque_anterior_mi / bi, r.emissao_liq_mi / bi,
+           r.juros_apropriados_mi / bi, 0],
         textposition="outside",
         connector={"line": {"color": "#bbb"}},
         increasing={"marker": {"color": "#2ca02c"}},

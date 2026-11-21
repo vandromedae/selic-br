@@ -32,12 +32,15 @@ def resumo(d) -> dict:
     row = j[j.ano == ultimo_ano_completo].iloc[0]
     cm_ult = d["custo"].data.max()
     cm_val = d["custo"].set_index("data").taxa_pct_aa.loc[cm_ult]
+    # último mês COM dado de IPCA 12m (o índice máximo do macro pode estar
+    # à frente com NaN — a sidebar não pode exibir "IPCA 12m: nan%")
+    m_ult = d["macro"]["ipca_12m"].dropna().index.max()
     return {
         "ultimo_ano_completo": ultimo_ano_completo,
         "row": row,
         "cm_ult": cm_ult,
         "cm_val": cm_val,
-        "m_ult": d["macro"].index.max(),
+        "m_ult": m_ult,
         "dez_ult": d["detentores"].data.max(),
     }
 

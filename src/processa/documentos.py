@@ -381,6 +381,23 @@ IPCA_MELHOR_DESDE = 2018                       # alegação: "melhor desde 2018"
 # ------------------------------------------------------------------ verificação
 
 
+def _veredito(artigo: float, nosso: float) -> str:
+    """Veredito numérico por tolerância RELATIVA — régua única, definida a
+    priori e aplicada a todas as verificações: erro relativo ≤ 2% confere,
+    ≤ 10% confere (≈), acima disso não confere.
+
+    (Tolerâncias absolutas por caso eram escolhidas à mão e ficavam
+    incoerentes entre si: o déficit primário da ANBIMA, com erro de 32%,
+    "conferia", enquanto o IPCA da mesma nota, com erro de 24%, não.)
+    """
+    rel = abs(artigo - nosso) / max(abs(artigo), 0.01)
+    if rel <= 0.02:
+        return "confere"
+    if rel <= 0.10:
+        return "confere (≈)"
+    return "não confere"
+
+
 def _ultimo(sg: pd.DataFrame, serie: str) -> tuple[pd.Timestamp, float]:
     sub = sg[sg.serie == serie].sort_values("data")
     if sub.empty:
@@ -484,15 +501,7 @@ def verificacao_eu_acuso() -> pd.DataFrame:
     ult = ult[ult.data == ult.data.max()]
     flut = float(ult[ult.indexador == "Taxa Flutuante"].participacao.iloc[0]) * 100
 
-    # veredito numérico por tolerância (nada hardcoded)
-    def _veredito(artigo: float, nosso: float, exato: float,
-                  aprox: float) -> str:
-        dif = abs(artigo - nosso)
-        if dif <= exato:
-            return "confere"
-        if dif <= aprox:
-            return "confere (≈)"
-        return "não confere"
+    # veredito numérico: _veredito (régua relativa única do módulo)
 
     def _linha(aleg, artigo, nosso, fonte, status, unidade=""):
         return {"alegacao": aleg, "artigo": artigo, "nosso_valor": nosso,
@@ -501,24 +510,24 @@ def verificacao_eu_acuso() -> pd.DataFrame:
     linhas = [
         _linha("Custo médio da dívida, jun/2026", "12,68",
                f"{custo_jun:.2f}", "RMD (DPF, estoque 12m, jun/26)",
-               _veredito(12.68, custo_jun, 0.01, 0.05), "% a.a."),
+               _veredito(12.68, custo_jun), "% a.a."),
         _linha("DBGG, jun/2026", "10,9", f"{dbgg_jun:.2f}",
-               "SGS 13761 (jun/26)", _veredito(10.9, dbgg_jun, 0.1, 0.3),
+               "SGS 13761 (jun/26)", _veredito(10.9, dbgg_jun),
                "R$ tri"),
         _linha("DBGG / PIB, jun/2026", "82,5", f"{dbggpib_jun:.1f}",
-               "SGS 13762 (jun/26)", _veredito(82.5, dbggpib_jun, 0.3, 0.8),
+               "SGS 13762 (jun/26)", _veredito(82.5, dbggpib_jun),
                "%"),
         _linha("Serviço = custo × estoque, jun/2026", "1,4",
                f"{servico:.2f}", "custo RMD × SGS 13761 (jun/26)",
-               _veredito(1.4, servico, 0.05, 0.15), "R$ tri"),
+               _veredito(1.4, servico), "R$ tri"),
         _linha("Serviço / PIB, jun/2026", "10,5", f"{servico_pib:.1f}",
                "custo × DBGG ÷ PIB 12m (SGS 4380, jun/26)",
-               _veredito(10.5, servico_pib, 0.3, 0.7), "%"),
+               _veredito(10.5, servico_pib), "%"),
         _linha("Serviço c/ dívida líquida", "8,7", f"{servico_dlsp:.1f}",
                "custo RMD × DLSP/PIB (SGS dlsp_pib, jun/26)",
-               _veredito(8.7, servico_dlsp, 0.3, 0.7), "%"),
+               _veredito(8.7, servico_dlsp), "%"),
         _linha("Déficit nominal / PIB", "~10", f"{nominal:.2f}",
-               f"SGS 5727 ({d_nom:%m/%Y})", _veredito(10.0, nominal, 0.3, 0.7),
+               f"SGS 5727 ({d_nom:%m/%Y})", _veredito(10.0, nominal),
                "% 12m"),
         _linha("Déficit primário 'pequeno'", "-", f"{primario:.2f}",
                f"SGS 5793 ({d_pri:%m/%Y})", "confere (qualitativo)", "% 12m"),
@@ -536,12 +545,12 @@ def verificacao_eu_acuso() -> pd.DataFrame:
                "conceito diferente (acumulado vs custo corrente), "
                "não erro aritmético", "% 12m"),
         _linha("PIB nominal cresce ~7% a.a.", "7,0", f"{g_pib:.1f}",
-               "SGS 4380 (12m)", _veredito(7.0, g_pib, 0.3, 0.7), "%"),
+               "SGS 4380 (12m)", _veredito(7.0, g_pib), "%"),
         _linha("DBGG cresce 12,7% só com juros", "12,7",
                f"{g_dbgg:.1f} (observado)", "SGS 13761 (12m)",
                "confere como conta aritmética; observado é maior", "%"),
         _linha("Dívida/PIB sobe ~5,7 p.p. ao ano", "5,7", f"{var_dpib:+.1f}",
-               "SGS 13762 (12m)", _veredito(5.7, var_dpib, 0.3, 0.8), "p.p."),
+               "SGS 13762 (12m)", _veredito(5.7, var_dpib), "p.p."),
         _linha("'mais da metade da dívida em LFTs'", ">50",
                f"{lft_share:.1f} (DPMFi) | {lft_dbgg:.1f} (DBGG)",
                f"Estoque da DPF, Anexo 2.1 (antes do swap, {d_merc:%m/%Y}) "
@@ -628,7 +637,7 @@ def verificacao_kanczuk() -> pd.DataFrame:
     return pd.DataFrame([
         _linha("Selic em 15% (decisão anterior à matéria)", "15",
                f"{meta_jul:.2f}", "SGS 432 (vigente desde 19/06/2025)",
-               "confere" if abs(meta_jul - SELIC_PATAMAR) <= 0.01 else "não confere",
+               _veredito(SELIC_PATAMAR, meta_jul),
                "% a.a."),
         _linha("'patamar mais alto desde 2006'", "15 > tudo desde 2006",
                f"última vez >=15%: {d_ult15:%m/%Y} ({v_ult15:.2f}); "
@@ -681,7 +690,11 @@ def verificacao_febraban() -> pd.DataFrame:
     ipca_dez = ipca[ipca.data.dt.month == 12].set_index("data")["valor"]
     ipca_2025 = float(ipca_dez.loc["2025-12-01"])
     anos = ipca_dez.index.year                      # Index[int], sem .between
-    desde_2018 = ipca_dez[(anos >= IPCA_MELHOR_DESDE) & (anos <= 2024)]
+    # "melhor resultado desde 2018": lido como os anos POSTERIORES a 2018
+    # (2019–2024). Incluindo 2018 (IPCA 3,75%), o mínimo da janela seria
+    # menor que o de 2025 e a frase não se sustentaria — a ambiguidade do
+    # "desde" fica declarada no status.
+    desde_2018 = ipca_dez[(anos > IPCA_MELHOR_DESDE) & (anos <= 2024)]
 
     meta = _serie("meta_selic_copom")
     meta_nota = float(meta[meta.data <= NOTA].valor.iloc[-1])
@@ -704,21 +717,21 @@ def verificacao_febraban() -> pd.DataFrame:
     return pd.DataFrame([
         _linha("IPCA 2025 = 4,26%", "4,26", f"{ipca_2025:.2f}",
                "SGS 13522 (dez/2025)",
-               "confere (exato)" if abs(ipca_2025 - 4.26) <= 0.01
-               else "não confere", "%"),
+               _veredito(4.26, ipca_2025), "%"),
         _linha("'melhor resultado nominal desde 2018'", "menor desde 2018",
-               f"mín. 2018–2024 = {desde_2018.min():.2f}",
+               f"mín. 2019–2024 = {desde_2018.min():.2f} "
+               f"(2018: {ipca_dez.loc['2018-12-01']:.2f})",
                "SGS 13522 (fechamentos de dezembro)",
-               "confere" if melhor else "não confere", "%"),
+               ("confere (leitura 'desde 2018' = 2019 em diante)" if melhor
+                else "não confere"), "%"),
         _linha("Selic de 15,0% ao ano na nota (12/01/2026)", "15,0",
                f"{meta_nota:.2f}", "SGS 432 (vigência em 12/01/2026)",
-               "confere" if abs(meta_nota - SELIC_PATAMAR) <= 0.01 else "não confere",
+               _veredito(SELIC_PATAMAR, meta_nota),
                "% a.a."),
         _linha("Focus projetava IPCA 2025 em 4,90% no início de 2025",
                "4,90", f"{focus_490:.2f} (pesquisa {d_focus:%d/%m/%Y})",
                "Focus anual (focus_anuais, IPCA ref. 2025)",
-               "confere (≈)" if abs(focus_490 - 4.90) <= 0.15
-               else "não confere", "%"),
+               _veredito(4.90, focus_490), "%"),
         _linha("1º corte 'se não em janeiro, a partir de março'", "mar/2026",
                f"{d_primeira_queda:%d/%m/%Y}" if d_primeira_queda == d_primeira_queda
                else "—",
@@ -767,24 +780,24 @@ def verificacao_anbima() -> pd.DataFrame:
     return pd.DataFrame([
         _linha("[27/01/2025] Selic chega a 15,25% em junho/2025", "15,25",
                f"{jun25:.2f} (em 19/06/2025)", "SGS 432",
-               "não confere — ficou 0,25 abaixo (15,00)", "% a.a."),
+               f"{_veredito(15.25, jun25)} — ficou 0,25 abaixo (15,00)", "% a.a."),
         _linha("[27/01/2025] …e permanece nesse patamar até o fim de 2025",
                "15,25 até dez/2025", f"{dez25:.2f} em dez/2025", "SGS 432",
                "confere como direção (patamar alto mantido), não o valor",
                "% a.a."),
         _linha("[27/01/2025] IPCA 2025 = 5,6%", "5,6", f"{ipca_2025:.2f}",
                "SGS 13522 (dez/2025)",
-               f"não confere — erro {ipca_2025 - 5.6:+.2f} p.p.", "%"),
+               f"{_veredito(5.6, ipca_2025)} — erro {ipca_2025 - 5.6:+.2f} p.p.", "%"),
         _linha("[27/01/2025] dívida bruta = 81% do PIB em 2025", "81,0",
                f"{dbgg_dez25:.2f}", "SGS 13762 (dez/2025)",
-               f"não confere — erro {dbgg_dez25 - 81:+.2f} p.p.", "%"),
+               f"{_veredito(81, dbgg_dez25)} — erro {dbgg_dez25 - 81:+.2f} p.p.", "%"),
         _linha("[27/01/2025] déficit primário = 0,63% do PIB em 2025",
                "0,63", f"{pri_2025:.2f}", "SGS 5793 (dez/2025, + = déficit)",
-               "confere (≈)" if abs(pri_2025 - 0.63) <= 0.25
-               else "não confere", "%"),
+               f"{_veredito(0.63, pri_2025)} — erro {pri_2025 - 0.63:+.2f} p.p.",
+               "%"),
         _linha("[15/09/2025] Selic mantida em 15% nas 3 últimas reuniões "
                "de 2025", "15,00", f"{dez25:.2f}", "SGS 432 (dez/2025)",
-               "confere" if abs(dez25 - SELIC_PATAMAR) <= 0.01 else "não confere",
+               _veredito(SELIC_PATAMAR, dez25),
                "% a.a."),
         _linha("[15/09/2025] 1º corte em janeiro de 2026 (14,75%)",
                "jan/2026",
@@ -793,11 +806,10 @@ def verificacao_anbima() -> pd.DataFrame:
                "não confere — foi março/2026", ""),
         _linha("[15/09/2025] IPCA 2025 = 4,8%", "4,8", f"{ipca_2025:.2f}",
                "SGS 13522 (dez/2025)",
-               f"não confere — erro {ipca_2025 - 4.8:+.2f} p.p.", "%"),
+               f"{_veredito(4.8, ipca_2025)} — erro {ipca_2025 - 4.8:+.2f} p.p.", "%"),
         _linha("[15/09/2025] dívida bruta = 79,80% do PIB em 2025", "79,80",
                f"{dbgg_dez25:.2f}", "SGS 13762 (dez/2025)",
-               "confere (≈)" if abs(dbgg_dez25 - 79.8) <= 1.5
-               else "não confere", "%"),
+               _veredito(79.8, dbgg_dez25), "%"),
     ])
 
 
