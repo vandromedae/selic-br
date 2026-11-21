@@ -24,10 +24,12 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   ex ante de 2024–2026 em **média de ~8,8 p.p.** (6,9 em 2024 → 10,1 em 2026)
   — média que desde 2002 só havia sido alcançada em 2002–06, quando a inflação
   caía de dois dígitos. Hoje coexiste com
-  IPCA de ~4,6% — **dentro da meta**.
-- A regra de Taylor simples pediria ~7,5–9% a.a. para Focus ~5%. O **desvio
-  médio 2024–26 (~6,5 p.p.) é o maior entre as janelas comparadas** (2003–14:
-  4,9; 2022–23: 5,2 p.p.), mas **não é recorde histórico**: a MM36 chegou a
+  IPCA de ~4,6% — **acima do teto** da faixa de tolerância (meta de 3% desde
+  2025, com teto de 4,5%; a inflação ficou dentro da faixa até 2025).
+- A regra de Taylor simples (meta variável: 4,5% até 2024, 3,0% desde 2025)
+  pediria ~8,2–8,8% a.a. para Focus ~5%. O **desvio médio 2024–26 (~6,0 p.p.)
+  é o maior entre as janelas comparadas** (2003–14:
+  4,9; 2022–23: 5,1 p.p.), mas **não é recorde histórico**: a MM36 chegou a
   9,9 p.p. em fev/2006.
 - Atividade (IBC-Br +2–3%) e desemprego em mínimo (5,2–5,3%) não explicam o
   patamar. **Conclusão verificável:** o juro atual é inflação esperada **+
@@ -83,11 +85,16 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   (set/22). O aperto atual começou em **março de 2021** e já estava no
   patamar de hoje em **dez/2022 (8,4%)** — a troca de nível não coincide
   com a troca de mandato.
-- Dispêndio nominal cresceu ~8,9× entre 2002 e 2025 (R$ 113 bi → R$ 1.008 bi);
-  os saltos de % do PIB ocorrem em 2015–16 e 2024–25, ambos com desvio
+- Dispêndio nominal cresceu ~8,9× entre 2002 e 2025 (R$ 113 bi → R$ 1.008 bi),
+  mas o PIB nominal cresceu ~8,6× no mesmo período: em % do PIB os juros
+  foram de 7,6% (2002) a 7,9% (2025) — quase estáveis. Os saltos de % do PIB
+  são de 2015 e 2024 (2016 e 2025 recuaram), ambos com desvio
   acima da regra de Taylor.
-- Swaps geraram custo em 8 dos 18 anos (44%, 2008–25) — "imposto cambial"
-  recorrente na conta de juros, contratado em diferentes gestões.
+- Swaps: hedge cambial com resultado volátil — custo em 8 dos 18 anos
+  (2008–25), com perdas concentradas em anos de forte depreciação (2015:
+  −R$ 90 bi; 2020: −41; 2024: −116) e ganho quando o real aprecia (2025:
+  +106). O **líquido do período é ganho de R$ 51 bi** (+60 bi em 2015–25) —
+  não um "imposto cambial" recorrente na conta de juros.
 - **Não afirmamos intenção aqui**: isso exige documentos (atas, manifestos,
   ofícios) — ver a fase de documentos abaixo.
 

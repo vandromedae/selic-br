@@ -79,10 +79,8 @@ def fig_selic_inflacao(d) -> go.Figure:
     ]:
         fig.add_scatter(x=m.index, y=m[col], name=nome, line=dict(color=cor, dash=dash or "solid")
                         if dash else dict(color=cor), mode="lines")
-    fig.add_hline(y=4.5, line=dict(width=1), line_dash="dot", line_color="#7f7f7f")
-    fig.add_annotation(x=pd.Timestamp("2005-01-31"), y=5.3,
-                       text="meta de inflação (4,5%)",
-                       showarrow=False, font=dict(size=11, color="#7f7f7f"))
+    fig.add_scatter(x=m.index, y=ind.meta_inflacao(), name="meta de inflação (4,5% até 2024; 3,0% desde 2025)",
+                    line=dict(color="#7f7f7f", dash="dot", width=1), mode="lines")
     fig.update_xaxes(title="")
     fig.update_yaxes(title="% a.a.")
     _layout(fig)
@@ -108,10 +106,13 @@ def fig_juro_real(d) -> go.Figure:
 
 def fig_desvio_taylor(d) -> go.Figure:
     t = d["macro"][["selic_meta", "focus_ipca_12m"]].dropna().copy()
-    t["taylor"] = 2.5 + t.focus_ipca_12m + 0.5 * (t.focus_ipca_12m - 4.5)
+    # meta VARIÁVEL (4,5% até 2024; 3,0% desde 2025): com a meta antiga, o
+    # Taylor de 2025–26 fica 0,75 p.p. abaixo e o desvio infla na mesma medida
+    meta = ind.meta_inflacao().reindex(t.index).ffill()
+    t["taylor"] = 2.5 + t.focus_ipca_12m + 0.5 * (t.focus_ipca_12m - meta)
     fig = go.Figure()
     fig.add_scatter(x=t.index, y=t.taylor,
-                    name="Regra de Taylor simples (r*=2,5; meta 4,5)",
+                    name="Regra de Taylor simples (r*=2,5; meta 4,5→3,0)",
                     line=dict(color="#7f7f7f", dash="dash"), mode="lines")
     # faixa entre a regra e a Selic = desvio da política em relação à regra
     fig.add_scatter(x=t.index, y=t.selic_meta, name="Selic meta",
@@ -227,7 +228,7 @@ def fig_juros_primario(d) -> go.Figure:
                     name="juros nominais % PIB (12m)",
                     line=dict(color="#d62728"), mode="lines")
     fig.add_scatter(x=sp.index, y=sp.primario_pib_12m,
-                    name="resultado primário % PIB (12m)",
+                    name="primário % PIB (12m) — positivo = déficit",
                     line=dict(color="#2ca02c"), mode="lines")
     fig.add_hline(y=0, line_color="#000000", line_width=1)
     fig.update_yaxes(title="% do PIB")

@@ -58,7 +58,8 @@ def p1(d) -> None:
         "A Selic acompanha a inflação **esperada** (Focus), não realizada. O "
         "que é excepcional é a magnitude: juro real ex ante de 2024–2026 em "
         "média ~8,8 p.p. (6,9 em 2024 → 10,1 em 2026), com inflação "
-        "**dentro da meta**."
+        "**acima do teto** da meta: 4,58% em set/26 contra o teto de 4,5% "
+        "da faixa (meta de 3% desde 2025)."
     )
     st.plotly_chart(fig_selic_inflacao(d), width="stretch")
     st.plotly_chart(fig_juro_real(d), width="stretch")
@@ -159,7 +160,10 @@ def p5(d) -> None:
     st.caption(
         f"Dispêndio nominal com juros: {fmt_bi(j2.juros_mi.iloc[0] / 1000, 0)} "
         f"({j2.ano.iloc[0]}) → {fmt_bi(j2[j2.ano < ANO_CORTE].juros_mi.iloc[-1] / 1000, 0)} "
-        f"({r['ultimo_ano_completo']}) — sem contar o efeito dos swaps."
+        f"({r['ultimo_ano_completo']}) — sem contar o efeito dos swaps. "
+        f"Em % do PIB: {j2.juros_pib_pct.iloc[0]:.1f}% → "
+        f"{j2[j2.ano < ANO_CORTE].juros_pib_pct.iloc[-1]:.1f}% — a razão "
+        f"nominal de ~8,9× reflete sobretudo o PIB nominal, que cresceu ~8,6×."
     )
     st.plotly_chart(fig_juros_swaps(d), width="stretch")
     st.info(

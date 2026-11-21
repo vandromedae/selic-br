@@ -14,6 +14,22 @@ from ..extratores.base import ler_parquet
 ANO_INICIO = 2002
 COBERTURA_DETENTORES = 2007  # RMD 2.7 (detentores da DPMFi) começa em jan/2007
 
+# regime de metas de inflação do BCB: até 2024, meta de 4,5% ao ano; desde
+# 2025, meta de 3,0% contínua. Em ambos, faixa de tolerância de ±1,5 p.p.
+# (teto = meta + 1,5: 6,0 até 2018 com ±2,0; 4,5 desde 2019)
+META_ATE_2024 = 4.5
+META_DESDE_2025 = 3.0
+TOLERANCIA_META = 1.5
+
+
+def meta_inflacao() -> pd.Series:
+    """Meta de inflação do BCB, mês a mês (4,5% até 2024; 3,0% desde 2025)."""
+    m = macro_mensal()
+    meta = pd.Series(META_ATE_2024, index=m.index)
+    meta[meta.index >= "2025-01-01"] = META_DESDE_2025
+    meta.name = "meta"
+    return meta
+
 
 # ------------------------------------------------------------------ validação
 # Falha ruidosa em vez de saída incompleta em silêncio: o dado de entrada
