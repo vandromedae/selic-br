@@ -18,6 +18,7 @@ dependencies:
   - lxml>=6.1,<7
   - beautifulsoup4>=4.15,<5
   - pyarrow>=26,<27
-  - pypdf>=6,<7
+  - pypdf
+  - python-calamine  # ler os .xls da CVM (investimento estrangeiro)>=6,<7
   - streamlit>=1.51,<2  # "width" de gráficos/tabelas (use_container_width saiu pós-1.50)
   - pip
