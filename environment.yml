@@ -3,19 +3,21 @@ channels:
   - conda-forge
 dependencies:
   - python=3.12
-  - pandas>=2.2
-  - numpy
-  - requests
-  - matplotlib
-  - seaborn
-  - plotly
-  - jupyter
-  - ipykernel
-  - nbformat
-  - openpyxl
-  - lxml
-  - beautifulsoup4
-  - pyarrow
-  - pypdf
-  - streamlit>=1.51  # "width" de gráficos/tabelas (use_container_width saiu pós-1.50)
+  # faixas = versões validadas hoje (piso) + teto de major (estabilidade);
+  # reprodução exata com builds em environment.lock.yml (ver README)
+  - pandas>=2.2,<4
+  - numpy>=2.5,<3
+  - requests>=2.34,<3
+  - matplotlib>=3.11,<4
+  - seaborn>=0.13,<1
+  - plotly>=7.1,<8
+  - jupyter>=1.1,<2
+  - ipykernel>=7.4,<8
+  - nbformat>=5.11,<6
+  - openpyxl>=3.1,<4
+  - lxml>=6.1,<7
+  - beautifulsoup4>=4.15,<5
+  - pyarrow>=26,<27
+  - pypdf>=6,<7
+  - streamlit>=1.51,<2  # "width" de gráficos/tabelas (use_container_width saiu pós-1.50)
   - pip

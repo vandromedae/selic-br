@@ -482,7 +482,11 @@ environment.yml    ambiente conda "juros_divida"
 ## Como rodar
 
 ```bash
-conda env create -f environment.yml   # apenas na primeira vez
+# recriar o ambiente — faixas das versões validadas em environment.yml
+conda env create -f environment.yml
+# ... ou a reprodução EXATA do ambiente validado (353 builds pinados)
+conda env create -f environment.lock.yml
+
 conda activate juros_divida
 
 # atualizar dados (cada extrator tem CLI própria)
@@ -507,6 +511,12 @@ jupyter nbconvert --to notebook --execute --inplace notebooks/*.ipynb
 # ferramenta web
 streamlit run app/app.py
 ```
+
+**Atualizar dependências:** ajustar o pin em `environment.yml`, recriar o
+ambiente e re-exportar o lock — `conda env export -n juros_divida >
+environment.lock.yml` (e remover a linha `prefix:` do gerado). As faixas do
+`environment.yml` são o que foi validado; o lock reproduz o ambiente
+byte a byte (versões e builds).
 
 **Coleta com procedência** (Tesouro e RMD). As três operações são
 `baixar()` — verifica e obtém a versão atual (revalidação condicional por
