@@ -12,6 +12,8 @@ if str(RAIZ) not in sys.path:
 import pandas as pd
 import plotly.graph_objects as go
 
+from src.processa import indicadores as ind
+
 from app.dados import ANO_CORTE
 from app.graficos import _layout
 
@@ -46,10 +48,13 @@ def fig_i_g(d) -> tuple[pd.DataFrame, go.Figure]:
     g_nom = v.pib_mi.pct_change() * 100
     m = d["macro"]
     m_anual = m[m.ipca_12m.notna()].groupby(m[m.ipca_12m.notna()].index.year).mean()
-    g_real = ((1 + g_nom / 100) / (1 + m_anual.ipca_12m / 100) - 1) * 100
+    # g real = PIB real do IBGE (SIDRA, volume) — não "nominal − IPCA",
+    # aproximação com erro de ~1 p.p. na média (até ~5 p.p. em anos de choque)
+    g_real = ind.crescimento_pib_real()
+    g_real = g_real[g_real.index < ANO_CORTE]  # ano incompleto fora (regra 4)
     tab = pd.DataFrame({
         "g (PIB nominal)": g_nom,
-        "g (PIB real aprox.)": g_real,
+        "g (PIB real, IBGE)": g_real,
     }).loc[2013:]
     i_nom = d["custo"].set_index("data").taxa_pct_aa.resample("YE").last()
     i_nom.index = i_nom.index.year
@@ -57,7 +62,7 @@ def fig_i_g(d) -> tuple[pd.DataFrame, go.Figure]:
     tab["i (custo médio DPF)"] = i_nom.loc[2013:2025]
     tab["r (juro real ex ante)"] = i_real.loc[2013:2025]
     tab["i − g (nominal)"] = tab["i (custo médio DPF)"] - tab["g (PIB nominal)"]
-    tab["r − g (real)"] = tab["r (juro real ex ante)"] - tab["g (PIB real aprox.)"]
+    tab["r − g (real)"] = tab["r (juro real ex ante)"] - tab["g (PIB real, IBGE)"]
     tab.index.name = "ano"
     tab_l = tab.reset_index()
     cores = ["#2ca02c" if x >= 0 else "#d62728" for x in tab_l["i − g (nominal)"]]

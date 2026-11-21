@@ -259,6 +259,31 @@ def focus_anuais() -> pd.DataFrame:
     return d
 
 
+def crescimento_pib_real() -> pd.Series:
+    """Variação anual do PIB real (volume) — IBGE SIDRA, fbcf.parquet.
+
+    Crescimento do ano = média anual do índice de volume do PIB a preços de
+    mercado sobre a média do ano anterior (a variação "do ano" do IBGE).
+    É o g oficial da comparação r > g: deflacionar o PIB nominal pelo
+    IPCA 12m é aproximação com erro de ~1 p.p. na média, até ~5 p.p. em
+    anos de choque de preços (2021: 10,1 vs 4,8).
+    """
+    f = ler_parquet("fbcf")
+    _exigir_colunas(f, ["setor", "data", "indice"], "fbcf.parquet")
+    pib = f[f.setor == "PIB a preços de mercado"]
+    if pib.empty:
+        raise ValueError(
+            "crescimento_pib_real: setor 'PIB a preços de mercado' ausente em "
+            f"fbcf.parquet — setores: {sorted(f.setor.unique())}")
+    s = pib.set_index("data")["indice"]
+    if s.index.year.min() > ANO_INICIO:
+        raise ValueError(
+            f"crescimento_pib_real: cobertura recuou — começa em "
+            f"{s.index.min():%Y-%m} (esperado desde {ANO_INICIO})")
+    anual = s.groupby(s.index.year).mean()
+    return anual.pct_change() * 100
+
+
 # ------------------------------------------------------------------ custo médio
 
 
