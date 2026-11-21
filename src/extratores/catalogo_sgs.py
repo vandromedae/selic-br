@@ -46,8 +46,10 @@ SERIES_SGS: dict[int, dict[str, str]] = {
     1839: {"nome": "compromissadas_selic", "desc": "Operações compromissadas/Selic - saldo final do período (R$ milhões)", "freq": "M"},
     # Lado do crédito (o outro lado do balanço bancário) — P2 / tese da Febraban
     20740: {"nome": "taxa_media_pf_livres", "desc": "Taxa média de juros das operações de crédito com recursos livres - PF - Total (% a.a.)", "freq": "M"},
-    20783: {"nome": "spread_total", "desc": "Spread médio das operações de crédito - Total (p.p.)", "freq": "M"},
-    20785: {"nome": "spread_pf", "desc": "Spread médio das operações de crédito - Pessoas físicas - Total (p.p.)", "freq": "M"},
+    20783: {"nome": "spread_total", "desc": "Spread médio das operações de crédito - Total, inclui direcionado (p.p.)", "freq": "M"},
+    20785: {"nome": "spread_pf", "desc": "Spread médio das operações de crédito - Pessoas físicas - Total, inclui direcionado (p.p.)", "freq": "M"},
+    20786: {"nome": "spread_livre", "desc": "Spread médio das operações de crédito com recursos livres - Total (p.p.)", "freq": "M"},
+    20809: {"nome": "spread_livre_pf", "desc": "Spread médio das operações de crédito com recursos livres - Pessoas físicas - Total (p.p.)", "freq": "M"},
     21082: {"nome": "inadimplencia_sfn", "desc": "Taxa de inadimplência - Total do SFN (%)", "freq": "M"},
     21084: {"nome": "inadimplencia_pf", "desc": "Inadimplência da carteira de crédito - Pessoas físicas - Total (% da carteira)", "freq": "M"},
     20634: {"nome": "concessoes_livres", "desc": "Concessões de crédito com recursos livres - Total (R$ milhões/mês)", "freq": "M"},

@@ -78,7 +78,8 @@ def p2(d) -> None:
     st.title("P2 · Quem recebe os juros?")
     st.markdown(
         "Composição de estoque por grupo de detentor (RMD 2.7) e **estimativa** "
-        "do fluxo de juros por grupo (juros do ano × participação em dezembro)."
+        "do fluxo de juros por grupo (juros apropriados da DPF no ano × "
+        "participação em dezembro)."
     )
     st.plotly_chart(fig_detentores(d, stacked=True), width="stretch")
     cols = st.columns(2)
@@ -88,9 +89,11 @@ def p2(d) -> None:
         st.plotly_chart(fig_fluxo_juros_detentor(d), width="stretch")
     st.warning(
         "**Estimativa, não dado oficial:** participação em dezembro × juros "
-        "anuais. A União não publica fluxo por credor. Identificar "
-        "instituições dentro do grupo não é possível (sigilo; Req. 696/2019 "
-        "negado) — ver aba **Transparência: lacunas**."
+        "apropriados da DPF (RMD 2.9, conta I.2). A União não publica fluxo "
+        "por credor. O nível institucional é parcialmente visível (fundos que "
+        "divulgam carteira, países dos não-residentes, patrocínio das EFPCs); "
+        "o cotista final e a carteira detalhada dos fundos com dispensa são "
+        "sigilo (Req. 696/2019 negado) — ver aba **Transparência: lacunas**."
     )
 
 
@@ -200,13 +203,14 @@ def transparencia() -> None:
                       "Deputados) pedia a lista ao STN; resposta foi "
                       "negativa por **sigilo bancário**.",
             "o que há": "Estimativa por grupo: participação de dezembro × "
-                        "juros nominais anuais (aba P2).",
+                        "juros apropriados da DPF (RMD 2.9, aba P2).",
         },
         {
             "lacuna": "Fluxo de juros por detentor (dado oficial)",
-            "estado": "**Não existe.** O Tesouro publica juros agregados "
-                      "(SGS 4616); por detentor só o estoque "
-                      "(RMD 2.7), mensal, por grupo.",
+            "estado": "**Não existe.** O Tesouro publica os juros apropriados "
+                      "da DPF (RMD 2.9) e o estoque por detentor (RMD 2.7), "
+                      "mas não o fluxo por detentor. O SGS 4616 é o juro do "
+                      "setor público consolidado, não da DPMFi.",
             "o que há": "Estimativa própria — marcada como tal em toda "
                         "a interface.",
         },
@@ -221,8 +225,8 @@ def transparencia() -> None:
             "lacuna": "API do Portal da Transparência",
             "estado": "**Exige chave de API** (o pedido via LAI foi "
                       "cancelado/deferido com exigência de credencial); "
-                      "dispensada neste projeto — substituída por SGS 4616 "
-                      "+ fatores de variação da DPF.",
+                      "dispensada neste projeto — substituída por RMD 2.9 "
+                      "+ SGS 4616 + fatores de variação da DPF.",
             "o que há": "Mesmo resultado analítico pelas séries do BCB/Tesouro.",
         },
         {
@@ -250,7 +254,7 @@ def fontes() -> None:
     st.markdown(f"""
 | Fonte | Uso nesta ferramenta |
 | --- | --- |
-| **BCB/SGS** (25 séries) | juros nominais (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA, primário |
+| **BCB/SGS** (39 séries) | juros nominais consolidados (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA, primário, spread do crédito livre (20786/20809) |
 | **Tesouro/STN — RMD** | detentores (Anexo 2.7), custo médio (4.1–4.3), composição (5.5) |
 | **Tesouro/STN — fatores DPF (Anexo 2.9)** | estoque, emissões, resgates, juros apropriados |
 | **Focus / Olinda (BCB)** | IPCA-12m e Selic anuais (medianas) |
@@ -260,8 +264,10 @@ def fontes() -> None:
 **Regras declaradas:**
 
 1. **Fluxo de juros por detentor é estimativa** (participação dez × juros
-   anuais) — não dado oficial.
-2. **Nomes de credores não são públicos** (Req. 696/2019 negado por sigilo).
+   apropriados da DPF, RMD 2.9) — não dado oficial.
+2. **O cotista final e a carteira detalhada dos fundos com dispensa não são
+   públicos** (Req. 696/2019 negado por sigilo); o nível institucional dos
+   fundos que divulgam carteira é nomeado.
 3. **Desemprego** só a partir de 2012 — lacuna informada, não escondida.
 4. **{ANO_CORTE} é ano incompleto** nas séries de fluxo — o app o exclui dos
    gráficos anuais fechados e avisa.

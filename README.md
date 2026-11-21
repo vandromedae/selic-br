@@ -52,66 +52,77 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 ### P2 — Quem são os beneficiários? (`notebooks/02_beneficiarios.ipynb`)
 - Orientado ao grupo detentor (Anexo 2.7 do RMD, desde 2007): o
   **sistema financeiro** (Instituições Financeiras + Fundos + Seguradoras)
-  detém **57% do estoque** (2025) e é o maior beneficiário estimado do fluxo
-  de juros; Previdência ~23%; Não-residentes ~10%; Tesouro Direto (pessoas
-  físicas) ~2,6%.
+  detém **57,5% do estoque** (set/2026) e é o maior beneficiário estimado do
+  fluxo de juros; Previdência ~22,4%; Não-residentes ~9,6%; Tesouro Direto
+  (pessoas físicas) ~3,1%.
 
 - **Aproximação do fluxo por detentor:** participação no estoque em dezembro ×
-  juros nominais do ano (SGS 4616) — não é dado oficial; é a melhor
-  aproximação possível com dados públicos, válida para tamanho relativo.
+  **juros apropriados da DPF** no ano (RMD 2.9, conta I.2) — não é dado
+  oficial; é a melhor aproximação possível com dados públicos, válida para
+  tamanho relativo. O SGS 4616 (juros do setor público consolidado, R$ 1,01 tri
+  em 2025) não é usado porque inclui estados, estatais e BCB, enquanto o
+  estoque do RMD 2.7 é só a DPMFi federal.
 
-- **Lacuna explícita:** identificação intra-grupo (qual banco/fundo, quanto)
-  não é pública — o Requerimento 696/2019 da Câmara, que pedia a lista ao
-  STN, foi **negado por sigilo bancário**.
+- **Lacuna explícita:** o **cotista final** do fundo e a **carteira detalhada**
+  dos fundos com dispensa de divulgação não são públicos — o Requerimento
+  696/2019 da Câmara, que pedia a lista de credores ao STN, foi **negado por
+  sigilo bancário**. O nível institucional é parcialmente visível: a CVM nomeia
+  os fundos que divulgam carteira, a PREVIC nomeia o patrocínio das EFPCs e a
+  CVM agrega os não-residentes por país.
 
 #### Nome aos bois — o que as fontes nomeiam (Camadas 1 e 2)
 
-O agrupamento do RMD foi decomposto em três níveis, com duas validações
-cruzadas que fecham (o fluxo de juros por título calculado fecha com o
-oficial — R$ 886 bi estimados vs R$ 880 bi; e o gap dos detentores fecha
-com a PREVIC — R$ 940 bi vs R$ 921 bi em títulos federais das EFPCs):
+O agrupamento do RMD foi decomposto em três níveis. As checagens são de
+**consistência interna**, não validações independentes (as duas pontas vêm da
+mesma família de dados do RMD):
 
 - **por título** (RMD 2.8): a **previdência** carrega as NTN-B/NTN-C
   (47% do título de inflação; R$ 774 bi no sistema fechado — a PREVIC
-  nomeia a estratégia, *imunização de longo prazo*); **bancos e fundos**
+  descreve a estratégia como *imunização de longo prazo*); **bancos e fundos**
   carregam as LFTs (69% — a rolagem indexada à Selic); **estrangeiros**
-  carregam as pré-fixadas (26% das LTN, 40% das NTN-F).
-- **por instituição** (CVM CDA, 5.993 fundos): BB (R$ 680 bi), Caixa
+  carregam as pré-fixadas (26% das LTN, 40% das NTN-F). A estimativa de juros
+  por título dá R$ 886 bi em 2025, contra R$ 880 bi de juros apropriados da
+  DPF (RMD 2.9, I.2) — diferença de 0,7%, dentro da mesma família de dados.
+- **por instituição** (CVM CDA, 5.993 classes de fundos): BB (R$ 680 bi), Caixa
   (R$ 419 bi), BrasilPrev (R$ 394 bi), Itaú (R$ 313 bi), Bradesco (R$ 207 bi),
   Santander (R$ 148 bi) — os maiores fundos são veículos dos bancos e de
-  previdência aberta (BRASILPREV TOP TPF, R$ 274 bi, é o maior).
-- **por país** (CVM, carteira dos não-residentes): EUA (R$ 196 bi) e
+  previdência aberta (BRASILPREV TOP TPF, R$ 274 bi, é o maior). Os seis
+  grupos somam 68,5% do total; só os cinco bancos (sem a BrasilPrev), 56,0%.
+- **por país** (CVM, carteira dos não-residentes, dez/2024): EUA (R$ 196 bi) e
   Reino Unido (R$ 137 bi) — mais da metade dos R$ 607 bi em títulos federais.
 
-**O achado central:** em 2025, os detentores receberam **R$ 1.008 bi em
-juros nominais — R$ 770–900 bi em termos reais, cerca de 3 vezes o que a
-economia cresceu no ano** (o PIB real cresceu R$ 269 bi). No acumulado
-2012–25, os juros apropriados somam **R$ 5,98 trilhões — 5,4% de tudo que o
-país produziu** no período. Quem detém títulos públicos tem um ativo que
-paga prêmio real acima do crescimento da economia, sem risco de crédito:
-**há beneficiários identificáveis e medidos** (bancos, fundos de pensão,
-gestoras, investidores estrangeiros), e a detenção é concentrada (80% em
-oito grupos; 30 fundos detêm R$ 2,8 tri).
+**O achado central:** em 2025, a DPF apropriou **R$ 880 bi em juros** (RMD 2.9,
+I.2) — cerca de **R$ 773 bi em juros reais**, descontada a correção monetária
+estimada dos títulos indexados (ver P3); é cerca de 3 vezes o que a economia
+cresceu no ano (o PIB real cresceu R$ 269 bi). No acumulado 2012–25, os juros
+apropriados somam **R$ 5,98 trilhões — 5,4% de tudo que o país produziu** no
+período. Quem detém títulos públicos tem um ativo que paga prêmio real acima do
+crescimento da economia, sem risco de crédito: **há beneficiários identificáveis
+e medidos** (bancos, fundos de pensão, gestoras, investidores estrangeiros), e a
+detenção é concentrada: só IF + Fundos + Previdência somam **76,6%** do estoque
+em set/2026; 30 **classes** de fundos detêm R$ 2,8 tri (19,7% do PL de todos os
+fundos).
 
-**A segunda frente — o spread do crédito** (SGS 20740/20783/20542/20570): o
-sistema financeiro remunera o capital pelos dois lados. O spread do crédito
-livre rende **~R$ 905 bi/ano de receita bruta** (PF: R$ 724 bi) — contra os
-**~R$ 576 bi em juros da dívida que cabem ao sistema financeiro**
-(IF + fundos + seguradoras; o total pago a todos os detentores é R$ 1.008 bi).
-As bases das séries são distintas (a taxa média é das novas operações; o
-spread do BCB é contra o custo de captação, não a Selic) e o spread é
-**bruto** — risco, operação e tributos dentro; o funding bancário é mais
-barato que a Selic, então "margem sobre a Selic" não é receita de ninguém, e
-a inadimplência (estoque em atraso) não é o custo de perda do ano (a
-despesa de provisão, não coletada). O que se afirma: **a segunda porta de
-receita do sistema financeiro é do tamanho da primeira**, e é paga pelos
-tomadores de crédito — o elo entre quem recebe (P2) e o i > g (P4).
+**A segunda frente — o spread do crédito livre** (SGS
+20740/20786/20809/20542/20570): o sistema financeiro remunera o capital pelos
+dois lados. O spread do crédito livre rende **~R$ 1,49 tri/ano de receita
+bruta** (PF: R$ 1,25 tri) — contra os **~R$ 503 bi em juros da dívida que cabem
+ao sistema financeiro** (IF + fundos + seguradoras; o total pago a todos os
+detentores é R$ 880 bi). As bases das séries são distintas (a taxa média é das
+novas operações; o spread do BCB é contra o custo de captação, não a Selic) e o
+spread é **bruto** — risco, operação e tributos dentro; o funding bancário é
+mais barato que a Selic, então "margem sobre a Selic" não é receita de ninguém,
+e a inadimplência (estoque em atraso) não é o custo de perda do ano (a despesa
+de provisão, não coletada). O que se afirma: **a segunda porta de receita do
+sistema financeiro é cerca de três vezes a primeira**, e é paga pelos tomadores
+de crédito — o elo entre quem recebe (P2) e o i > g (P4).
 
-**Onde a luz para:** R$ 769 bi em títulos públicos (24% do total em fundos)
-estão em **carteiras confidenciais** — 11.060 fundos com dispensa de
-divulgação (exclusivos, cotistas restritos). É onde estariam os donos
-maiores: a lei protege o nome. O look-through final (o cotista, o sócio do
-plano) não é público em nenhuma camada — o que se afirma é o nível
+**Onde a luz para:** R$ 769 bi em títulos públicos (**19,6%** do total
+divulgado + confidencial; **24%** do que é divulgado) estão em **carteiras
+confidenciais** — 11.060 classes de fundos com dispensa de divulgação
+(exclusivos, cotistas restritos). É onde a identificação pública termina: a lei
+protege o nome. O nome do fundo e o CNPJ são públicos; o cotista final e a
+carteira detalhada dos fundos com dispensa não são. O que se afirma é o nível
 institucional, e o artigo deve declarar o resto como o que é: sigilo.
 
 ### P3 — Os juros amortizam a dívida? (`notebooks/03_juros_amortizam.ipynb`)
@@ -152,8 +163,9 @@ institucional, e o artigo deve declarar o resto como o que é: sigilo.
   (set/22). O aperto atual começou em **março de 2021** e já estava no
   patamar de hoje em **dez/2022 (8,4%)** — a troca de nível não coincide
   com a troca de mandato.
-- Dispêndio nominal cresceu ~8,9× entre 2002 e 2025 (R$ 113 bi → R$ 1.008 bi),
-  mas o PIB nominal cresceu ~8,6× no mesmo período: em % do PIB os juros
+- Dispêndio nominal do setor público consolidado cresceu ~8,9× entre 2002 e
+  2025 (R$ 113 bi → R$ 1,01 tri; SGS 4616), mas o PIB nominal cresceu ~8,6× no
+  mesmo período: em % do PIB os juros
   foram de 7,6% (2002) a 7,9% (2025) — quase estáveis. Os saltos de % do PIB
   são de 2015 e 2024 (2016 e 2025 recuaram), ambos com desvio
   acima da regra de Taylor.
@@ -444,7 +456,7 @@ o que não recebe). O catálogo ganhou **6 séries** para medir o segundo lado.
 | Série | SGS | média 2021 | média 2026 (jan–set) | último (set/2026) |
 | --- | --- | --- | --- | --- |
 | Taxa média de juros do crédito livre PF | 20740 | 40,4% a.a. | 61,8% a.a. | **62,4% a.a.** |
-| Spread médio do crédito PF | 20785 | 19,4 p.p. | 27,7 p.p. | **28,0 p.p.** |
+| Spread médio do crédito PF — total, inclui direcionado | 20785 | 19,4 p.p. | 27,7 p.p. | **28,0 p.p.** |
 | Inadimplência da carteira PF | 21084 | 3,0% | **5,6%** | **5,99%** |
 | Inadimplência total do SFN | 21082 | — | — | **4,98%** |
 | Concessões de crédito livre (R$ mi/mês) | 20634 | 375 mil | 635 mil | 674 mil |
@@ -508,7 +520,7 @@ swaps +0,98 p.p. (2024) e −0,83 p.p. (2025).
 
 | Fonte | Uso | Acesso |
 | --- | --- | --- |
-| **BCB/SGS** (Sistema Gerenciador de Séries) | 35 séries: juros nominais (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA/INPC/meta (432/13522/188), primário/nominal (5793/5727), DBGG (13761/13762), crédito/inadimplência/spread (20740, 20783, 20785, 21082, 21084, 20634), câmbio, etc. | API pública (exige IPv4) |
+| **BCB/SGS** (Sistema Gerenciador de Séries) | 39 séries: juros nominais consolidados (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA/INPC/meta (432/13522/188), primário/nominal (5793/5727), DBGG (13761/13762), crédito/inadimplência/spread (20740, 20783, 20785, 20786, 20809, 21082, 21084, 20634), câmbio, etc. | API pública (exige IPv4) |
 | **Tesouro/STN — RMD, Relatório Mensal do Tesouro** | Detentores (Anexo 2.7), custo médio (Anexo 4.1–4.3), composição (5.5), reserva fiscal (6.1) | anexo ZIP via CDN do Tesouro |
 | **Tesouro/STN — Fatores de variação e emissões da DPF (Anexo 2 e 2.9)** | estoque, emissões, resgates, juros apropriados | portal (CSV) |
 | **Focus / Olinda (BCB)** | medianas anuais de IPCA e Selic; IPCA-12m | Olinda (superdataset) |
@@ -524,8 +536,8 @@ swaps +0,98 p.p. (2024) e −0,83 p.p. (2025).
 
 **Substituições e decisões de fonte** (transparência metodológica):
 - A API do Portal da Transparência exige chave de API (pedido cancelado/
-  deferido) — substituída por SGS 4616 (juros) + fatores de variação da DPF
-  (resgates/emissões);
+  deferido) — substituída por RMD 2.9 (juros apropriados da DPF) + SGS 4616
+  (juros consolidados) + fatores de variação da DPF (resgates/emissões);
 - Desemprego público só existe de 2012 em diante — a lacuna 2002–2011 é
   **informada, não escondida**;
 - O RMD entra em modo manutenção no portal público — o extrator baixa o

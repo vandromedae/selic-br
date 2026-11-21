@@ -84,6 +84,10 @@ def juros_anuais() -> pd.DataFrame:
     estados, estatais e BCB; não só os federais) com decomposição por swap
     e % PIB.
 
+    Não usar como numerador do fluxo por detentor da DPMFi: o escopo é o
+    setor público consolidado, enquanto o estoque do RMD 2.7 é só a dívida
+    federal. Para isso, ver `juros_por_detentor`, que usa o RMD 2.9.
+
     Colunas: ano, juros_mi, swap_resultado_mi, juros_ex_swap_mi, pib_mi,
              swap_pp_pib, juros_pib_pct, juros_ex_swap_pib_pct
 
@@ -179,7 +183,13 @@ def detentores_mes() -> pd.DataFrame:
 
 
 def juros_por_detentor(ano: int | None = None) -> pd.DataFrame:
-    """Estimativa do fluxo de juros por detentor = participação × juros nominais.
+    """Estimativa do fluxo de juros por detentor = participação × juros da DPF.
+
+    Numerador: `fatores_anuais()["juros_apropriados_mi"]` — os juros
+    apropriados da DPF no ano (RMD, anexo 2.9, conta I.2), em R$ milhões.
+    É o conceito compatível com o estoque da DPMFi do RMD 2.7. O SGS 4616
+    (juros nominais do setor público consolidado) inclui estados, estatais e
+    BCB e não deve ser usado aqui.
 
     Premissa: participação do estoque em dezembro aproxima a participação média
     do ano no dispêndio com juros (proxy — não é dado oficial por detentor).
@@ -188,7 +198,7 @@ def juros_por_detentor(ano: int | None = None) -> pd.DataFrame:
     fora — os anos antes da cobertura do RMD 2.7 (até 2006) e o ano corrente,
     enquanto o anexo não fecha o ano. Qualquer outro ano descartado é erro.
     """
-    j = juros_anuais()
+    j = fatores_anuais()[["ano", "juros_apropriados_mi"]]
     if ano is not None:
         j = j[j.ano == ano]
     det = detentores_anuais()
@@ -200,8 +210,8 @@ def juros_por_detentor(ano: int | None = None) -> pd.DataFrame:
         raise ValueError(
             f"juros_por_detentor: anos sem dezembro em detentores: "
             f"{inesperados} — o merge interno os descartaria em silêncio")
-    det = det.merge(j[["ano", "juros_mi"]], on="ano")
-    det["juros_estimado_mi"] = det.participacao * det["juros_mi"]
+    det = det.merge(j, on="ano")
+    det["juros_estimado_mi"] = det.participacao * det["juros_apropriados_mi"]
     det["juros_estimado_bi"] = det.juros_estimado_mi / 1000
     return det
 

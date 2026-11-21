@@ -3,12 +3,15 @@
 Fonte: dados abertos da CVM, `FI/DOC/CDA/DADOS/cda_fi_YYYYMM.zip`
 (documento de carteira mensal, por bloco de posição). O bloco `BLC_1`
 traz os ativos em carteira; filtramos `TP_APLIC == "Títulos Públicos"`,
-que nomeia cada fundo (`DENOM_SOCIAL`) e a sua posição em títulos
-federais — o "nome aos bois" dos beneficiários da dívida.
+que nomeia cada fundo que divulga posição (`DENOM_SOCIAL`) e a sua
+posição em títulos federais — o "nome aos bois" dos beneficiários da
+dívida, para a parte que não está sob dispensa de divulgação.
 
 O que este dado NÃO cobre: a previdência fechada (fundos de pensão
-patronais, regulados pela PREVIC) não é fundo CVM; os fundos exclusivos
-estão em `cda_fie_*` (fora deste extrator).
+patronais, regulados pela PREVIC) não é fundo CVM; as carteiras com
+dispensa de divulgação aparecem em `cda_fi_CONFID_*`, sem o detalhe das
+posições. Os fundos exclusivos não estão em `cda_fie_*` (esse bloco é de
+FIDC/FIIM): quando divulgam, estão no próprio `cda_fi_BLC_1`.
 
 Saída: `cvm_fundos_titulos.parquet` (fundos nomeados × tipo de título).
 """
