@@ -310,20 +310,31 @@ def custo_medio() -> pd.DataFrame:
     return c
 
 
-def custo_medio_dpf() -> pd.DataFrame:
-    """Custo médio do estoque (% a.a.), escopo DPF — série mensal desde 2005."""
+# cobertura mínima por tabela do RMD 4.x (a série "12m" precisa de 12 meses
+# de histórico, então começa um ano depois da mensal)
+COBERTURA_CUSTO = {"estoque mensal": "2005-01", "estoque 12m": "2005-12"}
+
+
+def custo_medio_dpf(tabela: str = "estoque mensal") -> pd.DataFrame:
+    """Custo médio do estoque (% a.a.), escopo DPF.
+
+    `tabela` = "estoque mensal" (taxa anualizada do mês) ou "estoque 12m"
+    (acumulada em 12 meses — a janela coerente para comparar com o
+    crescimento ANUAL do PIB no i−g; o `documentos.py` usa 12m).
+    """
     c = ler_parquet("rmd_custo_medio")
     _exigir_colunas(c, ["data", "escopo", "tabela", "taxa_pct_aa"],
                     "rmd_custo_medio.parquet")
-    d = c[(c.tabela == "estoque mensal") & (c.escopo == "DPF")]
+    d = c[(c.tabela == tabela) & (c.escopo == "DPF")]
     if d.empty:
         raise ValueError(
-            "custo_medio_dpf: o filtro 'estoque mensal'/'DPF' não casou nenhuma "
-            "linha — os rótulos do RMD 4.x mudaram?")
-    if d.data.min().to_period("M") > pd.Period("2005-01"):
+            f"custo_medio_dpf: o filtro {tabela!r}/'DPF' não casou nenhuma "
+            f"linha — tabelas disponíveis: {sorted(c.tabela.unique())}")
+    desde = COBERTURA_CUSTO.get(tabela, "2005-01")
+    if d.data.min().to_period("M") > pd.Period(desde):
         raise ValueError(
             f"custo_medio_dpf: cobertura recuou — começa em "
-            f"{d.data.min():%Y-%m} (esperado desde 2005-01)")
+            f"{d.data.min():%Y-%m} (esperado desde {desde})")
     return d[["data", "taxa_pct_aa"]].reset_index(drop=True)
 
 

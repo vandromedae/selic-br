@@ -110,6 +110,9 @@ def fig_desvio_taylor(d) -> go.Figure:
     # Taylor de 2025–26 fica 0,75 p.p. abaixo e o desvio infla na mesma medida
     meta = ind.meta_inflacao().reindex(t.index).ffill()
     t["taylor"] = 2.5 + t.focus_ipca_12m + 0.5 * (t.focus_ipca_12m - meta)
+    # r* é premissa, não dado: o desvio cai 1:1 com r* — a régua com r*=5
+    # (limite superior da faixa) fica 2,5 p.p. acima da base
+    t["taylor_r5"] = 5 + t.focus_ipca_12m + 0.5 * (t.focus_ipca_12m - meta)
     fig = go.Figure()
     fig.add_scatter(x=t.index, y=t.taylor,
                     name="Regra de Taylor simples (r*=2,5; meta 4,5→3,0)",
@@ -118,6 +121,8 @@ def fig_desvio_taylor(d) -> go.Figure:
     fig.add_scatter(x=t.index, y=t.selic_meta, name="Selic meta",
                     line=dict(color="#1f77b4"), mode="lines",
                     fill="tonexty", fillcolor="rgba(31,119,180,0.15)")
+    fig.add_scatter(x=t.index, y=t.taylor_r5, name="Taylor com r*=5 (sensibilidade)",
+                    line=dict(color="#7f7f7f", dash="dot"), mode="lines")
     fig.update_yaxes(title="% a.a.")
     _layout(fig)
     return fig

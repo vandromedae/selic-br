@@ -66,7 +66,9 @@ def p1(d) -> None:
     st.plotly_chart(fig_desvio_taylor(d), width="stretch")
     st.info(
         "**Conclusão verificável:** o juro extra atual não é “preço da "
-        "inflação”: é um prêmio institucional adicional. Defender que "
+        "inflação”: é um prêmio institucional adicional — e a sua medida é "
+        "uma faixa, não um ponto: ~6,0 p.p. com r*=2,5, ~3,5 p.p. com r*=5 "
+        "(o desvio cai 1:1 com a premissa de juro neutro). Defender que "
         "“está justificado” é uma posição — a causa adicional (risco fiscal? "
         "credibilidade?) não está nos dados macro aqui usados."
     )

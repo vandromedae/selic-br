@@ -30,7 +30,9 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   pediria ~8,2–8,8% a.a. para Focus ~5%. O **desvio médio 2024–26 (~6,0 p.p.)
   é o maior entre as janelas comparadas** (2003–14:
   4,9; 2022–23: 5,1 p.p.), mas **não é recorde histórico**: a MM36 chegou a
-  9,9 p.p. em fev/2006.
+  9,9 p.p. em fev/2006. O desvio é sensível à premissa de juro neutro (r*):
+  ~6,0 p.p. com r*=2,5, ~4,5 com r*=4 e ~3,5 com r*=5 — a entrevista
+  verificada de Kanczuk discute r* de 8% (ele), 5% (BC) e 6% (consenso).
 - Atividade (IBC-Br +2–3%) e desemprego em mínimo (5,2–5,3%) não explicam o
   patamar. **Conclusão verificável:** o juro atual é inflação esperada **+
   prêmio institucional adicional** sem contrapeso inflacionário — defender que

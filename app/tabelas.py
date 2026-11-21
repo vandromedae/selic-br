@@ -56,12 +56,12 @@ def fig_i_g(d) -> tuple[pd.DataFrame, go.Figure]:
         "g (PIB nominal)": g_nom,
         "g (PIB real, IBGE)": g_real,
     }).loc[2013:]
-    i_nom = d["custo"].set_index("data").taxa_pct_aa.resample("YE").last()
+    i_nom = ind.custo_medio_dpf(tabela="estoque 12m").set_index("data").taxa_pct_aa.resample("YE").last()
     i_nom.index = i_nom.index.year
     i_real = d["macro"].groupby(d["macro"].index.year).mean().juro_real_ex_ante
-    tab["i (custo médio DPF)"] = i_nom.loc[2013:2025]
+    tab["i (custo médio DPF, 12m)"] = i_nom.loc[2013:2025]
     tab["r (juro real ex ante)"] = i_real.loc[2013:2025]
-    tab["i − g (nominal)"] = tab["i (custo médio DPF)"] - tab["g (PIB nominal)"]
+    tab["i − g (nominal)"] = tab["i (custo médio DPF, 12m)"] - tab["g (PIB nominal)"]
     tab["r − g (real)"] = tab["r (juro real ex ante)"] - tab["g (PIB real, IBGE)"]
     tab.index.name = "ano"
     tab_l = tab.reset_index()
