@@ -251,6 +251,12 @@ def fontes() -> None:
    gráficos anuais fechados e avisa.
 5. Swaps: `juros_ex_swap = juros + resultado_caixa` (prejuízo do BCB aumenta
    juros; ganho reduz) — validado contra BNDES 67/2026 (desvio ≤ 0,03 p.p.).
+6. **Juro real por subtração simples** ("Selic − IPCA 12m"/"Selic − Focus"):
+   aproximação de Fisher com erro típico **+0,3 p.p.** (até ~1,5 p.p. nos
+   picos) — a régua de mercado e a das alegações verificadas. As colunas
+   exatas (`*_fisher`) e o ex-post de mesmo horizonte
+   (`juro_real_ex_post_12m`, Selic acumulada) ficam em
+   `selic_real_mensal()`, lado a lado.
 
 **Notebooks completos:** `notebooks/00_validacao.ipynb` …
 `05_proposital.ipynb` (executados, com saída). O núcleo analítico é

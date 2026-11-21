@@ -222,10 +222,33 @@ def macro_mensal() -> pd.DataFrame:
 
 
 def selic_real_mensal() -> pd.DataFrame:
-    """Juro real ex-post (Selic mensal anualizada − IPCA 12m) e ex-ante (− Focus)."""
+    """Juro real ex-post e ex-ante, em duas convenções lado a lado.
+
+    Convenção principal (colunas sem sufixo) = subtração simples
+    ("Selic − IPCA 12m" e "Selic − Focus"): a régua de mercado e a das
+    alegações verificadas (Kanczuk, Febraban, ANBIMA) — é a aproximação
+    de 1ª ordem de Fisher, com erro i·π/(1+π): superestima o juro real em
+    ~0,3 p.p. na média, até ~1,5 p.p. nos picos.
+
+    Colunas exatas, para médias e comparações:
+    - `*_fisher` … r = (1+i)/(1+π)−1 (fórmula de Fisher);
+    - `juro_real_ex_post_12m` … Selic ACUMULADA em 12 meses contra o
+      IPCA 12m — mesmo horizonte (o ex-post padrão compara a taxa do mês
+      anualizada com a inflação de 12 meses; a diferença cresce em anos de
+      virada de ciclo, ~1,8 p.p. em 2025).
+
+    No ex-ante os horizontes já coincidem (Selic vigente a.a. × Focus 12m).
+    """
     m = macro_mensal()
-    m["juro_real_ex_post"] = m["selic_mensal"] - m["ipca_12m"]
-    m["juro_real_ex_ante"] = m["selic_mensal"] - m["focus_ipca_12m"]
+    i, pi, e = m["selic_mensal"], m["ipca_12m"], m["focus_ipca_12m"]
+    m["juro_real_ex_post"] = i - pi
+    m["juro_real_ex_ante"] = i - e
+    m["juro_real_ex_post_fisher"] = ((1 + i / 100) / (1 + pi / 100) - 1) * 100
+    m["juro_real_ex_ante_fisher"] = ((1 + i / 100) / (1 + e / 100) - 1) * 100
+    mensal = (1 + i / 100) ** (1 / 12) - 1  # taxa do mês (anualizada -> mensal)
+    acum12 = ((1 + mensal).rolling(12)
+               .apply(lambda x: x.prod(), raw=True) - 1) * 100
+    m["juro_real_ex_post_12m"] = acum12 - pi
     return m
 
 
