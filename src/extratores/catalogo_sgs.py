@@ -51,6 +51,8 @@ SERIES_SGS: dict[int, dict[str, str]] = {
     21082: {"nome": "inadimplencia_sfn", "desc": "Taxa de inadimplência - Total do SFN (%)", "freq": "M"},
     21084: {"nome": "inadimplencia_pf", "desc": "Inadimplência da carteira de crédito - Pessoas físicas - Total (% da carteira)", "freq": "M"},
     20634: {"nome": "concessoes_livres", "desc": "Concessões de crédito com recursos livres - Total (R$ milhões/mês)", "freq": "M"},
+    20542: {"nome": "saldo_credito_livre", "desc": "Saldo da carteira de crédito com recursos livres - Total (R$ milhões)", "freq": "M"},
+    20570: {"nome": "saldo_credito_livre_pf", "desc": "Saldo da carteira de crédito com recursos livres - PF - Total (R$ milhões)", "freq": "M"},
 }
 
 # Séries em R$ milhões, convenientes para somas anuais

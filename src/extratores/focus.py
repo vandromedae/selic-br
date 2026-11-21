@@ -1,8 +1,9 @@
 """Extrator Focus / Expectativas de Mercado (Olinda, BCB).
 
 Endpoints (OData v1):
-- ExpectativasMercadoAnuais: IPCA e Selic, expectativas por ano-calendário
-  (desde 2000) -> focus_anuais.parquet
+- ExpectativasMercadoAnuais: IPCA, Selic, PIB Total e Dívida bruta do
+  governo geral, expectativas por ano-calendário (desde 2000)
+  -> focus_anuais.parquet
 - ExpectativasMercadoInflacao12Meses: expectativa de inflação 12 meses à frente
   (desde 2001) -> focus_inflacao12m.parquet
 - ExpectativasMercadoSelic: expectativas de Selic -> focus_selic.parquet
@@ -95,7 +96,8 @@ def _odata(endpoint: str, filtro: str | None = None,
 
 def processar_anuais() -> pd.DataFrame:
     regs = []
-    for indicador in ("IPCA", "Selic"):
+    for indicador in ("IPCA", "Selic", "PIB Total",
+                      "Dívida bruta do governo geral"):
         for row in _odata(
             "ExpectativasMercadoAnuais",
             f"Indicador eq '{indicador}' and DataReferencia ge '2000'",

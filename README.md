@@ -37,12 +37,24 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   patamar. **Conclusão verificável:** o juro atual é inflação esperada **+
   prêmio institucional adicional** sem contrapeso inflacionário — defender que
   ele "está justificado" é uma posição, não um dado.
+- **O Focus como oráculo é fraco:** contra o realizado, o erro absoluto médio
+  da expectativa de 12 meses é **1,9 p.p.** em 95 trimestres, e os erros
+  grandes vêm nos pontos de virada (jan/2021: IPCA projetado 3,3% vs 10,1%
+  realizado; Selic 3,3% → 9,25%). No ciclo atual o erro de inflação encolheu
+  (média anual −1,1 a +1,1 p.p. em 2022–25), mas o **PIB foi subestimado**
+  (2022: 0,3% projetado vs 3,0% realizado; 2023: 0,8 vs 3,2; 2024: 1,6 vs 3,4)
+  e a **dívida bruta surpreendeu para baixo** (2021: 92,1% do PIB projetado vs
+  77,3% realizado) — o "enxugando gelo" não aparece como dívida explodindo no
+  realizado, e sim como transferência (~R$ 1 tri/ano de juros). Expectativas
+  de 13/11/2026: Selic 12,8% e IPCA 5,0% para 2027 → **juro real esperado
+  ~7,8% e i−g ~6,8 p.p.**
 
 ### P2 — Quem são os beneficiários? (`notebooks/02_beneficiarios.ipynb`)
 - Orientado ao grupo detentor (Anexo 2.7 do RMD, desde 2007): o
   **sistema financeiro** (Instituições Financeiras + Fundos + Seguradoras)
-  detém ~50–55% do estoque e é o maior beneficiário estimado do fluxo de juros;
-  Previdência ~22–24%; Tesouro Direto (pessoas físicas) ~3%.
+  detém **57% do estoque** (2025) e é o maior beneficiário estimado do fluxo
+  de juros; Previdência ~23%; Não-residentes ~10%; Tesouro Direto (pessoas
+  físicas) ~2,6%.
 
 - **Aproximação do fluxo por detentor:** participação no estoque em dezembro ×
   juros nominais do ano (SGS 4616) — não é dado oficial; é a melhor
@@ -51,6 +63,56 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 - **Lacuna explícita:** identificação intra-grupo (qual banco/fundo, quanto)
   não é pública — o Requerimento 696/2019 da Câmara, que pedia a lista ao
   STN, foi **negado por sigilo bancário**.
+
+#### Nome aos bois — o que as fontes nomeiam (Camadas 1 e 2)
+
+O agrupamento do RMD foi decomposto em três níveis, com duas validações
+cruzadas que fecham (o fluxo de juros por título calculado fecha com o
+oficial — R$ 886 bi estimados vs R$ 880 bi; e o gap dos detentores fecha
+com a PREVIC — R$ 940 bi vs R$ 921 bi em títulos federais das EFPCs):
+
+- **por título** (RMD 2.8): a **previdência** carrega as NTN-B/NTN-C
+  (47% do título de inflação; R$ 774 bi no sistema fechado — a PREVIC
+  nomeia a estratégia, *imunização de longo prazo*); **bancos e fundos**
+  carregam as LFTs (69% — a rolagem indexada à Selic); **estrangeiros**
+  carregam as pré-fixadas (26% das LTN, 40% das NTN-F).
+- **por instituição** (CVM CDA, 5.993 fundos): BB (R$ 680 bi), Caixa
+  (R$ 419 bi), BrasilPrev (R$ 394 bi), Itaú (R$ 313 bi), Bradesco (R$ 207 bi),
+  Santander (R$ 148 bi) — os maiores fundos são veículos dos bancos e de
+  previdência aberta (BRASILPREV TOP TPF, R$ 274 bi, é o maior).
+- **por país** (CVM, carteira dos não-residentes): EUA (R$ 196 bi) e
+  Reino Unido (R$ 137 bi) — mais da metade dos R$ 607 bi em títulos federais.
+
+**O achado central:** em 2025, os detentores receberam **R$ 1.008 bi em
+juros nominais — R$ 770–900 bi em termos reais, cerca de 3 vezes o que a
+economia cresceu no ano** (o PIB real cresceu R$ 269 bi). No acumulado
+2012–25, os juros apropriados somam **R$ 5,98 trilhões — 5,4% de tudo que o
+país produziu** no período. Quem detém títulos públicos tem um ativo que
+paga prêmio real acima do crescimento da economia, sem risco de crédito:
+**há beneficiários identificáveis e medidos** (bancos, fundos de pensão,
+gestoras, investidores estrangeiros), e a detenção é concentrada (80% em
+oito grupos; 30 fundos detêm R$ 2,8 tri).
+
+**A segunda frente — o spread do crédito** (SGS 20740/20783/20542/20570): o
+sistema financeiro remunera o capital pelos dois lados. O spread do crédito
+livre rende **~R$ 905 bi/ano de receita bruta** (PF: R$ 724 bi) — contra os
+**~R$ 576 bi em juros da dívida que cabem ao sistema financeiro**
+(IF + fundos + seguradoras; o total pago a todos os detentores é R$ 1.008 bi).
+As bases das séries são distintas (a taxa média é das novas operações; o
+spread do BCB é contra o custo de captação, não a Selic) e o spread é
+**bruto** — risco, operação e tributos dentro; o funding bancário é mais
+barato que a Selic, então "margem sobre a Selic" não é receita de ninguém, e
+a inadimplência (estoque em atraso) não é o custo de perda do ano (a
+despesa de provisão, não coletada). O que se afirma: **a segunda porta de
+receita do sistema financeiro é do tamanho da primeira**, e é paga pelos
+tomadores de crédito — o elo entre quem recebe (P2) e o i > g (P4).
+
+**Onde a luz para:** R$ 769 bi em títulos públicos (24% do total em fundos)
+estão em **carteiras confidenciais** — 11.060 fundos com dispensa de
+divulgação (exclusivos, cotistas restritos). É onde estariam os donos
+maiores: a lei protege o nome. O look-through final (o cotista, o sócio do
+plano) não é público em nenhuma camada — o que se afirma é o nível
+institucional, e o artigo deve declarar o resto como o que é: sigilo.
 
 ### P3 — Os juros amortizam a dívida? (`notebooks/03_juros_amortizam.ipynb`)
 - Identidade dos fatores de variação da DPF (Anexo 2.9): `variação do estoque =
