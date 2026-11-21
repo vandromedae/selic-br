@@ -16,8 +16,11 @@ SERIES_SGS: dict[int, dict[str, str]] = {
     4466: {"nome": "ipca_nucleo_ms", "desc": "IPCA núcleo médias aparadas com suavização (% mês)", "freq": "M"},
     11426: {"nome": "ipca_nucleo_ms_sem_suv", "desc": "IPCA núcleo médias aparadas sem suavização (% mês)", "freq": "M"},
     # Atividade
-    24363: {"nome": "ibcbr", "desc": "IBC-Br (índice, saz. ajustada)", "freq": "M"},
-    24364: {"nome": "ibcbr_dessaz", "desc": "IBC-Br dessazonalizado (índice)", "freq": "M"},
+    # Relatório de Inflação do BCB (mar/2016): "24363 e 24364 (sem e com
+    # ajuste sazonal, respectivamente)" — a 24364 é a COM ajuste sazonal
+    # (dessazonalizada); os nomes das variáveis seguem essa ordem
+    24363: {"nome": "ibcbr", "desc": "IBC-Br (índice, sem ajuste sazonal)", "freq": "M"},
+    24364: {"nome": "ibcbr_dessaz", "desc": "IBC-Br (índice, com ajuste sazonal)", "freq": "M"},
     4380: {"nome": "pib_nominal_mensal", "desc": "PIB - valor R$ mês corrente (R$ milhões)", "freq": "M"},
     # Estatísticas fiscais do BCB (abaixo da linha, setor público consolidado)
     4616: {"nome": "juros_mensal", "desc": "Juros nominais - fluxo mensal (R$ milhões)", "freq": "M"},
