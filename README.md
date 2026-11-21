@@ -58,7 +58,10 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   R$ 1.319 bi. Os resgates **já incluem os juros pagos** (notas 6 e 7 do
   anexo), então **os juros não amortizam a dívida; são a dívida nova**: 67% do
   aumento de 2025 e 88% do acumulado 2012–25 (R$ 5.977 bi dos R$ 6.769 bi)
-  foram juros apropriados.
+  foram juros apropriados. **Nominalidade**: o anexo 2.9 não separa a correção
+  monetária dos títulos indexados a preços — estimada em ~R$ 107 bi em 2025
+  (12% do total, participação de índice de preços × IPCA); os juros *reais*
+  do ano seriam ~R$ 773 bi (≈59% do aumento, mais ~8% de correção monetária).
 - As emissões anuais giram de 1,9 a 3,8× o juro apropriado (2,2× em 2025) e
   equivalem, em média, a 1,05× os resgates — a máquina de rolagem é muito
   maior que a dívida nova líquida.

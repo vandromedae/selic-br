@@ -99,8 +99,11 @@ def p3(d) -> None:
     st.markdown(
         "Identidade dos fatores de variação da DPF (Tesouro, anexo 2.9): "
         "variação do estoque = emissão líquida + juros — em 2025, R$ 439 bi "
-        "+ R$ 880 bi = R$ 1.319 bi (67% do aumento foram juros). Os juros "
-        "**não amortizam** a dívida; **são a dívida nova**."
+        "+ R$ 880 bi = R$ 1.319 bi (67% do aumento foram juros **nominais**: "
+        "incluem a correção monetária dos títulos indexados a preços — "
+        "estimada em ~R$ 107 bi em 2025, 12% do total, pela participação de "
+        "índice de preços × IPCA; os juros reais do ano seriam ~R$ 773 bi). "
+        "Os juros **não amortizam** a dívida; **são a dívida nova**."
     )
     f_ano = st.slider("ano da cascata", 2012, 2025, 2025, key="cascata")
     st.plotly_chart(fig_cascata(d, f_ano), width="stretch")
@@ -140,7 +143,11 @@ def p4(d) -> None:
         "Nos dados públicos de fluxo **não há caminho pelo qual o dispêndio "
         "de juros se converta em investimento produtivo**: é rolagem (P3) + "
         "transferência a detentores (P2). O soberano rendendo juro real alto "
-        "sem risco “rouba” a poupança do crédito privado."
+        "sem risco “rouba” a poupança do crédito privado. **Evidência "
+        "contrária, declarada:** desemprego em mínimo da série (5,2%), FBCF "
+        "em alta (+2,3%/ano em 2023–25) e ocupação recorde — o que os dados "
+        "mostram é composição de portfólio, não retração de investimento ou "
+        "emprego."
     )
 
 
@@ -152,7 +159,10 @@ def p5(d) -> None:
         "O que os dados mostram: a régua de juro real **alternou de forma "
         "dramática e reversível** entre mandatos — não é fatalidade técnica. "
         "**Não é afirmação de intenção**: isso exige documentos (atas, "
-        "manifestos, ofícios) — fase posterior."
+        "manifestos, ofícios) — fase posterior. Ressalva de unidade: o Copom "
+        "tem autonomia formal desde 2021 (LC 179/2021) e o ciclo de 2023–24 é "
+        "do mandato do presidente do BC Campos Neto — a política monetária "
+        "não segue o calendário presidencial."
     )
     tab = df_mandatos(d)
     st.bar_chart(tab["juro_real_ex_ante_medio"], color="#1f77b4", height=340)

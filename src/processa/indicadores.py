@@ -80,7 +80,9 @@ def _exigir_cobertura_anual(df: pd.DataFrame, desde: int, fonte: str,
 
 
 def juros_anuais() -> pd.DataFrame:
-    """Juros nominais federais (SGS 4616) com decomposição por swap e % PIB.
+    """Juros nominais do setor público consolidado (SGS 4616 — União,
+    estados, estatais e BCB; não só os federais) com decomposição por swap
+    e % PIB.
 
     Colunas: ano, juros_mi, swap_resultado_mi, juros_ex_swap_mi, pib_mi,
              swap_pp_pib, juros_pib_pct, juros_ex_swap_pib_pct
