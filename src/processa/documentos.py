@@ -150,8 +150,9 @@ DOCS: list[dict] = [
             "endossa a proposta de Lara Resende: Selic gradual para 7,5% a.a. "
             "em 12 meses (meta de 3% + 2,5% de crescimento + 2% de spread), "
             "com ajuste fiscal de ~4% do PIB sobre rentistas; repete a "
-            "equação 4,5% = 7,5% − 3% + 2% (que dá 6,5%) e o dado de 40% de "
-            "estrangeiros"
+            "equação 4,5% = 7,5% − 3% + 2% (que dá 6,5%) e o dado de 40% dos "
+            "títulos negociados na Bolsa com estrangeiros — compatível com "
+            "o NTN-F (40,2% em set/26), não com o estoque total"
         ),
     },
     {
@@ -431,7 +432,10 @@ TRECHOS: list[dict] = [
         "tema": "risco externo",
         "trecho": ("Como cerca de 40% dos títulos do governo negociados na "
                    "Bolsa de valores pertencem a estrângeiros"),
-        "nota": "não confere com o estoque (10,0%); typo do original",
+        "nota": ("compatível com o NTN-F (40,2% em set/26); a base "
+                 "'negociados na Bolsa' não está especificada; o "
+                 "estoque total é 10,0% — bases diferentes; typo do "
+                 "original"),
     },
     {
         "id_doc": "bresser_lara_resende_2026",
@@ -453,8 +457,9 @@ TRECHOS: list[dict] = [
         "trecho": ("O Banco Central anunciaria uma meta para a taxa Selic, "
                    "definida pelo intervalo entre a inflação, o piso, e o "
                    "crescimento nominal da renda, o teto do intervalo."),
-        "nota": "a mudança de forma: de 7,5% fixo para intervalo "
-                "[inflação, crescimento nominal]",
+        "nota": ("mudança de destino e horizonte: de um ponto (~7,5%) "
+                 "para um intervalo; a trajetória gradual já estava "
+                 "no texto de set/2026"),
     },
     {
         "id_doc": "lara_nota_2026_11",
@@ -1093,7 +1098,7 @@ def verificacao_bresser() -> pd.DataFrame:
     dela. Os números de jun/2026 são os mesmos do "Eu Acuso" e são
     reconferidos aqui; o que é novo é a equação da taxa real, a decomposição
     de 7,5%, o ajuste de 4% do PIB, a estimativa de 5% e o dado de 40% de
-    estrangeiros.
+    estrangeiros (compatível com o NTN-F, não com o estoque total).
 
     Fontes: RMD (custo médio, detentores, juros apropriados), SGS
     13761/13762/4380/432/dlsp_pib, Focus (Selic 2027) e PIB mensal.
@@ -1160,6 +1165,26 @@ def verificacao_bresser() -> pd.DataFrame:
     nr_ult_pct = float(nr_ult.participacao) * 100
     nr_ult_data = pd.Timestamp(nr_ult.data)
 
+    # não-residentes por título (RMD 2.8): o NTN-F é o prefixado longo
+    # negociado na B3; a participação é de ESTOQUE, não de volume negociado
+    det_tit = pd.read_parquet(PROCESSADO / "rmd_detentores_titulo.parquet")
+    det_tit["data"] = pd.to_datetime(det_tit.data)
+    nr_tit = det_tit[det_tit.detentor == "Não-residente"].copy()
+    if nr_tit.empty:
+        raise ValueError("RMD 2.8 sem 'Não-residente' — rode src.extratores.rmd")
+
+    def _nr_titulo(titulo: str):
+        s = nr_tit[nr_tit.titulo == titulo].sort_values("data")
+        if s.empty:
+            raise ValueError(f"RMD 2.8 sem '{titulo}' — rode src.extratores.rmd")
+        jun = s[s.data <= MES].iloc[-1]
+        ult = s.iloc[-1]
+        return (float(jun.participacao) * 100, float(ult.participacao) * 100,
+                pd.Timestamp(ult.data))
+
+    ntnf_jun, ntnf_ult, ntnf_data = _nr_titulo("NTN-F")
+    ltn_jun, ltn_ult, _ = _nr_titulo("LTN")
+
     # Selic atual e consenso Focus para 2027 (a proposta é 7,5% em 12 meses)
     sel = _serie("meta_selic_copom")
     selic_atual = float(sel.valor.iloc[-1])
@@ -1216,12 +1241,18 @@ def verificacao_bresser() -> pd.DataFrame:
                "magnitude compatível com o total (5,2–5,4%); como residual "
                "'não explicado', não é medível — 5% seria quase todo o juro "
                "total", "% do PIB"),
-        _linha("40% dos títulos do governo com estrangeiros", "40",
-               f"{nr_jun_pct:.1f} (jun/26) | {nr_ult_pct:.1f} "
-               f"({nr_ult_data:%m/%Y})",
-               "RMD 2.7 (estoque da DPMFi, não-residentes)",
-               "não confere com o estoque — 10,0% em jun/26; a base "
-               "'negociados na Bolsa' não está no catálogo", "%"),
+        _linha("40% dos títulos do governo negociados na Bolsa com "
+               "estrangeiros", "40",
+               f"NTN-F: {ntnf_jun:.1f} (jun/26) | {ntnf_ult:.1f} "
+               f"({ntnf_data:%m/%Y}); LTN: {ltn_jun:.1f} | {ltn_ult:.1f}; "
+               f"estoque total: {nr_jun_pct:.1f} | {nr_ult_pct:.1f}",
+               "RMD 2.8 (estoque da DPMFi por título, não-residentes); "
+               "RMD 2.7 (estoque total)",
+               "compatível com o NTN-F — 40,2% em set/26, o prefixado "
+               "longo negociado na B3; não com o conjunto NTN-F+LTN "
+               "(31,3% em set/26) nem com o estoque total (10,0% em "
+               "jun/26); a base 'negociados na Bolsa' não está "
+               "especificada", "%"),
         _linha("Selic tenderá a 7,5% em 12 meses", "7,5",
                f"atual {selic_atual:.2f} | Focus 2027 {focus_2027:.2f}",
                f"SGS 432 ({selic_data:%d/%m/%Y}) + Focus "

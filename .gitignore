@@ -27,3 +27,9 @@ Thumbs.db
 # Saídas do Repomix (empacotamento pra IA)
 output*.xml
 repomix-output*
+
+# Plano de trabalho da frente fiscal (rascunho, não versionado)
+PLANO_FISCAL.md
+
+# Notas fiscais para o artigo (rascunho, não versionado)
+notas_fiscal.md

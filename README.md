@@ -459,7 +459,7 @@ Resende. O que ele acrescenta é o endosso explícito, a formulação como
 | Decomposição 3,0 + 2,5 + 2,0 | 7,5% | 7,5% | aritmética confere; **2,5% é crescimento do PIB, não juro neutro** — a decomposição só fecha se 2,5% for lido como juro real |
 | Ajuste fiscal | ~4% do PIB | 4,25% | confere (≈) — conta estática (12,68 − 7,5) × DBGG/PIB; a incidência "só rentistas" não é testada |
 | Rentistas capturam 5% do PIB | 5% | 5,2% (média 2012–25) / 5,4% (acumulado, R$ 5,98 tri) / 6,91% (2025) | **magnitude compatível com o total**; como residual "não explicado", não é medível — 5% seria quase todo o juro total |
-| 40% dos títulos com estrangeiros | 40% | 10,0% (jun/26) / 9,6% (set/26), estoque | **não confere com o estoque**; a base "negociados na Bolsa" não está no catálogo |
+| 40% dos títulos do governo **negociados na Bolsa** com estrangeiros | 40% | NTN-F: 41,8% (jun/26) / 40,2% (set/26); LTN: 26,4%; estoque total: 10,0% (jun/26) / 9,6% (set/26) | **compatível com o NTN-F** — o prefixado longo negociado na B3; não com o conjunto NTN-F+LTN (31,3% em set/26) nem com o estoque total (10,0% em jun/26); a base "negociados na Bolsa" não está especificada |
 | Selic a 7,5% em 12 meses | 7,5% | atual 13,75%; Focus 2027 = 13,04% | **proposta normativa**, não projeção |
 | Meta de inflação | 3,0% | 3,0% | confere |
 | Venda de reservas | — | — | proposta sem série no catálogo — não testável |
@@ -476,8 +476,10 @@ hipótese distributiva (P2) na voz de um ex-ministro.
 números de jun/2026 e a equação com erro. A conta de 4,5% de juro real só vale
 se a inflação já estiver em 3%; com a inflação esperada de 5,1% (Focus 2026),
 7,5% nominal dá ~2,4% real — não os 4,5% que o artigo quer. O ajuste de 4% do
-PIB é estático (reprecifica todo o estoque de uma vez), e a saída de 40% dos
-estrangeiros e a venda de reservas não têm série no projeto. Os 5% do PIB são
+PIB é estático (reprecifica todo o estoque de uma vez). A participação
+estrangeira por título está no RMD 2.8 — 40,2% dos NTN-F em set/26, o que
+torna o "40%" compatível com esse título — mas a **saída** (fluxo) e a
+venda de reservas não têm série no projeto. Os 5% do PIB são
 plausíveis como **média do juro total** (5,2% simples / 5,4% acumulado em
 2012–25), mas não como **residual não explicado**: o projeto mede o total, não
 a parcela atribuída a "rentistas". O 5,4% é o total **apropriado** a todos os
@@ -496,13 +498,14 @@ fonte primária: responde às objeções
 (credibilidade, câmbio, "o BC controla só a taxa de um dia") e acrescenta
 evidência sobre o custo do juro para empresas e famílias.
 
-**O que muda na proposta.** A meta deixa de ser um número fixo (7,5% em 12
-meses, como no texto de set/2026 e no endosso de Bresser) e vira um
-**intervalo**: piso na inflação, teto no crescimento nominal da renda, a ser
-atingido em **2–4 anos**, com *forward guidance* e coordenação
-fiscal-monetária. Fora do intervalo só em "condições extraordinárias,
-justificadas em carta aberta". É uma proposta normativa — não é projeção nem
-dado.
+**O que muda na proposta.** A trajetória sempre foi de redução gradual; o
+que muda em nov/2026 é o **destino** e o **horizonte**. Em set/2026, o BC
+anunciaria a redução gradual ao longo de ~12 meses até ~7,5% a.a. (um
+ponto). Em nov/2026, o destino vira um **intervalo**: piso na inflação, teto
+no crescimento nominal da renda, a ser atingido em **2–4 anos**, com
+*forward guidance* e coordenação fiscal-monetária. Fora do intervalo só em
+"condições extraordinárias, justificadas em carta aberta". É uma proposta
+normativa — não é projeção nem dado.
 
 | Alegação | Artigo | Nós | Veredito |
 | --- | --- | --- | --- |
@@ -546,6 +549,16 @@ projeto não coleta; ficam como **não verificáveis**, não como falsas. O mesm
 vale para as reservas > US$ 400 bi e para o estudo de Dejanir Silva. A parte
 da proposta é normativa: o intervalo, o prazo de 2–4 anos e a carta aberta
 não são dados.
+
+**A tese do “seguro da rentabilidade em dólares”.** A seção com esse título
+(nota de 16/11/2026) argumenta que a política de juros altos oferece “alta
+rentabilidade garantida em dólares aos detentores da dívida brasileira” e
+que isso tem consequências perversas para empresas e famílias. É uma
+**posição/interpretação** de Lara Resende, não uma série do projeto: o
+projeto mede o custo médio da dívida em reais e a Selic, mas não a
+rentabilidade em dólares por detentor nem a reação do BC a ela. A conversão
+para dólares depende do câmbio e da estratégia de cada detentor — não está
+no catálogo. Registrar como posição, não como dado falsificado.
 
 ### Entidades do mercado — Febraban e ANBIMA (3 documentos, 11 citações)
 
@@ -615,12 +628,13 @@ associadas), dois releases:**
    projeto não consegue reproduzir. O valor dos dois documentos é mostrar
    como a proposta circula e se modifica — não acrescentar evidência
    empírica verificável.
-5. **A proposta mudou de forma entre setembro e novembro.** Em set/2026 era
-   um número (7,5% em 12 meses); em nov/2026 vira um intervalo com piso na
-   inflação e teto no crescimento nominal, prazo de 2–4 anos e cláusula de
-   exceção. É a resposta às objeções — mas também torna a proposta mais
-   difícil de testar: não há um número único a comparar com a Selic ou com
-   o Focus.
+5. **A proposta mudou de destino e horizonte entre setembro e novembro.**
+   Em set/2026 era um ponto (~7,5%) a ser atingido por redução gradual em
+   ~12 meses; em nov/2026 vira um intervalo com piso na inflação e teto no
+   crescimento nominal, prazo de 2–4 anos e cláusula de exceção. A redução
+   gradual já estava no texto de setembro; o que muda é o destino e o prazo.
+   É a resposta às objeções — mas também torna a proposta mais difícil de
+   testar: não há um número único a comparar com a Selic ou com o Focus.
 
 **Ainda não coletado** (coleta manual, fora dos datasets): ofícios e
 comunicações oficiais do BCB/Fazenda defendendo o nível, declarações
