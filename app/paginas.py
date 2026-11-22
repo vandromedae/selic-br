@@ -57,8 +57,8 @@ def p1(d) -> None:
     st.markdown(
         "A Selic acompanha a inflação **esperada** (Focus), não realizada. O "
         "que é excepcional é a magnitude: juro real ex ante de 2024–2026 em "
-        "média ~8,8 p.p. (6,9 em 2024 → 10,1 em 2026), com inflação "
-        "**acima do teto** da meta: 4,58% em set/26 contra o teto de 4,5% "
+        "média ~8,8 p.p. (6,9 em 2024 → 9,9 em 2026), com inflação "
+        "**acima do teto** da meta: 4,63% em out/26 contra o teto de 4,5% "
         "da faixa (meta de 3% desde 2025)."
     )
     st.plotly_chart(fig_selic_inflacao(d), width="stretch")
@@ -254,7 +254,7 @@ def fontes() -> None:
     st.markdown(f"""
 | Fonte | Uso nesta ferramenta |
 | --- | --- |
-| **BCB/SGS** (39 séries) | juros nominais consolidados (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA, primário, spread do crédito livre (20786/20809) |
+| **BCB/SGS** (42 séries) | juros nominais consolidados (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA, IPCA serviços e monitorados (10844/4449), câmbio (1), primário, spread do crédito livre (20786/20809) |
 | **Tesouro/STN — RMD** | detentores (Anexo 2.7), custo médio (4.1–4.3), composição (5.5) |
 | **Tesouro/STN — fatores DPF (Anexo 2.9)** | estoque, emissões, resgates, juros apropriados |
 | **Focus / Olinda (BCB)** | IPCA-12m e Selic anuais (medianas) |

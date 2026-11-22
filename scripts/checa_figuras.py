@@ -1,5 +1,6 @@
-# Verifica colisoes de texto/legendas nas figuras do nb08 (sem depender de imagem)
-# Uso: env PYTHONPATH=. conda run -n juros_divida python scripts/checa_figuras.py
+# Verifica colisoes de texto/legendas nas figuras de um notebook (sem depender de imagem)
+# Uso: env PYTHONPATH=. conda run -n juros_divida python scripts/checa_figuras.py [notebook]
+# Sem argumento, checa o nb08.
 import json
 import sys
 from pathlib import Path
@@ -11,7 +12,10 @@ import matplotlib.pyplot as plt
 p = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(p))
 
-nb = json.loads((p / "notebooks" / "08_renda_salarios.ipynb").read_text())
+alvo = (Path(sys.argv[1]) if len(sys.argv) > 1
+        else p / "notebooks" / "08_renda_salarios.ipynb")
+print("checando:", alvo)
+nb = json.loads(alvo.read_text())
 ns = {"__name__": "__main__"}
 
 figs = {}

@@ -11,16 +11,17 @@ Registro curado (humano, não automático):
 - `trechos()` confere que cada citação existe EXATAMENTE no texto bruto
   (`verbatim_ok`) — pega erro de transcrição na hora
 
-`verificacao_eu_acuso()`, `verificacao_kanczuk()`, `verificacao_febraban()`
-e `verificacao_anbima()` recalculam a aritmética de cada documento com as
-séries do projeto (SGS/Focus/RMD) — nada é aceito sem conferência. É um
-padrão repetível: para cada novo documento de posição, uma função de
-verificação.
+`verificacao_eu_acuso()`, `verificacao_kanczuk()`, `verificacao_febraban()`,
+`verificacao_anbima()`, `verificacao_bresser()` e `verificacao_lara_nota()`
+recalculam a aritmética de cada documento com as séries do projeto
+(SGS/Focus/RMD) — nada é aceito sem conferência. É um padrão repetível: para
+cada novo documento de posição, uma função de verificação.
 
 Saídas:
 - dados/processado/documentos_indice.csv
 - dados/processado/documentos_trechos.parquet
-- dados/processado/documentos_verificacao.csv (as duas verificações)
+- dados/processado/documentos_verificacao.csv (uma linha por alegação;
+  `documento` identifica a fonte)
 
 Coleta do texto bruto: GET público da URL do artigo (requests, UA de
 navegador), corte do corpo + notas de rodapé antes da seção de comentários;
@@ -132,6 +133,46 @@ DOCS: list[dict] = [
             "registrando a divisão interna: parte do grupo veria espaço para "
             "cortar em janeiro, mas \"algumas casas\" defendem manter os "
             "juros no patamar mais elevado até a convergência à meta"
+        ),
+    },
+    {
+        "id": "bresser_lara_resende_2026",
+        "tipo": "artigo de opinião (endosso)",
+        "autor": ("Luiz Carlos Bresser-Pereira (ex-ministro da Fazenda; "
+                  "professor emérito da FGV-SP)"),
+        "data": "2026-11-04",
+        "fonte": "Substack — Luiz Carlos Bresser Pereira",
+        "url": ("https://luizcarlosbresserpereira885213.substack.com/p/"
+                "a-proposta-de-andre-lara-resende"),
+        "titulo": "A proposta de Lara Resende para baixar os juros",
+        "arquivo": "dados/bruto/documentos/bresser_lara_resende_2026-11-04.txt",
+        "tese": (
+            "endossa a proposta de Lara Resende: Selic gradual para 7,5% a.a. "
+            "em 12 meses (meta de 3% + 2,5% de crescimento + 2% de spread), "
+            "com ajuste fiscal de ~4% do PIB sobre rentistas; repete a "
+            "equação 4,5% = 7,5% − 3% + 2% (que dá 6,5%) e o dado de 40% de "
+            "estrangeiros"
+        ),
+    },
+    {
+        "id": "lara_nota_2026_11",
+        "tipo": "artigo de posição (continuação)",
+        "autor": "André Lara Resende (ex-presidente do BCB)",
+        "data": "2026-11-16",
+        "fonte": "Substack — Um Cético Esperançoso",
+        "url": ("https://andrelararesende.substack.com/p/"
+                "uma-nota-sobre-a-proposta-de-meta"),
+        "titulo": "Uma nota sobre a proposta de meta para os juros",
+        "arquivo": ("dados/bruto/documentos/"
+                    "uma_nota_meta_juros_lara_resende_2026-11-16.txt"),
+        "tese": (
+            "responde às objeções à proposta de set/2026: a meta para a Selic "
+            "vira um intervalo entre a inflação (piso) e o crescimento nominal "
+            "da renda (teto), a ser atingido em 2–4 anos, com forward guidance "
+            "e coordenação fiscal-monetária; fora do intervalo só em condições "
+            "extraordinárias justificadas em carta aberta. Defende que o BC "
+            "pauta a curva (correlações de 0,95 e 0,85) e que o juro alto "
+            "encarece o financiamento das empresas e das famílias"
         ),
     },
 ]
@@ -325,6 +366,232 @@ TRECHOS: list[dict] = [
         "trecho": ("vai manter a taxa básica de juros em 15% nas três "
                    "últimas reuniões de 2025"),
         "nota": "projeção datada — conferida contra a SGS 432",
+    },
+    # ------------------------------------------------ bresser_lara_resende_2026
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "tese",
+        "trecho": ("É uma excelente proposta que, se adotada pelo governo, "
+                   "deverá ser amplamente discutida pelos seus representantes "
+                   "principais no Minimstério da Fazenda e no Banco Central"),
+        "nota": "endosso explícito — é posição, não medição (typo do original)",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "juro real",
+        "trecho": ("Uma taxa de juros desse nível inviabiliza grande parte "
+                   "dos investimentos"),
+        "nota": "custo do nível sobre o investimento",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "tese",
+        "trecho": ("representa uma grande transferência de renda da população "
+                   "em geral para rentistas e financistas"),
+        "nota": "a hipótese distributiva (P2) dita sem meias palavras",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "risco fiscal",
+        "trecho": ("A alta dos juros não reduz a inflação; ao contrário, se "
+                   "não houver uma contração fiscal simultânea, irá elevar a "
+                   "inflação."),
+        "nota": "argumento neofisheriano atribuído a Cochrane — posição teórica",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "proposta",
+        "trecho": ("O BC se comprometeria a manter a taxa básica se "
+                   "aproximando gradualmente para 7,5%, a.a., em doze meses."),
+        "nota": "a proposta em uma frase — meta de 12 meses",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "proposta",
+        "trecho": ("Teríamos, então, 3,0% de meta de inflação, mais 2,5 de "
+                   "crescimento do PIB, mais 2% de spread transitório de "
+                   "segurança."),
+        "nota": "decomposição que soma 7,5%, mas 2,5% é PIB, não juro neutro",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "proposta",
+        "trecho": ("um ajuste fiscal de cerca de 4% do PIB, que afetaria "
+                   "apenas os rentistas e financistas"),
+        "nota": "magnitude e incidência do ajuste — conferida em 4,25% (≈)",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "tese",
+        "trecho": "capturam há muitos anos 5% do PIB",
+        "nota": "estimativa de Bresser — não é o fluxo total medido (6,91%)",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "risco externo",
+        "trecho": ("Como cerca de 40% dos títulos do governo negociados na "
+                   "Bolsa de valores pertencem a estrângeiros"),
+        "nota": "não confere com o estoque (10,0%); typo do original",
+    },
+    {
+        "id_doc": "bresser_lara_resende_2026",
+        "tema": "proposta",
+        "trecho": ("o governo deverá tranquilizar os mercados através da "
+                   "verda de reservas"),
+        "nota": "proposta sem série no catálogo — não testável (typo do original)",
+    },
+    # ------------------------------------------------- lara_nota_2026_11
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "tese",
+        "trecho": "Reduzir os juros é a única saída.",
+        "nota": "a tese em uma frase; continua a proposta de set/2026",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "proposta",
+        "trecho": ("O Banco Central anunciaria uma meta para a taxa Selic, "
+                   "definida pelo intervalo entre a inflação, o piso, e o "
+                   "crescimento nominal da renda, o teto do intervalo."),
+        "nota": "a mudança de forma: de 7,5% fixo para intervalo "
+                "[inflação, crescimento nominal]",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "proposta",
+        "trecho": ("O piso evita os juros reais negativos da repressão "
+                   "financeira; o teto garante que a relação dívida/PIB se "
+                   "estabilize."),
+        "nota": "racional do intervalo: piso contra repressão financeira, "
+                "teto contra explosão da dívida",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "proposta",
+        "trecho": ("Só em condições extraordinárias, justificadas em carta "
+                   "aberta, a taxa básica ficaria fora desse intervalo."),
+        "nota": "cláusula de exceção — não é tabelamento nem regra rígida",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "proposta",
+        "trecho": ("proponho que o prazo para atingir o intervalo meta seja "
+                   "algo entre dois e quatro anos"),
+        "nota": "prazo novo em relação ao texto de set/2026 (12 meses)",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "proposta",
+        "trecho": ("É uma política de “forward guidance”, como já fazem os "
+                   "bancos centrais desde o início deste século, com a "
+                   "novidade de explicitar a coordenação das políticas "
+                   "fiscal e monetária."),
+        "nota": "enquadra a proposta como forward guidance + coordenação "
+                "fiscal-monetária",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "juro real",
+        "trecho": ("Os dados do próprio Tesouro Nacional, no Relatório "
+                   "Mensal da Dívida, mostram que, entre 2011 e 2022, o custo "
+                   "médio das novas emissões e do estoque da dívida pública "
+                   "acompanhou de perto a trajetória da Selic."),
+        "nota": "resposta à objeção de que o BC controla só a taxa de um dia",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "juro real",
+        "trecho": ("Correlação não significa causalidade, mas neste caso não "
+                   "há dúvida sobre a direção: a Selic é o instrumento do BC, "
+                   "e o custo médio da dívida, que reflete as taxas para os "
+                   "diferentes prazos dos títulos, é a consequência."),
+        "nota": "a direção causal que ele afirma — é o ponto teórico, não o "
+                "coeficiente",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "juro real",
+        "trecho": ("Entre dezembro de 2011 e setembro de 2026, o custo médio "
+                   "das emissões em oferta pública da dívida interna, "
+                   "acumulado em 12 meses, teve correlação de 0,95 com a "
+                   "Selic acumulada no mesmo período."),
+        "nota": "número novo; o RMD 4.3 só começa em 01/2021 (nova "
+                "metodologia) — proxy do estoque: 0,84, não 0,95",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "juro real",
+        "trecho": ("Entre janeiro de 2011 e outubro de 2026, a taxa do título "
+                   "prefixado de dez anos do Tesouro acompanhou a trajetória "
+                   "da Selic, com correlação de 0,85 entre as taxas mensais."),
+        "nota": "número novo; sem série de 10 anos no catálogo — proxy de "
+                "emissões NTN-F 2021–26 dá 0,93",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "juro real",
+        "trecho": ("No ciclo de alta iniciado em 2021, que levou a Selic de "
+                   "1,9% para 14,9% ao ano, a taxa de dez anos subiu de 7,5% "
+                   "para perto de 15%."),
+        "nota": "Selic confere na série efetiva; a taxa de 10 anos não está "
+                "no catálogo — proxy de emissões NTN-F: 7,2% (2021) → 14,3% "
+                "(2025)",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "mercado financeiro",
+        "trecho": ("Não é “a curva” que pauta o BC, mas o BC quem pauta, ou "
+                   "deveria pautar, o mercado."),
+        "nota": "a tese institucional: o BC determina a estrutura a termo, "
+                "não o contrário",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "tese",
+        "trecho": ("Em 2025, a companhia brasileira típica investiu o "
+                   "equivalente a 91% da sua depreciação, menos do que o "
+                   "necessário para repor o capital que se desgasta."),
+        "nota": "custo do juro sobre o investimento — sem série de "
+                "investimento/depreciação no catálogo",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "tese",
+        "trecho": ("Em 2025, a Serasa Experian registrou 977 pedidos de "
+                   "recuperação judicial, o maior número desde 2016 e mais de "
+                   "50% acima da média histórica, de 53 pedidos por mês."),
+        "nota": "evidência de estresse das empresas — sem série Serasa no "
+                "catálogo",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "tese",
+        "trecho": ("Em agosto de 2026, suas dívidas com o sistema financeiro "
+                   "chegaram a 50,1% da renda acumulada em doze meses, e o "
+                   "pagamento dessas dívidas consumia cerca de 29% da renda "
+                   "mensal, ambos recordes nas séries do Banco Central."),
+        "nota": "endividamento das famílias — sem série no catálogo",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "risco fiscal",
+        "trecho": ("o custo da dívida, devido à insistência equivocada do "
+                   "Banco Central em fixar a Selic em níveis extraordinariamente "
+                   "altos, é o principal fator por trás do déficit público e "
+                   "do crescimento da dívida."),
+        "nota": "a causalidade central, repetida na conclusão",
+    },
+    {
+        "id_doc": "lara_nota_2026_11",
+        "tema": "câmbio",
+        "trecho": ("Praticamente não temos dívida pública externa. Temos "
+                   "reservas cambiais expressivas. Além disso, os dólares de "
+                   "exportadores mantidos no exterior, que poderiam ser "
+                   "internalizados por simples revisão das normas do Conselho "
+                   "Monetário Nacional, elevam esse colchão para mais de "
+                   "US$ 400 bilhões."),
+        "nota": "resposta ao risco cambial — sem série de reservas "
+                "internacionais no catálogo",
     },
 ]
 
@@ -606,7 +873,9 @@ def verificacao_kanczuk() -> pd.DataFrame:
     expost = (sel - ipc).dropna()
 
     foc = pd.read_parquet(PROCESSADO / "focus_inflacao12m.parquet")
-    foc = foc[foc.suavizada == "N"].set_index("data_pesquisa")["media"]
+    # base 0 = base padrão; a base 1 coexiste desde 2014 (ver extrator).
+    foc = foc[(foc.suavizada == "N") & (foc.base_calculo == 0)]
+    foc = foc.set_index("data_pesquisa")["media"]
     # atenção ao alinhamento: o SGS traz a data no INÍCIO do mês e o Focus,
     # qualquer dia — ambos precisam ir para o fim do mês antes de subtrair
     exante = (sel.resample("ME").last()
@@ -702,7 +971,8 @@ def verificacao_febraban() -> pd.DataFrame:
     d_primeira_queda = queda.data.min() if len(queda) else pd.NaT
 
     foc = pd.read_parquet(PROCESSADO / "focus_anuais.parquet")
-    foc = foc[(foc.indicador == "IPCA") & (foc.data_referencia == 2025)]
+    foc = foc[(foc.indicador == "IPCA") & (foc.data_referencia == 2025)
+              & (foc.base_calculo == 0)]
     foc_jan = foc[(foc.data_pesquisa >= "2025-01-01")
                   & (foc.data_pesquisa < "2025-02-01")].sort_values(
         "data_pesquisa")
@@ -816,6 +1086,353 @@ def verificacao_anbima() -> pd.DataFrame:
 # ------------------------------------------------------------------ saída / CLI
 
 
+def verificacao_bresser() -> pd.DataFrame:
+    """Recalcula as alegações do artigo de Bresser-Pereira (4/11/2026).
+
+    O artigo é um ENDOSSO à proposta de Lara Resende — não é fonte primária
+    dela. Os números de jun/2026 são os mesmos do "Eu Acuso" e são
+    reconferidos aqui; o que é novo é a equação da taxa real, a decomposição
+    de 7,5%, o ajuste de 4% do PIB, a estimativa de 5% e o dado de 40% de
+    estrangeiros.
+
+    Fontes: RMD (custo médio, detentores, juros apropriados), SGS
+    13761/13762/4380/432/dlsp_pib, Focus (Selic 2027) e PIB mensal.
+    """
+    sg = pd.read_parquet(PROCESSADO / "sgs.parquet")
+    cm = pd.read_parquet(PROCESSADO / "rmd_custo_medio.parquet")
+
+    def _serie(nome: str) -> pd.DataFrame:
+        d = sg[sg.serie == nome][["data", "valor"]].copy()
+        d["data"] = pd.to_datetime(d.data)
+        if d.empty:
+            raise ValueError(f"série '{nome}' ausente — rode src.extratores.sgs")
+        return d.sort_values("data").reset_index(drop=True)
+
+    dbgg_s, dpib_s, pib_s = (
+        _serie("dbgg_rs"), _serie("dbgg_pib"), _serie("pib_nominal_mensal"))
+    pib12 = pib_s.valor.rolling(12).sum()
+    pib12.index = pib_s.data.values
+
+    MES = MES_ARTIGO                            # jun/2026 (mês citado)
+    dbgg_jun = float(dbgg_s[dbgg_s.data <= MES].valor.iloc[-1]) / 1e6
+    dbggpib_jun = float(dpib_s[dpib_s.data <= MES].valor.iloc[-1])
+    c = cm[(cm.escopo == "DPF") & (cm.tabela == "estoque 12m")].copy()
+    c["data"] = pd.to_datetime(c.data)
+    custo_jun = float(c[c.data <= MES].taxa_pct_aa.iloc[-1])
+    pib12_jun = float(pib12.asof(MES))
+    servico = custo_jun / 100 * dbgg_jun
+    servico_pib = servico * 1e6 / pib12_jun * 100
+    dlsp_s = _serie("dlsp_pib")
+    dlsp_pct = float(dlsp_s[dlsp_s.data <= MES].valor.iloc[-1])
+    servico_dlsp = custo_jun * dlsp_pct / 100
+    # conta estática do artigo: reprecificar TODO o estoque de 12,68% para
+    # 7,5%, sem defasagem — é um limite superior, não uma projeção
+    ajuste = (custo_jun - 7.5) / 100 * dbgg_jun * 1e6 / pib12_jun * 100
+
+    # 5% do PIB: juro apropriado da DPF (RMD 2.9) ÷ PIB, na janela 2012–25
+    from . import indicadores as ind
+    fat = ind.fatores_anuais()
+    pib_anual = ind.juros_anuais()[["ano", "pib_mi"]]
+    m = fat.merge(pib_anual, on="ano", how="inner")
+    m = m[(m.ano >= 2012) & (m.ano <= 2025)].copy()
+    if m.empty or m.pib_mi.isna().any() or m.ano.nunique() != len(m):
+        raise ValueError("juro apropriado/PIB 2012–25 ausente ou duplicado — "
+                         "rode os extratores")
+    if 2025 not in set(m.ano):
+        raise ValueError("2025 ausente na janela 2012–25 — rode os extratores")
+    m["juros_pib"] = m.juros_apropriados_mi / m.pib_mi * 100
+    juros_pib_media = float(m.juros_pib.mean())
+    juros_pib_acum = float(m.juros_apropriados_mi.sum()
+                           / m.pib_mi.sum() * 100)
+    juros_total_tri = float(m.juros_apropriados_mi.sum() / 1e6)
+    juros_pib_2025 = float(m.loc[m.ano == 2025, "juros_pib"].iloc[0])
+
+    # não-residentes: estoque da DPMFi (RMD 2.7), não o volume negociado
+    det = pd.read_parquet(PROCESSADO / "rmd_detentores.parquet")
+    det = det[det.detentor == "Não-residentes"].copy()
+    det["data"] = pd.to_datetime(det.data)
+    if det.empty:
+        raise ValueError("RMD 2.7 sem 'Não-residentes' — rode src.extratores.rmd")
+    det = det.sort_values("data")
+    nr_jun = det[det.data <= MES].iloc[-1]
+    nr_ult = det.iloc[-1]
+    nr_jun_pct = float(nr_jun.participacao) * 100
+    nr_ult_pct = float(nr_ult.participacao) * 100
+    nr_ult_data = pd.Timestamp(nr_ult.data)
+
+    # Selic atual e consenso Focus para 2027 (a proposta é 7,5% em 12 meses)
+    sel = _serie("meta_selic_copom")
+    selic_atual = float(sel.valor.iloc[-1])
+    selic_data = pd.Timestamp(sel.data.iloc[-1])
+    foc = pd.read_parquet(PROCESSADO / "focus_anuais.parquet")
+    fsel = (foc[(foc.indicador == "Selic") & (foc.data_referencia == 2027)
+                & (foc.base_calculo == 0)]
+            .sort_values("data_pesquisa"))
+    if fsel.empty:
+        raise ValueError("Focus Selic 2027 ausente — rode src.extratores.focus")
+    focus_2027 = float(fsel.media.iloc[-1])
+    focus_data = pd.Timestamp(fsel.data_pesquisa.iloc[-1])
+
+    def _linha(aleg, artigo, nosso, fonte, status, unidade=""):
+        return {"alegacao": aleg, "artigo": artigo, "nosso_valor": nosso,
+                "unidade": unidade, "fonte_nosso": fonte, "status": status}
+
+    return pd.DataFrame([
+        _linha("Custo médio da dívida, jun/2026 (citado de Lara Resende)",
+               "12,68", f"{custo_jun:.2f}", "RMD (DPF, estoque 12m, jun/26)",
+               _veredito(12.68, custo_jun), "% a.a."),
+        _linha("DBGG, jun/2026", "10,9", f"{dbgg_jun:.2f}",
+               "SGS 13761 (jun/26)", _veredito(10.9, dbgg_jun), "R$ tri"),
+        _linha("DBGG / PIB, jun/2026", "82,5", f"{dbggpib_jun:.1f}",
+               "SGS 13762 (jun/26)", _veredito(82.5, dbggpib_jun), "%"),
+        _linha("Serviço = custo × estoque, jun/2026", "1,4",
+               f"{servico:.2f}", "custo RMD × SGS 13761 (jun/26)",
+               _veredito(1.4, servico), "R$ tri"),
+        _linha("Serviço / PIB, jun/2026", "10,5", f"{servico_pib:.1f}",
+               "custo × DBGG ÷ PIB 12m (SGS 4380, jun/26)",
+               _veredito(10.5, servico_pib), "%"),
+        _linha("Serviço c/ dívida líquida", "8,7", f"{servico_dlsp:.1f}",
+               "custo RMD × DLSP/PIB (SGS dlsp_pib, jun/26)",
+               _veredito(8.7, servico_dlsp), "%"),
+        _linha("Equação r = i − π + z: 4,5% = 7,5% − 3% + 2%", "4,5",
+               f"{7.5 - 3 + 2:.1f}", "aritmética: 7,5 − 3 + 2",
+               "não confere — o resultado é 6,5%, não 4,5%; 4,5% é apenas "
+               "7,5 − 3", "%"),
+        _linha("Decomposição 3,0% + 2,5% + 2,0% = 7,5%", "7,5",
+               f"{3.0 + 2.5 + 2.0:.1f}", "aritmética: 3,0 + 2,5 + 2,0",
+               "aritmética confere; 2,5% é crescimento do PIB, não juro "
+               "neutro — a decomposição só fecha se 2,5% for lido como juro "
+               "real", "%"),
+        _linha("Ajuste fiscal de ~4% do PIB", "4,0", f"{ajuste:.2f}",
+               "(12,68 − 7,5) × DBGG/PIB (jun/26)",
+               f"{_veredito(4.0, ajuste)} — conta estática, sem defasagem "
+               "de reprecificação; a incidência 'só rentistas' não é testada",
+               "% do PIB"),
+        _linha("Rentistas capturam 5% do PIB", "5,0",
+               f"{juros_pib_media:.1f} (média 2012–25) | "
+               f"{juros_pib_acum:.1f} (acumulado, R$ {juros_total_tri:.2f} tri) "
+               f"| {juros_pib_2025:.2f} (2025)",
+               "RMD 2.9 (juros apropriados DPF) ÷ PIB; janela 2012–25",
+               "magnitude compatível com o total (5,2–5,4%); como residual "
+               "'não explicado', não é medível — 5% seria quase todo o juro "
+               "total", "% do PIB"),
+        _linha("40% dos títulos do governo com estrangeiros", "40",
+               f"{nr_jun_pct:.1f} (jun/26) | {nr_ult_pct:.1f} "
+               f"({nr_ult_data:%m/%Y})",
+               "RMD 2.7 (estoque da DPMFi, não-residentes)",
+               "não confere com o estoque — 10,0% em jun/26; a base "
+               "'negociados na Bolsa' não está no catálogo", "%"),
+        _linha("Selic tenderá a 7,5% em 12 meses", "7,5",
+               f"atual {selic_atual:.2f} | Focus 2027 {focus_2027:.2f}",
+               f"SGS 432 ({selic_data:%d/%m/%Y}) + Focus "
+               f"({focus_data:%d/%m/%Y})",
+               "proposta normativa, não projeção — o consenso Focus para "
+               "2027 está em 13,04%", "% a.a."),
+        _linha("Meta de inflação de 3%", "3,0", "3,0",
+               "CMN (meta vigente)", "confere", "%"),
+        _linha("Venda de reservas para conter a saída de estrangeiros",
+               "—", "—", "sem série de reservas no catálogo",
+               "proposta sem dado no projeto — não testável", ""),
+        _linha("Efeito neofisheriano (Cochrane)", "—", "—",
+               "posição teórica", "não testado no projeto — não é dado", ""),
+    ])
+
+
+def verificacao_lara_nota() -> pd.DataFrame:
+    """Recalcula as alegações da nota de Lara Resende (16/11/2026).
+
+    A nota é uma CONTINUAÇÃO da proposta de set/2026 — não uma nova fonte
+    primária. O que muda é a forma da regra (intervalo entre a inflação e o
+    crescimento nominal, prazo de 2–4 anos, forward guidance) e o que ele
+    acrescenta de evidência: as correlações com a Selic e o custo do juro
+    sobre empresas e famílias.
+
+    Fontes: SGS 4189 (Selic efetiva mensal), 432 (meta Selic), 5793
+    (primário/PIB 12m) e RMD (custo médio do estoque 12m e custo das
+    emissões por título). As séries que o artigo cita e o projeto NÃO tem —
+    custo das emissões antes de 2021 (o RMD 4.3 usa nova metodologia e só
+    publica desde 01/2021), NTN-F 10 anos, contas corporativas, recuperações,
+    Ibovespa/CDI, endividamento das famílias e reservas internacionais —
+    ficam como "não verificável", não como "falso": falta de série não é
+    refutação. Para a ponta longa há uma proxy parcial: o custo das emissões
+    de NTN-F em 12 meses (RMD, 2021–2026), que é taxa de emissão primária,
+    não a taxa de mercado secundário do papel de 10 anos.
+    """
+    sg = pd.read_parquet(PROCESSADO / "sgs.parquet")
+    cm = pd.read_parquet(PROCESSADO / "rmd_custo_medio.parquet")
+
+    def _serie(nome: str) -> pd.DataFrame:
+        d = sg[sg.serie == nome][["data", "valor"]].copy()
+        d["data"] = pd.to_datetime(d.data)
+        if d.empty:
+            raise ValueError(f"série '{nome}' ausente — rode src.extratores.sgs")
+        return d.sort_values("data").reset_index(drop=True)
+
+    sel_ef = _serie("selic_mensal_anualizada").set_index("data")["valor"]
+    meta = _serie("meta_selic_copom").set_index("data")["valor"]
+
+    # ---- ciclo de alta de 2021: 1,9% -> 14,9% (Selic efetiva mensal)
+    ciclo = sel_ef["2020-01-01":"2026-11-30"]
+    sel_min, sel_max = float(ciclo.min()), float(ciclo.max())
+    d_min, d_max = ciclo.idxmin(), ciclo.idxmax()
+    meta_ciclo = meta["2020-01-01":"2026-11-30"]
+    meta_min, meta_max = float(meta_ciclo.min()), float(meta_ciclo.max())
+
+    # ---- 2011-2012: 12,5% -> 7,25%
+    meta_1112 = meta["2011-08-01":"2012-10-31"]
+    m_ini, m_fim = float(meta_1112.iloc[0]), float(meta_1112.iloc[-1])
+    d_ini = meta_1112.index[0]
+    # data do último corte para 7,25% (não o fim da janela)
+    d_fim = meta_1112[meta_1112 == m_fim].index[0]
+
+    # ---- correlações: custo do ESTOQUE 12m × Selic mensal
+    cm["data"] = pd.to_datetime(cm.data)
+    sel_me = meta.resample("ME").last()
+
+    def _corr(escopo: str, ini: str, fim: str) -> tuple[int, float]:
+        x = (cm[(cm.escopo == escopo) & (cm.tabela == "estoque 12m")]
+             .sort_values("data").set_index("data")["taxa_pct_aa"]
+             .resample("ME").last())
+        j = pd.concat([x.rename("custo"), sel_me.rename("selic")],
+                      axis=1, sort=True).dropna().loc[ini:fim]
+        if len(j) < 12:
+            raise ValueError(f"correlação {escopo} {ini}..{fim} com {len(j)} meses")
+        return len(j), float(j.corr().iloc[0, 1])
+
+    n_dpmfi, corr_dpmfi = _corr("DPMFi", "2011-12-01", "2026-09-30")
+    n_dpf, corr_dpf = _corr("DPF", "2011-12-01", "2026-09-30")
+    n_dpmfi_22, corr_dpmfi_22 = _corr("DPMFi", "2011-01-01", "2022-12-31")
+    n_dpf_22, corr_dpf_22 = _corr("DPF", "2011-01-01", "2022-12-31")
+
+    # ---- proxy da ponta longa: custo das emissões de NTN-F em 12m
+    ntnf = (cm[(cm.escopo == "NTN-F") & (cm.tabela == "emissões 12m")]
+            .sort_values("data").set_index("data")["taxa_pct_aa"])
+    if ntnf.empty:
+        raise ValueError("custo das emissões de NTN-F ausente no RMD")
+    ntnf_ini, ntnf_ini_data = float(ntnf.iloc[0]), ntnf.index[0]
+    ntnf_max, ntnf_max_data = float(ntnf.max()), ntnf.idxmax()
+    j_ntnf = pd.concat([ntnf.resample("ME").last().rename("ntnf"),
+                        sel_me.rename("selic")], axis=1, sort=True).dropna()
+    n_ntnf, corr_ntnf = len(j_ntnf), float(j_ntnf.corr().iloc[0, 1])
+
+    # ---- custo do estoque nos ciclos citados
+    def _custo(escopo: str, data: str) -> float:
+        x = cm[(cm.escopo == escopo) & (cm.tabela == "estoque 12m")]
+        x = x[x.data <= data].sort_values("data")
+        return float(x.taxa_pct_aa.iloc[-1])
+
+    dpmfi_2016 = _custo("DPMFi", "2016-02-29")
+    dpmfi_2020 = _custo("DPMFi", "2020-12-31")
+    dpmfi_2022 = _custo("DPMFi", "2022-12-31")
+    dpf_2016 = _custo("DPF", "2016-01-31")
+    dpf_2020 = _custo("DPF", "2020-12-31")
+    dpf_2022 = _custo("DPF", "2022-12-31")
+
+    # ---- primário 2025
+    pri = _serie("primario_pib_12m")
+    pri_2025 = float(pri[(pri.data.dt.year == 2025)
+                         & (pri.data.dt.month == 12)].valor.iloc[0])
+
+    def _linha(aleg, artigo, nosso, fonte, status, unidade=""):
+        return {"alegacao": aleg, "artigo": artigo, "nosso_valor": nosso,
+                "unidade": unidade, "fonte_nosso": fonte, "status": status}
+
+    return pd.DataFrame([
+        _linha("Selic no ciclo de alta: 1,9% → 14,9%", "1,9 → 14,9",
+               f"{sel_min:.1f} ({d_min:%m/%Y}) → {sel_max:.1f} "
+               f"({d_max:%m/%Y}); meta {meta_min:.1f} → {meta_max:.1f}",
+               "SGS 4189 (Selic efetiva mensal) + 432 (meta)",
+               "confere na série efetiva; na meta, 2,0 → 15,0", "% a.a."),
+        _linha("NTN-F 10 anos: 7,5% → perto de 15%", "7,5 → ~15",
+               f"proxy: {ntnf_ini:.1f} ({ntnf_ini_data:%m/%Y}) → "
+               f"{ntnf_max:.1f} ({ntnf_max_data:%m/%Y})",
+               "RMD custo das emissões de NTN-F 12m (proxy); a taxa de "
+               "10 anos do Tesouro Direto não está no catálogo",
+               "confere (≈) como proxy — é taxa de emissão primária, não a "
+               "taxa de mercado secundário do papel de 10 anos", "% a.a."),
+        _linha("Correlação 0,95: custo das emissões 12m × Selic, "
+               "12/2011–09/2026", "0,95",
+               f"{corr_dpmfi:.3f} (DPMFi) | {corr_dpf:.3f} (DPF); "
+               f"n={n_dpmfi}",
+               "proxy: RMD custo do estoque 12m × SGS 432",
+               "não verificável na base do artigo — o RMD 4.3 (custo das "
+               "emissões) só publica desde 01/2021, com nova metodologia; a "
+               "proxy do estoque (2011–2026) dá 0,84, não 0,95",
+               "correlação"),
+        _linha("Correlação 0,85: NTN-F 10 anos × Selic, 01/2011–10/2026",
+               "0,85",
+               f"proxy: {corr_ntnf:.2f} (NTN-F emissões 12m × Selic, "
+               f"01/2021–09/2026, n={n_ntnf})",
+               "RMD custo das emissões de NTN-F 12m × SGS 432",
+               "não verificável na janela do artigo — a janela começa em "
+               "01/2011 e a série de 10 anos não está no catálogo; a proxy "
+               "de 2021–26 dá 0,93", "correlação"),
+        _linha("Custo médio (estoque) acompanhou a Selic, 2011–2022",
+               "acompanhou",
+               f"corr {corr_dpmfi_22:.3f} (DPMFi) | {corr_dpf_22:.3f} "
+               f"(DPF); n={n_dpmfi_22}",
+               "RMD custo do estoque 12m × SGS 432",
+               "confere (≈) para o estoque; a parte de 'novas emissões' não "
+               "é testável antes de 2021 (RMD 4.3 começa em 01/2021)",
+               "correlação"),
+        _linha("Selic: 12,5% → 7,25% (ago/2011–out/2012)", "12,5 → 7,25",
+               f"{m_ini:.2f} ({d_ini:%d/%m/%Y}) → {m_fim:.2f} "
+               f"({d_fim:%d/%m/%Y})", "SGS 432 (meta Selic)", "confere",
+               "% a.a."),
+        _linha("Custo das novas emissões: >14% → <5% (ciclo 2016–2020)",
+               ">14 → <5",
+               f"estoque: {dpmfi_2016:.1f} → {dpmfi_2020:.1f} (DPMFi) | "
+               f"{dpf_2016:.1f} → {dpf_2020:.1f} (DPF)",
+               "RMD custo do estoque 12m",
+               "não verificável para emissões — o RMD 4.3 só começa em "
+               "01/2021; o estoque caiu a 7,3–8,4%, não a <5%", "% a.a."),
+        _linha("Custo das novas emissões voltou a >12% no fim de 2022",
+               ">12",
+               f"estoque: {dpmfi_2022:.1f} (DPMFi) | {dpf_2022:.1f} (DPF) "
+               "em dez/22", "RMD custo do estoque 12m",
+               "não verificável para emissões — o RMD 4.3 só começa em "
+               "01/2021; o estoque ficou em 10,2–10,8%", "% a.a."),
+        _linha("Déficit primário 2025: abaixo de 2/3 dos países do FMI; "
+               "emergentes 3,9%; avançadas 2,5%",
+               "0,43 (Brasil); 3,9; 2,5", f"{pri_2025:.2f} (SGS 5793, dez/25)",
+               "SGS 5793; FMI Fiscal Monitor não coletado",
+               "o dado do Brasil confere; a comparação internacional não é "
+               "verificável com o catálogo", "% do PIB"),
+        _linha("Companhias abertas: dívida 4,6× lucro; custo 9% vs 3,5%; "
+               "despesa 40% vs 16%; 23% → 43%",
+               "4,6× / 9% / 3,5% / 40% / 16% / 23% → 43%", "—",
+               "sem série de contas corporativas no catálogo",
+               "não verificável com dados do projeto", ""),
+        _linha("Investimento: 91% da depreciação (2025), 113% (2021), "
+               "149% (EUA)", "91 / 113 / 149", "—",
+               "sem série de investimento/depreciação no catálogo",
+               "não verificável com dados do projeto", "%"),
+        _linha("Recuperações judiciais: 977 (2025), 2.466 empresas, "
+               "1.099 (1º sem/2026), agro 30%",
+               "977 / 2.466 / 1.099 / 30", "—",
+               "sem série Serasa/recuperações no catálogo",
+               "não verificável com dados do projeto", ""),
+        _linha("Ibovespa 40× vs CDI 103× (07/1994–10/2026); 93 de 268 "
+               "janelas", "40× / 103× / 93 de 268", "—",
+               "sem série de Ibovespa/CDI no catálogo",
+               "não verificável com dados do projeto", ""),
+        _linha("Famílias: dívida 50,1% da renda; serviço 29% (ago/2026)",
+               "50,1 / 29", "—",
+               "sem série de endividamento das famílias no catálogo",
+               "não verificável com dados do projeto", "%"),
+        _linha("Reservas cambiais + dólares de exportadores > US$ 400 bi",
+               ">400", "—", "sem série de reservas internacionais no catálogo",
+               "não verificável com dados do projeto", "US$ bi"),
+        _linha("Estudo de Dejanir Silva (Purdue, nov/2026)", "—", "—",
+               "estudo externo não coletado",
+               "não verificável com dados do projeto", ""),
+        _linha("Proposta: intervalo [inflação, crescimento nominal], 2–4 "
+               "anos, fora só em condições extraordinárias", "—", "—",
+               "proposta normativa", "não é dado — registrada como posição",
+               ""),
+    ])
+
+
 def salvar() -> tuple[Path, Path, Path]:
     idx = indice()
     csv = PROCESSADO / "documentos_indice.csv"
@@ -830,6 +1447,8 @@ def salvar() -> tuple[Path, Path, Path]:
         verificacao_kanczuk().assign(documento="kanczuk_asa_2025"),
         verificacao_febraban().assign(documento="febraban_sidney_2026"),
         _com_documento_anbima(),
+        verificacao_bresser().assign(documento="bresser_lara_resende_2026"),
+        verificacao_lara_nota().assign(documento="lara_nota_2026_11"),
     ], ignore_index=True)
     vcsv = PROCESSADO / "documentos_verificacao.csv"
     ver.to_csv(vcsv, index=False)
@@ -878,6 +1497,16 @@ def main() -> None:
     print("\n== verificação: releases ANBIMA/Grupo Consultivo (2025) ==")
     a = _com_documento_anbima()
     print(a[["alegacao", "artigo", "nosso_valor", "status"]]
+          .to_string(index=False))
+
+    print("\n== verificação: artigo Bresser-Pereira (4/11/2026) ==")
+    b = verificacao_bresser()
+    print(b[["alegacao", "artigo", "nosso_valor", "status"]]
+          .to_string(index=False))
+
+    print("\n== verificação: nota Lara Resende (16/11/2026) ==")
+    n = verificacao_lara_nota()
+    print(n[["alegacao", "artigo", "nosso_valor", "status"]]
           .to_string(index=False))
 
     csv, pq, vcsv = salvar()

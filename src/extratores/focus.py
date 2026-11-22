@@ -112,10 +112,19 @@ def processar_anuais() -> pd.DataFrame:
                 "minimo": row.get("Minimo"),
                 "maximo": row.get("Maximo"),
                 "desvio_padrao": row.get("DesvioPadrao"),
+                "base_calculo": row.get("baseCalculo"),
                 "respondentes": row.get("numeroRespondentes"),
             })
         time.sleep(0.3)
     df = pd.DataFrame(regs)
+    dup = df.duplicated(["indicador", "data_pesquisa", "data_referencia",
+                         "base_calculo"])
+    if dup.any():
+        raise ValueError(
+            f"focus_anuais: {int(dup.sum())} duplicatas de "
+            "(indicador, data, referência, base_calculo)")
+    if df["base_calculo"].isna().any():
+        raise ValueError("focus_anuais: baseCalculo ausente")
     return salvar_parquet(df, "focus_anuais")
 
 
@@ -124,7 +133,7 @@ def processar_inflacao12m() -> pd.DataFrame:
     for row in _odata(
         "ExpectativasMercadoInflacao12Meses",
         "Indicador eq 'IPCA'",
-        orderby="Data,Suavizada",
+        orderby="Data,Suavizada,baseCalculo",
     ):
         regs.append({
             "data_pesquisa": pd.Timestamp(row["Data"]),
@@ -134,9 +143,21 @@ def processar_inflacao12m() -> pd.DataFrame:
             "maximo": row.get("Maximo"),
             "desvio_padrao": row.get("DesvioPadrao"),
             "suavizada": row.get("Suavizada"),
+            # baseCalculo: 0 = base padrão (janela maior), 1 = base
+            # alternativa (janela menor). As duas coexistem desde 2014 e
+            # podem divergir até ~0,4 p.p.; sem esta coluna o consumidor
+            # mistura as bases conforme a ordem da API.
+            "base_calculo": row.get("baseCalculo"),
             "respondentes": row.get("numeroRespondentes"),
         })
     df = pd.DataFrame(regs)
+    dup = df.duplicated(["data_pesquisa", "suavizada", "base_calculo"])
+    if dup.any():
+        raise ValueError(
+            f"focus_inflacao12m: {int(dup.sum())} duplicatas de "
+            "(data, suavizada, base_calculo)")
+    if df["base_calculo"].isna().any():
+        raise ValueError("focus_inflacao12m: baseCalculo ausente")
     return salvar_parquet(df, "focus_inflacao12m")
 
 

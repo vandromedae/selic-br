@@ -15,6 +15,10 @@ SERIES_SGS: dict[int, dict[str, str]] = {
     188: {"nome": "inpc", "desc": "INPC - variação % no mês", "freq": "M"},
     4466: {"nome": "ipca_nucleo_ms", "desc": "IPCA núcleo médias aparadas com suavização (% mês)", "freq": "M"},
     11426: {"nome": "ipca_nucleo_ms_sem_suv", "desc": "IPCA núcleo médias aparadas sem suavização (% mês)", "freq": "M"},
+    10844: {"nome": "ipca_servicos", "desc": "IPCA - Serviços - variação % no mês", "freq": "M"},
+    4449: {"nome": "ipca_monitorados", "desc": "IPCA - Preços monitorados - variação % no mês", "freq": "M"},
+    # Câmbio
+    1: {"nome": "cambio_usd", "desc": "Taxa de câmbio - Livre - Dólar americano (venda) - R$/US$ - diária", "freq": "D"},
     # Atividade
     # Relatório de Inflação do BCB (mar/2016): "24363 e 24364 (sem e com
     # ajuste sazonal, respectivamente)" — a 24364 é a COM ajuste sazonal

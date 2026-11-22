@@ -238,10 +238,12 @@ def macro_mensal() -> pd.DataFrame:
     des = des.set_index("data")["taxa_pct"]
 
     foc = ler_parquet("focus_inflacao12m")
-    _exigir_colunas(foc, ["data_pesquisa", "suavizada", "media"],
-                    "focus_inflacao12m.parquet")
-    foc = foc[foc.suavizada == "N"].set_index("data_pesquisa")["media"]
-    foc = foc.resample("ME").last()
+    _exigir_colunas(foc, ["data_pesquisa", "suavizada", "base_calculo",
+                          "media"], "focus_inflacao12m.parquet")
+    # base 0 = base padrão do Focus; a base 1 (janela menor) coexiste
+    # desde 2014 e não pode ser misturada na mesma série.
+    foc = foc[(foc.suavizada == "N") & (foc.base_calculo == 0)]
+    foc = foc.set_index("data_pesquisa")["media"].resample("ME").last()
 
     df = pd.DataFrame({
         "selic_meta": selic_meta,
@@ -287,9 +289,11 @@ def selic_real_mensal() -> pd.DataFrame:
 
 def focus_anuais() -> pd.DataFrame:
     d = ler_parquet("focus_anuais")
-    _exigir_colunas(d, ["indicador", "data_pesquisa", "data_referencia", "media"],
-                    "focus_anuais.parquet")
-    return d
+    _exigir_colunas(d, ["indicador", "data_pesquisa", "data_referencia",
+                        "base_calculo", "media"], "focus_anuais.parquet")
+    # base 0 = base padrão do Focus; a base 1 coexiste desde 2014 e não
+    # pode ser misturada com a 0 na mesma série.
+    return d[d.base_calculo == 0].reset_index(drop=True)
 
 
 def crescimento_pib_real() -> pd.Series:

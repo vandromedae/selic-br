@@ -21,15 +21,18 @@ ferramenta web de transparência sobre os rendimentos da dívida.
 ### P1 — Os juros altos se justificam? (`notebooks/01_juros_se_justificam.ipynb`)
 - A Selic acompanha a inflação **esperada** (Focus), não a realizada — a direção
   do ciclo não é arbitrária. O que é excepcional é a **magnitude**: juro real
-  ex ante de 2024–2026 em **média de ~8,8 p.p.** (6,9 em 2024 → 10,1 em 2026)
+  ex ante de 2024–2026 em **média de ~8,8 p.p.** (6,9 em 2024 → 9,9 em 2026)
   — média que desde 2002 só havia sido alcançada em 2002–06, quando a inflação
   caía de dois dígitos. Hoje coexiste com
   IPCA de ~4,6% — **acima do teto** da faixa de tolerância (meta de 3% desde
-  2025, com teto de 4,5%; a inflação ficou dentro da faixa até 2025).
+  2025, com teto de 4,5%). Não é a primeira vez: com as metas efetivas de cada
+  ano, o IPCA furou o teto em **2015, 2021, 2022 e 2024** (e em 2026, ainda
+  incompleto); ficou dentro em 2012–14, 2016, 2018–20, 2023 e 2025, e abaixo
+  do piso em 2017.
 - A regra de Taylor simples (meta variável: 4,5% até 2024, 3,0% desde 2025)
   pediria ~8,2–8,8% a.a. para Focus ~5%. O **desvio médio 2024–26 (~6,0 p.p.)
   é o maior entre as janelas comparadas** (2003–14:
-  4,9; 2022–23: 5,1 p.p.), mas **não é recorde histórico**: a MM36 chegou a
+  4,9; 2022–23: 5,2 p.p.), mas **não é recorde histórico**: a MM36 chegou a
   9,9 p.p. em fev/2006. O desvio é sensível à premissa de juro neutro (r*):
   ~6,0 p.p. com r*=2,5, ~4,5 com r*=4 e ~3,5 com r*=5 — a entrevista
   verificada de Kanczuk discute r* de 8% (ele), 5% (BC) e 6% (consenso).
@@ -39,8 +42,10 @@ ferramenta web de transparência sobre os rendimentos da dívida.
   ele "está justificado" é uma posição, não um dado.
 - **O Focus como oráculo é fraco:** contra o realizado, o erro absoluto médio
   da expectativa de 12 meses é **1,9 p.p.** em 95 trimestres, e os erros
-  grandes vêm nos pontos de virada (jan/2021: IPCA projetado 3,3% vs 10,1%
-  realizado; Selic 3,3% → 9,25%). No ciclo atual o erro de inflação encolheu
+  grandes vêm nos pontos de virada. Na série de 12 meses, o 1º tri/2021
+  esperava 4,0% e o realizado 12 meses depois foi 11,3% (+7,3 p.p.); na
+  projeção anual, jan/2021 trazia IPCA de 3,3% e Selic de 3,3% para 2021,
+  contra 10,1% e 9,25% realizados. No ciclo atual o erro de inflação encolheu
   (média anual −1,1 a +1,1 p.p. em 2022–25), mas o **PIB foi subestimado**
   (2022: 0,3% projetado vs 3,0% realizado; 2023: 0,8 vs 3,2; 2024: 1,6 vs 3,4)
   e a **dívida bruta surpreendeu para baixo** (2021: 92,1% do PIB projetado vs
@@ -214,6 +219,56 @@ contábil não é renda, e o 3º ponto do artigo só fecha depois dela.
 
 ---
 
+## Inflação e trabalho — as justificativas do BC (`notebooks/09_justificativas.ipynb`)
+
+**O que o notebook faz:** testa com dados as justificativas usadas para
+sustentar o juro alto — inflação acima da meta, mercado de trabalho aquecido,
+salário acima da produtividade, expectativas desancoradas e choques de
+oferta. **Não estima causalidade**: a Phillips é associação condicional; a
+decomposição é contábil; o juro alto não é tratado como causa única.
+
+**Achados principais:**
+- **Metas efetivas, não a meta fixa de 4,5%:** o IPCA furou o teto em
+  **2015, 2021, 2022, 2024** e em **2026** (parcial); ficou dentro em
+  2012–14, 2016, 2018–20, 2023 e 2025; e ficou **abaixo do piso em 2017**.
+  Desde 2021, **3 dos 5 anos fechados** ficaram acima do teto — o juro alto
+  não entregou a meta.
+- **Composição do IPCA:** em 2021, transportes (4,61 p.p.) e habitação
+  (2,11 p.p.) dominam; em 2022, alimentação (2,54) e saúde (1,48); em 2024,
+  alimentação (1,66) e saúde (0,82); em 2026, alimentação (1,23) e saúde
+  (0,74). O proxy de serviços (grupos 6–9) responde por **11,5%** do IPCA em
+  2021 e **39–46%** em 2022–26 — não é o motor principal em 2021.
+- **Phillips:** no IPCA cheio, o coeficiente do desemprego é **−0,05**
+  (p=0,73) em 2012–26 e **+0,53** (p=0,01) em 2021–26; para serviços,
+  **−0,50** (p=0,001) e **−0,31** (p=0,001) com controles. O sinal previsto
+  aparece em serviços, não no IPCA cheio; é correlação, não causalidade.
+- **Salário × produtividade:** **+15,5% vs +0,6%** entre 2012 e 2025 (razão
+  1,15); ULC positiva em 2023–25 (+5,3, +3,1, +5,2 p.p.). Procede em parte:
+  o salário real caiu **8,4%** entre 2020 e 2022 e a produtividade é por
+  trabalhador, não por hora.
+- **Mercado de trabalho:** desemprego **5,2%**, ocupação **59,0%** (recorde),
+  informalidade **37,5%** (abaixo de 39,9% em 2012–19), mas participação
+  **62,2%** (abaixo de 62,8%). Aperto real, mas parte vem de menor oferta de
+  trabalho — e não se traduz automaticamente em IPCA cheio.
+- **Expectativas:** o Focus 12m médio **caiu** de 5,24% (2012–19) para 4,63%
+  (2021–26), mas a meta média caiu de 4,47% para 3,25%: o **gap à meta subiu
+  de 0,77 para 1,38 p.p.** e a fração de meses acima do teto **triplicou**
+  (11,5% → 39,4%). Em 2021–26, a expectativa ficou acima da meta em vigor em
+  **98,6%** dos meses.
+- **Atas:** 280 (05/08/26) e 281 (16/09/26) dizem "mercado de trabalho
+  aquecido"; a 282 (04/11/26) lista **quatro choques de oferta** (petróleo,
+  El Niño, fim da escala 6X1, câmbio) e fala em "expectativas desancoradas",
+  sem repetir "aquecido".
+
+**Limites:** produtividade por trabalhador (não por hora); proxy de serviços
+(grupos 6–9) distinto da série oficial SGS 10844; decomposição aproximada
+(resíduo ≤ 0,36 p.p.); Focus é expectativa de mercado, não medida de
+credibilidade; 2026 incompleto (IPCA até out, PNAD até o 3º tri). Onde a
+série não permite separar os mecanismos, a leitura é **"não verificável"**,
+não "falsa".
+
+---
+
 ## Fase de documentos — índice das atas do Copom (`notebooks/06_documentos.ipynb`)
 
 **Corpus:** **47 atas públicas da 236ª (20/1/2021) à 282ª (3–4/11/2026)**
@@ -310,9 +365,10 @@ Registro **curado** de documentos de posição (tese explícita + autor
 assinado), diferente das ata (decisão coletiva) e dos discursos (inventário
 temático). Padrão repetível: cada documento entra com metadados (`DOCS`),
 citações **verbatim** (`TRECHOS`, checadas contra o texto bruto — hoje
-**25/25**) e uma função própria de verificação aritmética.
+**7 documentos e 52/52 citações**) e uma função própria de verificação
+aritmética.
 
-**Primeiro documento:** *"Eu Acuso: uma proposta para eliminar os juros
+**Documento de abertura:** *"Eu Acuso: uma proposta para eliminar os juros
 absurdos"* — André Lara Resende (25/9/2026, Substack). Texto bruto arquivado
 em `dados/bruto/documentos/eu_acuso_lara_resende_2026-09-25.txt` (corpo +
 notas, cortado antes dos comentários).
@@ -326,10 +382,10 @@ DPF, mês do artigo = jun/2026) — nada é aceito do documento sem conferência
 | DBGG / DBGG-PIB, jun/26 | 10,9 tri / 82,5% | 10,81 tri / 82,0% | confere |
 | Serviço = custo × estoque | 1,4 tri / 10,5% PIB | 1,37 tri / 10,4% | confere (aritmética exata com os números dele) |
 | Serviço c/ dívida líquida | 8,7% PIB | 8,7% | confere |
-| Déficit nominal / PIB | ~10% | 9,51% (SGS 5727) | confere |
-| Identidade nominal = juros + primário | — | 9,51 = 8,99 + 0,52 | **fecha (resíduo 0,00)** |
-| PIB nominal cresce ~7% a.a. | 7,0% | 7,0% | confere |
-| Dívida/PIB sobe ~5,7 p.p./ano | 5,7 | +5,1 | confere (≈) |
+| Déficit nominal / PIB | ~10% | 9,52% (SGS 5727) | confere (≈) |
+| Identidade nominal = juros + primário | — | 9,52 = 8,99 + 0,52 | **fecha (resíduo 0,01 p.p. — arredondamento)** |
+| PIB nominal cresce ~7% a.a. | 7,0% | 6,9% | confere |
+| Dívida/PIB sobe ~5,7 p.p./ano | 5,7 | +5,1 | não confere (erro −0,6 p.p.; 10,5% relativo) |
 | "mais da metade da dívida em LFTs" | >50% | **51,2%** da DPMFi (42,3% da DBGG) | confere — Estoque da DPF, instrumento antes do swap |
 | …a mesma alegação pela exposição "após swap" | >50% | 45,9% (RMD Anexo 5.5) | base errada da 1ª checagem (ver nota) |
 | Juro apropriado 12m × conta de estoque final | 10,5% | 8,99% (SGS 5760) | conceito diferente, não erro (ver nota) |
@@ -351,18 +407,21 @@ não repetir):
 
 Séries novas no catálogo para a conferência: **13761** (DBGG R$),
 **13762** (DBGG % PIB), **5727** (resultado nominal/PIB 12m) — 28 séries na
-época; hoje são **34**, com as 6 de crédito do teste da Febraban (abaixo).
+época; hoje são **42**, incluindo as 6 de crédito do teste da Febraban (abaixo).
 Convenção SGS 5727/5793: **positivo = déficit** (checado em dez/2020:
 +13,34 nominal / +9,24 primário; dez/2021: +4,26 / −0,72).
 
-**Segundo documento:** *"`BC não levará inflação para a meta e cortará juros
+**Contraponto:** *"`BC não levará inflação para a meta e cortará juros
 mesmo sem espaço`, diz Fabio Kanczuk, do ASA"* — NeoFeed (25/7/2025, entrevista
 na Expert XP). Kanczuk foi diretor de Política Econômica do BCB (2019–2021) e
 secretário de Política Econômica com Guedes; hoje é diretor de macroeconomia do
 ASA. Texto bruto em
 `dados/bruto/documentos/kanczuk_asa_2025-07-25.txt` (corpo + entrevista,
-cortado antes do rodapé). É a **primeira defesa assinada do patamar** no
-corpus — e vem de quem saiu do Banco Central.
+cortado antes do rodapé). **Fonte secundária:** é a reportagem da NeoFeed
+sobre a entrevista, não uma transcrição literal; os trechos citados são os
+publicados na matéria e não foram conferidos contra áudio ou vídeo. É a
+**primeira defesa assinada do patamar** no corpus — e vem de quem saiu do
+Banco Central.
 
 | Alegação | Matéria | Nós | Veredito |
 | --- | --- | --- | --- |
@@ -380,9 +439,118 @@ opção para não levar a meta de inflação a sério»*. Os dois, porém, trata
 nível da Selic como **escolha**, não como consequência técnica: ele propõe
 banda de 3%, ele propõe manter 15% por dois a três anos.
 
+### Bresser-Pereira endossa a proposta de Lara Resende (1 documento, 10 citações)
+
+**Endosso:** *"A proposta de Lara Resende para baixar os juros"* —
+Luiz Carlos Bresser-Pereira (4/11/2026, Substack; a página exibe 6/11/2026).
+Texto bruto em `dados/bruto/documentos/bresser_lara_resende_2026-11-04.txt`.
+É um **documento de posição/endosso**, não a fonte primária da proposta: os
+números de jun/2026 são os mesmos do *"Eu Acuso"* e a proposta é a de Lara
+Resende. O que ele acrescenta é o endosso explícito, a formulação como
+"reforma monetária" e a hipótese distributiva (rentistas/financistas).
+
+| Alegação | Artigo | Nós | Veredito |
+| --- | --- | --- | --- |
+| Custo médio da dívida, jun/26 (citado de Lara Resende) | 12,68% a.a. | 12,68 | **confere (exato)** — RMD, DPF estoque 12m |
+| DBGG / DBGG-PIB, jun/26 | 10,9 tri / 82,5% | 10,81 tri / 82,0% | confere |
+| Serviço = custo × estoque | 1,4 tri / 10,5% do PIB | 1,37 tri / 10,4% | confere (aritmética exata) |
+| Serviço c/ dívida líquida | 8,7% do PIB | 8,7% | confere |
+| Equação `r = i − π + z` | 4,5% = 7,5% − 3% + 2% | **6,5%** | **não confere** — 7,5 − 3 + 2 = 6,5; 4,5 é apenas 7,5 − 3 |
+| Decomposição 3,0 + 2,5 + 2,0 | 7,5% | 7,5% | aritmética confere; **2,5% é crescimento do PIB, não juro neutro** — a decomposição só fecha se 2,5% for lido como juro real |
+| Ajuste fiscal | ~4% do PIB | 4,25% | confere (≈) — conta estática (12,68 − 7,5) × DBGG/PIB; a incidência "só rentistas" não é testada |
+| Rentistas capturam 5% do PIB | 5% | 5,2% (média 2012–25) / 5,4% (acumulado, R$ 5,98 tri) / 6,91% (2025) | **magnitude compatível com o total**; como residual "não explicado", não é medível — 5% seria quase todo o juro total |
+| 40% dos títulos com estrangeiros | 40% | 10,0% (jun/26) / 9,6% (set/26), estoque | **não confere com o estoque**; a base "negociados na Bolsa" não está no catálogo |
+| Selic a 7,5% em 12 meses | 7,5% | atual 13,75%; Focus 2027 = 13,04% | **proposta normativa**, não projeção |
+| Meta de inflação | 3,0% | 3,0% | confere |
+| Venda de reservas | — | — | proposta sem série no catálogo — não testável |
+| Efeito neofisheriano (Cochrane) | — | — | posição teórica — não testada no projeto |
+
+**O que o artigo acrescenta.** É o primeiro documento do corpus a endossar
+explicitamente a proposta de Lara Resende e a chamá-la de "reforma monetária":
+Selic convergindo para 7,5% em 12 meses, com meta de 3%, crescimento de 2,5%
+e spread de 2%. Também é o primeiro a dizer, sem meias palavras, que o nível
+de juros **transfere renda** da população para rentistas e financistas — a
+hipótese distributiva (P2) na voz de um ex-ministro.
+
+**O que ele não prova.** O endosso não é uma segunda medição: repete os
+números de jun/2026 e a equação com erro. A conta de 4,5% de juro real só vale
+se a inflação já estiver em 3%; com a inflação esperada de 5,1% (Focus 2026),
+7,5% nominal dá ~2,4% real — não os 4,5% que o artigo quer. O ajuste de 4% do
+PIB é estático (reprecifica todo o estoque de uma vez), e a saída de 40% dos
+estrangeiros e a venda de reservas não têm série no projeto. Os 5% do PIB são
+plausíveis como **média do juro total** (5,2% simples / 5,4% acumulado em
+2012–25), mas não como **residual não explicado**: o projeto mede o total, não
+a parcela atribuída a "rentistas". O 5,4% é o total **apropriado** a todos os
+detentores; a distribuição por detentor (RMD 2.7) é uma conta separada. O
+efeito neofisheriano é uma posição teórica de Cochrane, não um resultado
+empírico do corpus.
+
+### Lara Resende responde às objeções — a proposta vira intervalo (1 documento, 17 citações)
+
+**Refinamento:** *"Uma nota sobre a proposta de meta para os juros"* —
+André Lara Resende (16/11/2026, Substack). Texto bruto em
+`dados/bruto/documentos/uma_nota_meta_juros_lara_resende_2026-11-16.txt`
+(corpo + legendas dos gráficos + nota de rodapé, cortado antes dos
+comentários). É uma **continuação** da proposta de set/2026, não uma nova
+fonte primária: responde às objeções
+(credibilidade, câmbio, "o BC controla só a taxa de um dia") e acrescenta
+evidência sobre o custo do juro para empresas e famílias.
+
+**O que muda na proposta.** A meta deixa de ser um número fixo (7,5% em 12
+meses, como no texto de set/2026 e no endosso de Bresser) e vira um
+**intervalo**: piso na inflação, teto no crescimento nominal da renda, a ser
+atingido em **2–4 anos**, com *forward guidance* e coordenação
+fiscal-monetária. Fora do intervalo só em "condições extraordinárias,
+justificadas em carta aberta". É uma proposta normativa — não é projeção nem
+dado.
+
+| Alegação | Artigo | Nós | Veredito |
+| --- | --- | --- | --- |
+| Selic no ciclo de alta | 1,9% → 14,9% | 1,9 (09/2020) → 14,9 (07/2025), Selic efetiva; meta 2,0 → 15,0 | **confere na série efetiva** |
+| NTN-F 10 anos no ciclo | 7,5% → ~15% | proxy: 7,2 (01/2021) → 14,3 (10/2025), custo das emissões de NTN-F 12m | confere (≈) como proxy — é taxa de emissão primária, não a taxa de mercado secundário do papel de 10 anos |
+| Correlação custo das emissões 12m × Selic (12/2011–09/2026) | 0,95 | 0,844 (DPMFi) / 0,690 (DPF), proxy do **estoque** | não verificável na base do artigo — o RMD 4.3 (custo das emissões) só publica desde 01/2021, com nova metodologia; a proxy do estoque dá 0,84, não 0,95 |
+| Correlação NTN-F 10 anos × Selic (01/2011–10/2026) | 0,85 | proxy: 0,93 (01/2021–09/2026, n=69) | não verificável na janela do artigo — a série de 10 anos não está no catálogo; a proxy de 2021–26 dá 0,93 |
+| Custo médio (estoque) acompanhou a Selic, 2011–2022 | "acompanhou" | 0,881 (DPMFi) / 0,759 (DPF) | confere (≈) para o estoque; "novas emissões" não é testável antes de 2021 (RMD 4.3 começa em 01/2021) |
+| Selic 12,5% → 7,25% (ago/2011–out/2012) | 12,5 → 7,25 | 12,50 (01/08/2011) → 7,25 (11/10/2012) | **confere** — SGS 432 |
+| Custo das novas emissões: >14% → <5% (2016–2020) | >14 → <5 | estoque: 14,4 → 7,3 (DPMFi) / 16,4 → 8,4 (DPF) | não verificável para emissões — o RMD 4.3 só começa em 01/2021; o estoque não chega a <5% |
+| Custo das novas emissões >12% no fim de 2022 | >12 | estoque: 10,8 (DPMFi) / 10,2 (DPF) | não verificável para emissões — o RMD 4.3 só começa em 01/2021 |
+| Déficit primário 2025 vs FMI | 0,43% (Brasil); 3,9% emergentes; 2,5% avançadas | 0,43 (SGS 5793) | o dado do Brasil confere; a comparação internacional não está no catálogo |
+| Dívida das companhias abertas | 4,6× lucro; 9% vs 3,5%; 40% vs 16%; 23% → 43% | — | não verificável — sem série de contas corporativas |
+| Investimento | 91% (2025), 113% (2021), 149% (EUA) | — | não verificável — sem série de investimento/depreciação |
+| Recuperações judiciais | 977 (2025); 2.466 empresas; 1.099 (1º sem/2026); agro 30% | — | não verificável — sem série Serasa/recuperações |
+| Ibovespa vs CDI | 40× vs 103×; 93 de 268 janelas | — | não verificável — sem série de Ibovespa/CDI |
+| Famílias | dívida 50,1% da renda; serviço 29% (ago/2026) | — | não verificável — sem série de endividamento das famílias |
+| Reservas cambiais + dólares de exportadores | > US$ 400 bi | — | não verificável — sem série de reservas internacionais |
+| Estudo de Dejanir Silva (Purdue, nov/2026) | — | — | não verificável — estudo externo não coletado |
+| Proposta: intervalo [inflação, crescimento nominal], 2–4 anos | — | — | proposta normativa — não é dado |
+
+**O que a nota acrescenta.** É a primeira vez que a **meta** aparece como
+**intervalo com piso e teto**, e não como um número fixo. O piso na inflação
+responde à crítica de "juro real negativo" (repressão financeira); o teto no
+crescimento nominal impede que a dívida cresça mais rápido que o PIB. O prazo
+de 2–4 anos e a cláusula de exceção (carta aberta) suavizam o que antes podia
+ser lido como tabelamento. A nota também desloca o argumento para a **ponta
+longa**: se o BC pauta a curva, a queda da Selic derruba o custo da dívida;
+as correlações de 0,95 e 0,85 são a evidência que ele oferece.
+
+**O que ela não prova.** As duas correlações centrais não podem ser
+reproduzidas com o catálogo: não há série agregada de custo das emissões
+(a proxy do estoque dá 0,84, não 0,95) nem série de NTN-F 10 anos para
+2011–2026 (0,85). Para o nível de 7,5% → 15%, há uma proxy parcial: o custo
+das emissões de NTN-F em 12 meses vai de 7,2% (01/2021) a 14,3% (10/2025),
+com correlação de 0,93 com a Selic em 2021–26 — compatível, mas é taxa de
+emissão primária, não a taxa de mercado secundário do papel de 10 anos.
+As consequências sobre empresas e famílias — 4,6× lucro, 91% da depreciação,
+977 recuperações, 50,1% da renda — são plausíveis, mas vêm de séries que o
+projeto não coleta; ficam como **não verificáveis**, não como falsas. O mesmo
+vale para as reservas > US$ 400 bi e para o estudo de Dejanir Silva. A parte
+da proposta é normativa: o intervalo, o prazo de 2–4 anos e a carta aberta
+não são dados.
+
 ### Entidades do mercado — Febraban e ANBIMA (3 documentos, 11 citações)
 
-Textos brutos em `dados/bruto/documentos/`: `febraban_sidney_2026-01-12.txt`,
+**Três documentos institucionais.** Textos brutos em
+`dados/bruto/documentos/`: `febraban_sidney_2026-01-12.txt`,
 `anbima_grupo_2025-01-27.txt`, `anbima_grupo_2025-09-15.txt`.
 
 **Febraban — Isaac Sidney, nota assinada (12/1/2026):**
@@ -415,18 +583,21 @@ associadas), dois releases:**
 | Quem | Data | Posição sobre o nível | Documento no corpus |
 | --- | --- | --- | --- |
 | André Lara Resende (ex-presidente do BCB) | 25/9/2026 | **ataca**: cortar para ~7,5% | `eu_acuso_2026` |
+| André Lara Resende | 16/11/2026 | **refina a proposta**: intervalo [inflação, crescimento nominal], 2–4 anos; o BC pauta a curva | `lara_nota_2026_11` |
+| Luiz Carlos Bresser-Pereira (ex-ministro da Fazenda) | 4/11/2026 | **endossa Lara Resende**: a proposta é "excelente"; Selic a 7,5% em 12 meses | `bresser_lara_resende_2026` |
 | Fábio Kanczuk (ASA; ex-diretor do BCB) | 25/7/2025 | **defende**: manter 15% por 2–3 anos | `kanczuk_asa_2025` |
 | ANBIMA, Grupo Consultivo (26 economistas) | 27/1/2025 | **endossa o aperto**: "justifica uma política monetária mais restritiva" (fiscal) | `anbima_2025_01` |
 | ANBIMA, Grupo Consultivo | 15/9/2025 | **registra a defesa interna**: "os juros devem ser mantidos no patamar mais elevado até que haja essa convergência" | `anbima_2025_09` |
 | Febraban, Isaac Sidney (presidente; ex-diretor do BCB) | 12/1/2026 | **não endossa o nível**: "não implica concordância com a Selic atual"; mas defende a autonomia do BC e liga a queda dos juros ao fiscal | `febraban_sidney_2026` |
 
-**Três achados do mapa:**
+**Cinco achados do mapa:**
 
 1. **Ninguém no corpus defende o patamar como benéfico a um grupo.** As
    defesas são técnicas (inflação longe do centro da meta) ou institucionais
    (autonomia do BC). A Febraban vai no sentido oposto da hipótese de
    rentistas: *«bancos não precisam e não dependem de juros altos para
-   alcançar rentabilidade»*.
+   alcançar rentabilidade»*. Bresser é o primeiro a formular a hipótese
+   distributiva abertamente — mas como **crítica** ao nível, não como defesa.
 2. **As projeções que sustentavam o aperto erraram para cima.** A ANBIMA
    projetou IPCA 2025 em 5,6% (jan) e 4,8% (set) contra **4,26%** real, e
    dívida em 81%/79,8% contra 78,64% — o medo que justificava o nível alto
@@ -435,8 +606,21 @@ associadas), dois releases:**
 3. **As defesas são institucionais e, em boa parte, anônimas.** A ANBIMA
    fala por 26 economistas (o coordenador cita "algumas casas" sem nomes);
    a Febraban assina pelo setor; as atas do Copom não têm voto nominal. Só
-   dois documentos têm **pessoa física falando por si**: Lara Resende e
-   Kanczuk — e estão em lados opostos.
+   **três pessoas físicas** falam por si no corpus: Lara Resende (dois
+   textos), Kanczuk e Bresser — dois a favor do corte (Lara e Bresser, sendo
+   Bresser um endosso) e um a favor da manutenção.
+4. **O endosso de Bresser não é uma segunda medição — e a nota de Lara
+   também não.** Bresser repete os números de Lara Resende e a equação com
+   erro; a nota de 16/11 refina a proposta e acrescenta correlações que o
+   projeto não consegue reproduzir. O valor dos dois documentos é mostrar
+   como a proposta circula e se modifica — não acrescentar evidência
+   empírica verificável.
+5. **A proposta mudou de forma entre setembro e novembro.** Em set/2026 era
+   um número (7,5% em 12 meses); em nov/2026 vira um intervalo com piso na
+   inflação e teto no crescimento nominal, prazo de 2–4 anos e cláusula de
+   exceção. É a resposta às objeções — mas também torna a proposta mais
+   difícil de testar: não há um número único a comparar com a Selic ou com
+   o Focus.
 
 **Ainda não coletado** (coleta manual, fora dos datasets): ofícios e
 comunicações oficiais do BCB/Fazenda defendendo o nível, declarações
@@ -520,19 +704,21 @@ swaps +0,98 p.p. (2024) e −0,83 p.p. (2025).
 
 | Fonte | Uso | Acesso |
 | --- | --- | --- |
-| **BCB/SGS** (Sistema Gerenciador de Séries) | 39 séries: juros nominais consolidados (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA/INPC/meta (432/13522/188), primário/nominal (5793/5727), DBGG (13761/13762), crédito/inadimplência/spread (20740, 20783, 20785, 20786, 20809, 21082, 21084, 20634), câmbio, etc. | API pública (exige IPv4) |
+| **BCB/SGS** (Sistema Gerenciador de Séries) | 42 séries: juros nominais consolidados (4616), swaps caixa (29522), PIB nominal (4380), Selic/IPCA/INPC/meta (432/13522/188), IPCA serviços e monitorados (10844/4449), câmbio (1), primário/nominal (5793/5727), DBGG (13761/13762), crédito/inadimplência/spread (20740, 20783, 20785, 20786, 20809, 21082, 21084, 20634), etc. | API pública (exige IPv4) |
 | **Tesouro/STN — RMD, Relatório Mensal do Tesouro** | Detentores (Anexo 2.7), custo médio (Anexo 4.1–4.3), composição (5.5), reserva fiscal (6.1) | anexo ZIP via CDN do Tesouro |
 | **Tesouro/STN — Fatores de variação e emissões da DPF (Anexo 2 e 2.9)** | estoque, emissões, resgates, juros apropriados | portal (CSV) |
-| **Focus / Olinda (BCB)** | medianas anuais de IPCA e Selic; IPCA-12m | Olinda (superdataset) |
+| **Focus / Olinda (BCB)** | medianas anuais de IPCA e Selic; IPCA-12m; **base de cálculo 0** (a base 1 coexiste desde 2014 e não é misturada) | Olinda (superdataset) |
 | **IBGE SIDRA 6381 (v4099)** | desemprego PNAD-C trimestral (desde 2012) | API SIDRA |
+| **IBGE SIDRA 6402 (nb09)** | pessoas ocupadas, taxa de participação, nível de ocupação e informalidade (PNAD-C trimestral; informalidade desde 2015Q4) | API SIDRA |
+| **IBGE SIDRA 1419/7060 (nb09)** | IPCA mensal, 12m e peso por grupo e subgrupo (1419 até 2019; 7060 desde 2020) | API SIDRA |
 | **IBGE SIDRA 4660/4663/5436** (nb08) | rendimento médio mensal da PNAD-C: nominal e real anuais (t/4660), massa de rendimento (t/4663) e série trimestral (t/5436, com lacuna 2020Q2–22Q1) | API SIDRA |
-| **IBGE SIDRA 1620** (nb08) | FBCF e PIB em volume, trimestral (c11255/93406 e c11255/90707) | API SIDRA |
+| **IBGE SIDRA 1620** (nb08/nb09) | FBCF e PIB em volume, trimestral (c11255/93406 e c11255/90707); o PIB volume entra na produtividade por trabalhador (nb09) | API SIDRA |
 | **Salário mínimo nacional** (nb08) | steps nominais 2001–2026 (`dados/bruto/salario_minimo.csv`, manual) — Dieese como fonte primária, conferido contra IPEADATA MTE12_SALMIN12 | CSV manual + tabela Dieese |
 | **BNDES Estudo 67/2026** | referência de decomposição do juro (validação) | PDF |
 | **Atas do Copom (BCB)** | 47 atas 2021–2026 (236ª–282ª): índice de temas e trechos citáveis (fase de documentos) | PDFs públicos (probe de URL) |
 | **Discursos e apresentações (BCB)** | 1.556 itens 2002–2026; recorte foco 46 com texto (fase de documentos) | API interna pública do portal (engenharia reversa dos bundles JS) |
 | **REF Out/2026 — anexo estatístico (BCB)** | origem do "R$ 255 bi de lucro do SFN em 2025" (Gráfico 1.2.3.1, LL 12m); ROE/PLA do SFN 2020–2026 | XLSX manual (`dados_baixados_manualmente/`, não versionado) → `dados/processado/sfn_lucro_ll.csv` |
-| **Documentos de posição (corpus complementar)** | "Eu Acuso" de Lara Resende (25/9/2026): 7 citações verbatim + verificação aritmética | Substack (GET público, texto bruto arquivado) |
+| **Documentos de posição (corpus complementar)** | 7 documentos (Lara Resende set/2026 e nov/2026, Kanczuk, Febraban, 2 ANBIMA, Bresser): 52 citações verbatim + verificação aritmética | Substack, NeoFeed, Febraban, ANBIMA (GET público; texto bruto arquivado) |
 
 **Substituições e decisões de fonte** (transparência metodológica):
 - A API do Portal da Transparência exige chave de API (pedido cancelado/
@@ -555,10 +741,11 @@ src/
                    atas_copom.py  — índice de temas/trechos das atas
                    discursos.py   — índice de temas/trechos dos discursos (mesma régua)
                    documentos.py  — corpus de posição: registro curado + verificação
+                   justificativas.py — teste das justificativas do BC (inflação e trabalho)
   viz/             graficos.py — estilo, paleta, salvar figuras
-notebooks/         00_validação … 08_renda_salarios (executados, com outputs)
-scripts/           gera_nb08.py (gerador do nb08; sobrescreve o notebook) e
-                   checa_figuras.py (colisões de texto nas figuras)
+notebooks/         00_validação … 09_justificativas (executados, com outputs)
+scripts/           gera_nb08.py e gera_nb09.py (geradores; sobrescrevem o notebook) e
+                   checa_figuras.py (colisões de texto nas figuras; aceita o notebook como argumento)
 dados/             bruto (cache) / processado (parquet)
 viz/figs/          PNG das figuras dos notebooks
 app/               ferramenta web (Streamlit)

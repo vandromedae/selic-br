@@ -5,12 +5,12 @@ alegacao,artigo,nosso_valor,unidade,fonte_nosso,status,documento
 "Serviço = custo × estoque, jun/2026","1,4",1.37,R$ tri,custo RMD × SGS 13761 (jun/26),confere (≈),eu_acuso_2026
 "Serviço / PIB, jun/2026","10,5",10.4,%,"custo × DBGG ÷ PIB 12m (SGS 4380, jun/26)",confere,eu_acuso_2026
 Serviço c/ dívida líquida,"8,7",8.7,%,"custo RMD × DLSP/PIB (SGS dlsp_pib, jun/26)",confere,eu_acuso_2026
-Déficit nominal / PIB,~10,9.51,% 12m,SGS 5727 (09/2026),confere (≈),eu_acuso_2026
+Déficit nominal / PIB,~10,9.52,% 12m,SGS 5727 (09/2026),confere (≈),eu_acuso_2026
 Déficit primário 'pequeno',-,0.52,% 12m,SGS 5793 (09/2026),confere (qualitativo),eu_acuso_2026
-Identidade: nominal = juros + primário,-,9.51 = 8.99 + 0.52,% 12m,SGS 5727/5760/5793 (09/2026),confere (resíduo 0.00 p.p.),eu_acuso_2026
+Identidade: nominal = juros + primário,-,9.52 = 8.99 + 0.52,% 12m,SGS 5727/5760/5793 (09/2026),confere (resíduo 0.01 p.p.),eu_acuso_2026
 Ponte: conta com estoque médio 12m,-,9.7,%,custo RMD × DBGG médio (12m até jun/26),nota: estoque cresce ~14%/ano — estoque final > médio,eu_acuso_2026
 Juro apropriado 12m (medido),"10,5 (conta)",8.99,% 12m,"SGS 5760 (09/2026) — NFSP, inclui estados e swaps","conceito diferente (acumulado vs custo corrente), não erro aritmético",eu_acuso_2026
-PIB nominal cresce ~7% a.a.,"7,0",7.0,%,SGS 4380 (12m),confere,eu_acuso_2026
+PIB nominal cresce ~7% a.a.,"7,0",6.9,%,SGS 4380 (12m),confere,eu_acuso_2026
 "DBGG cresce 12,7% só com juros","12,7",14.0 (observado),%,SGS 13761 (12m),confere como conta aritmética; observado é maior,eu_acuso_2026
 "Dívida/PIB sobe ~5,7 p.p. ao ano","5,7",+5.1,p.p.,SGS 13762 (12m),não confere,eu_acuso_2026
 'mais da metade da dívida em LFTs',>50,51.2 (DPMFi) | 42.3 (DBGG),%,"Estoque da DPF, Anexo 2.1 (antes do swap, 06/2026) × SGS 13761","confere na dívida mobiliária federal (é onde existem LFTs); sobre a DBGG inteira, não",eu_acuso_2026
@@ -19,7 +19,7 @@ Primário 'entre os menores do mundo' (FMI),-,-,,FMI Fiscal Monitor 4/2026 (não
 Selic em 15% (decisão anterior à matéria),15,15.00,% a.a.,SGS 432 (vigente desde 19/06/2025),confere,kanczuk_asa_2025
 'patamar mais alto desde 2006',15 > tudo desde 2006,última vez >=15%: 07/2006 (15.25); máx. depois: 14.75,% a.a.,SGS 432 (série diária),confere,kanczuk_asa_2025
 'juro real observado acima de 6% desde 2022' — ex-post,>6 desde 2022,sempre >=6% só desde 11/2024 | mín. 2022–23 -1.2 | meses <6%: 8/24,% a.a.,SGS 4189 − SGS 13522 (Selic − IPCA 12m),não confere como está escrito (2022 inteiro abaixo),kanczuk_asa_2025
-'juro real observado acima de 6% desde 2022' — ex-ante,>6 desde 2022,sempre >=6% desde 05/2022 | mín. 2022–23 3.7 | meses <6%: 4/24,% a.a.,SGS 4189 − Focus IPCA 12m (média do mês),"confere (≈) — de mai/2022 em diante, não de jan/2022",kanczuk_asa_2025
+'juro real observado acima de 6% desde 2022' — ex-ante,>6 desde 2022,sempre >=6% desde 05/2022 | mín. 2022–23 3.8 | meses <6%: 4/24,% a.a.,SGS 4189 − Focus IPCA 12m (média do mês),"confere (≈) — de mai/2022 em diante, não de jan/2022",kanczuk_asa_2025
 'juro neutro real é de 8%' (ele) / 5% (BC) / 6% (consenso),8 / 5 / 6,—,% a.a.,"opinião e expectativa, não dado",não verificável com dados do projeto,kanczuk_asa_2025
 'Fed deve começar a cortar em outubro',out/2025,—,,previsão sobre dado externo (não coletado),não verificável com dados do projeto,kanczuk_asa_2025
 'Brasil vai continuar crescendo 2%',2,—,%,previsão,não verificável com dados do projeto,kanczuk_asa_2025
@@ -37,3 +37,35 @@ Selic em 15% (decisão anterior à matéria),15,15.00,% a.a.,SGS 432 (vigente de
 "[15/09/2025] 1º corte em janeiro de 2026 (14,75%)",jan/2026,19/03/2026,,SGS 432 (primeira queda abaixo de 15%),não confere — foi março/2026,anbima_2025_09
 "[15/09/2025] IPCA 2025 = 4,8%","4,8",4.26,%,SGS 13522 (dez/2025),não confere — erro -0.54 p.p.,anbima_2025_09
 "[15/09/2025] dívida bruta = 79,80% do PIB em 2025","79,80",78.64,%,SGS 13762 (dez/2025),confere,anbima_2025_09
+"Custo médio da dívida, jun/2026 (citado de Lara Resende)","12,68",12.68,% a.a.,"RMD (DPF, estoque 12m, jun/26)",confere,bresser_lara_resende_2026
+"DBGG, jun/2026","10,9",10.81,R$ tri,SGS 13761 (jun/26),confere,bresser_lara_resende_2026
+"DBGG / PIB, jun/2026","82,5",82.0,%,SGS 13762 (jun/26),confere,bresser_lara_resende_2026
+"Serviço = custo × estoque, jun/2026","1,4",1.37,R$ tri,custo RMD × SGS 13761 (jun/26),confere (≈),bresser_lara_resende_2026
+"Serviço / PIB, jun/2026","10,5",10.4,%,"custo × DBGG ÷ PIB 12m (SGS 4380, jun/26)",confere,bresser_lara_resende_2026
+Serviço c/ dívida líquida,"8,7",8.7,%,"custo RMD × DLSP/PIB (SGS dlsp_pib, jun/26)",confere,bresser_lara_resende_2026
+"Equação r = i − π + z: 4,5% = 7,5% − 3% + 2%","4,5",6.5,%,"aritmética: 7,5 − 3 + 2","não confere — o resultado é 6,5%, não 4,5%; 4,5% é apenas 7,5 − 3",bresser_lara_resende_2026
+"Decomposição 3,0% + 2,5% + 2,0% = 7,5%","7,5",7.5,%,"aritmética: 3,0 + 2,5 + 2,0","aritmética confere; 2,5% é crescimento do PIB, não juro neutro — a decomposição só fecha se 2,5% for lido como juro real",bresser_lara_resende_2026
+Ajuste fiscal de ~4% do PIB,"4,0",4.25,% do PIB,"(12,68 − 7,5) × DBGG/PIB (jun/26)","confere (≈) — conta estática, sem defasagem de reprecificação; a incidência 'só rentistas' não é testada",bresser_lara_resende_2026
+Rentistas capturam 5% do PIB,"5,0","5.2 (média 2012–25) | 5.4 (acumulado, R$ 5.98 tri) | 6.91 (2025)",% do PIB,RMD 2.9 (juros apropriados DPF) ÷ PIB; janela 2012–25,"magnitude compatível com o total (5,2–5,4%); como residual 'não explicado', não é medível — 5% seria quase todo o juro total",bresser_lara_resende_2026
+40% dos títulos do governo com estrangeiros,40,10.0 (jun/26) | 9.6 (09/2026),%,"RMD 2.7 (estoque da DPMFi, não-residentes)","não confere com o estoque — 10,0% em jun/26; a base 'negociados na Bolsa' não está no catálogo",bresser_lara_resende_2026
+"Selic tenderá a 7,5% em 12 meses","7,5",atual 13.75 | Focus 2027 12.78,% a.a.,SGS 432 (21/11/2026) + Focus (13/11/2026),"proposta normativa, não projeção — o consenso Focus para 2027 está em 13,04%",bresser_lara_resende_2026
+Meta de inflação de 3%,"3,0","3,0",%,CMN (meta vigente),confere,bresser_lara_resende_2026
+Venda de reservas para conter a saída de estrangeiros,—,—,,sem série de reservas no catálogo,proposta sem dado no projeto — não testável,bresser_lara_resende_2026
+Efeito neofisheriano (Cochrane),—,—,,posição teórica,não testado no projeto — não é dado,bresser_lara_resende_2026
+"Selic no ciclo de alta: 1,9% → 14,9%","1,9 → 14,9",1.9 (09/2020) → 14.9 (07/2025); meta 2.0 → 15.0,% a.a.,SGS 4189 (Selic efetiva mensal) + 432 (meta),"confere na série efetiva; na meta, 2,0 → 15,0",lara_nota_2026_11
+"NTN-F 10 anos: 7,5% → perto de 15%","7,5 → ~15",proxy: 7.2 (01/2021) → 14.3 (10/2025),% a.a.,RMD custo das emissões de NTN-F 12m (proxy); a taxa de 10 anos do Tesouro Direto não está no catálogo,"confere (≈) como proxy — é taxa de emissão primária, não a taxa de mercado secundário do papel de 10 anos",lara_nota_2026_11
+"Correlação 0,95: custo das emissões 12m × Selic, 12/2011–09/2026","0,95",0.844 (DPMFi) | 0.690 (DPF); n=178,correlação,proxy: RMD custo do estoque 12m × SGS 432,"não verificável na base do artigo — o RMD 4.3 (custo das emissões) só publica desde 01/2021, com nova metodologia; a proxy do estoque (2011–2026) dá 0,84, não 0,95",lara_nota_2026_11
+"Correlação 0,85: NTN-F 10 anos × Selic, 01/2011–10/2026","0,85","proxy: 0.93 (NTN-F emissões 12m × Selic, 01/2021–09/2026, n=69)",correlação,RMD custo das emissões de NTN-F 12m × SGS 432,"não verificável na janela do artigo — a janela começa em 01/2011 e a série de 10 anos não está no catálogo; a proxy de 2021–26 dá 0,93",lara_nota_2026_11
+"Custo médio (estoque) acompanhou a Selic, 2011–2022",acompanhou,corr 0.881 (DPMFi) | 0.759 (DPF); n=144,correlação,RMD custo do estoque 12m × SGS 432,confere (≈) para o estoque; a parte de 'novas emissões' não é testável antes de 2021 (RMD 4.3 começa em 01/2021),lara_nota_2026_11
+"Selic: 12,5% → 7,25% (ago/2011–out/2012)","12,5 → 7,25",12.50 (01/08/2011) → 7.25 (11/10/2012),% a.a.,SGS 432 (meta Selic),confere,lara_nota_2026_11
+Custo das novas emissões: >14% → <5% (ciclo 2016–2020),>14 → <5,estoque: 14.4 → 7.3 (DPMFi) | 16.4 → 8.4 (DPF),% a.a.,RMD custo do estoque 12m,"não verificável para emissões — o RMD 4.3 só começa em 01/2021; o estoque caiu a 7,3–8,4%, não a <5%",lara_nota_2026_11
+Custo das novas emissões voltou a >12% no fim de 2022,>12,estoque: 10.8 (DPMFi) | 10.2 (DPF) em dez/22,% a.a.,RMD custo do estoque 12m,"não verificável para emissões — o RMD 4.3 só começa em 01/2021; o estoque ficou em 10,2–10,8%",lara_nota_2026_11
+"Déficit primário 2025: abaixo de 2/3 dos países do FMI; emergentes 3,9%; avançadas 2,5%","0,43 (Brasil); 3,9; 2,5","0.43 (SGS 5793, dez/25)",% do PIB,SGS 5793; FMI Fiscal Monitor não coletado,o dado do Brasil confere; a comparação internacional não é verificável com o catálogo,lara_nota_2026_11
+"Companhias abertas: dívida 4,6× lucro; custo 9% vs 3,5%; despesa 40% vs 16%; 23% → 43%","4,6× / 9% / 3,5% / 40% / 16% / 23% → 43%",—,,sem série de contas corporativas no catálogo,não verificável com dados do projeto,lara_nota_2026_11
+"Investimento: 91% da depreciação (2025), 113% (2021), 149% (EUA)",91 / 113 / 149,—,%,sem série de investimento/depreciação no catálogo,não verificável com dados do projeto,lara_nota_2026_11
+"Recuperações judiciais: 977 (2025), 2.466 empresas, 1.099 (1º sem/2026), agro 30%",977 / 2.466 / 1.099 / 30,—,,sem série Serasa/recuperações no catálogo,não verificável com dados do projeto,lara_nota_2026_11
+Ibovespa 40× vs CDI 103× (07/1994–10/2026); 93 de 268 janelas,40× / 103× / 93 de 268,—,,sem série de Ibovespa/CDI no catálogo,não verificável com dados do projeto,lara_nota_2026_11
+"Famílias: dívida 50,1% da renda; serviço 29% (ago/2026)","50,1 / 29",—,%,sem série de endividamento das famílias no catálogo,não verificável com dados do projeto,lara_nota_2026_11
+Reservas cambiais + dólares de exportadores > US$ 400 bi,>400,—,US$ bi,sem série de reservas internacionais no catálogo,não verificável com dados do projeto,lara_nota_2026_11
+"Estudo de Dejanir Silva (Purdue, nov/2026)",—,—,,estudo externo não coletado,não verificável com dados do projeto,lara_nota_2026_11
+"Proposta: intervalo [inflação, crescimento nominal], 2–4 anos, fora só em condições extraordinárias",—,—,,proposta normativa,não é dado — registrada como posição,lara_nota_2026_11
